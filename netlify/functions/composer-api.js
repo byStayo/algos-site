@@ -348,6 +348,57 @@ exports.handler = async (event) => {
             return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
         }
 
+        // Try backtest endpoint for each symphony
+        if (action === 'backtest-data') {
+            const results = {};
+
+            for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
+                try {
+                    // Try GET first
+                    const getUrl = `https://api.composer.trade/api/v0.1/symphonies/${symphonyId}/backtest`;
+                    const getResponse = await fetch(getUrl, { headers: authHeaders });
+
+                    if (getResponse.ok) {
+                        const data = await getResponse.json();
+                        results[name] = {
+                            method: 'GET',
+                            status: getResponse.status,
+                            hasData: !!(data.epoch_ms?.length || data.series?.length || data.returns?.length),
+                            keys: Object.keys(data),
+                            sample: JSON.stringify(data).slice(0, 1000)
+                        };
+                    } else {
+                        // Try POST with date range
+                        const postUrl = `https://api.composer.trade/api/v0.1/symphonies/${symphonyId}/backtest`;
+                        const postResponse = await fetch(postUrl, {
+                            method: 'POST',
+                            headers: {
+                                ...authHeaders,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                start_date: '2025-01-01',
+                                end_date: '2025-12-31'
+                            })
+                        });
+
+                        const data = await postResponse.json();
+                        results[name] = {
+                            method: 'POST',
+                            status: postResponse.status,
+                            hasData: !!(data.epoch_ms?.length || data.series?.length || data.returns?.length),
+                            keys: typeof data === 'object' ? Object.keys(data) : [],
+                            sample: JSON.stringify(data).slice(0, 1000)
+                        };
+                    }
+                } catch (e) {
+                    results[name] = { error: e.message };
+                }
+            }
+
+            return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
+        }
+
         // Test newly discovered endpoints
         if (action === 'debug2') {
             const results = {};
