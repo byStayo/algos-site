@@ -1382,8 +1382,8 @@
                             <button class="time-btn" data-period="1W">1W</button>
                             <button class="time-btn" data-period="1M">1M</button>
                             <button class="time-btn" data-period="3M">3M</button>
-                            <button class="time-btn active" data-period="YTD">YTD</button>
-                            <button class="time-btn" data-period="ALL">All</button>
+                            <button class="time-btn" data-period="YTD">YTD</button>
+                            <button class="time-btn active" data-period="ALL">All</button>
                         </div>
                     </div>
                 </div>
@@ -1839,7 +1839,7 @@
         let interactiveChart = null;
         let chartData = { ...demoChartData };
         let fullChartData = null; // Store unfiltered data
-        let currentPeriod = 'YTD';
+        let currentPeriod = 'ALL'; // Default to ALL
         let hiddenSeries = new Set();
         let comparisonStocks = [];
 
@@ -2155,6 +2155,8 @@
             const now = new Date();
             let startDate;
 
+            let endDate = null; // null means use all data to the end
+
             switch(period) {
                 case '1W':
                     startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -2168,7 +2170,9 @@
                     startDate.setMonth(startDate.getMonth() - 3);
                     break;
                 case 'YTD':
-                    startDate = new Date(now.getFullYear(), 0, 1);
+                    // YTD = Full 2025 year (Jan 1, 2025 to Dec 31, 2025)
+                    startDate = new Date('2025-01-01');
+                    endDate = new Date('2025-12-31');
                     break;
                 case 'ALL':
                 default:
@@ -2178,16 +2182,25 @@
 
             // Find indices to include
             const startIdx = fullChartData.dates.findIndex(d => new Date(d) >= startDate);
-            const filteredIdx = startIdx >= 0 ? startIdx : 0;
+            const filteredStartIdx = startIdx >= 0 ? startIdx : 0;
+
+            // Find end index if endDate is specified
+            let filteredEndIdx = fullChartData.dates.length;
+            if (endDate) {
+                const endIdx = fullChartData.dates.findIndex(d => new Date(d) > endDate);
+                if (endIdx >= 0) {
+                    filteredEndIdx = endIdx;
+                }
+            }
 
             // Create filtered data
             chartData = {
-                dates: fullChartData.dates.slice(filteredIdx),
-                ALPHA: filterSeriesData(fullChartData.ALPHA, filteredIdx),
-                SHIELD: filterSeriesData(fullChartData.SHIELD, filteredIdx),
-                OMNI: filterSeriesData(fullChartData.OMNI, filteredIdx),
-                SPY: filterSeriesData(fullChartData.SPY, filteredIdx),
-                portfolioHistory: fullChartData.portfolioHistory ? filterSeriesData(fullChartData.portfolioHistory, filteredIdx) : null,
+                dates: fullChartData.dates.slice(filteredStartIdx, filteredEndIdx),
+                ALPHA: filterSeriesDataRange(fullChartData.ALPHA, filteredStartIdx, filteredEndIdx),
+                SHIELD: filterSeriesDataRange(fullChartData.SHIELD, filteredStartIdx, filteredEndIdx),
+                OMNI: filterSeriesDataRange(fullChartData.OMNI, filteredStartIdx, filteredEndIdx),
+                SPY: filterSeriesDataRange(fullChartData.SPY, filteredStartIdx, filteredEndIdx),
+                portfolioHistory: fullChartData.portfolioHistory ? filterSeriesDataRange(fullChartData.portfolioHistory, filteredStartIdx, filteredEndIdx) : null,
                 symphonyInfo: fullChartData.symphonyInfo
             };
 
@@ -2201,6 +2214,14 @@
             return {
                 values: series.values ? series.values.slice(startIdx) : [],
                 returns: series.returns ? series.returns.slice(startIdx) : []
+            };
+        }
+
+        function filterSeriesDataRange(series, startIdx, endIdx) {
+            if (!series) return { values: [], returns: [] };
+            return {
+                values: series.values ? series.values.slice(startIdx, endIdx) : [],
+                returns: series.returns ? series.returns.slice(startIdx, endIdx) : []
             };
         }
 
