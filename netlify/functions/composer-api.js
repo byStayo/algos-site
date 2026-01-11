@@ -368,7 +368,7 @@ exports.handler = async (event) => {
                             sample: JSON.stringify(data).slice(0, 1000)
                         };
                     } else {
-                        // Try POST with date range
+                        // Try POST with all required parameters
                         const postUrl = `https://api.composer.trade/api/v0.1/symphonies/${symphonyId}/backtest`;
                         const postResponse = await fetch(postUrl, {
                             method: 'POST',
@@ -378,7 +378,11 @@ exports.handler = async (event) => {
                             },
                             body: JSON.stringify({
                                 start_date: '2025-01-01',
-                                end_date: '2025-12-31'
+                                end_date: '2025-12-31',
+                                capital: 1000,
+                                slippage_percent: 0,
+                                apply_reg_fee: false,
+                                apply_taf_fee: false
                             })
                         });
 
