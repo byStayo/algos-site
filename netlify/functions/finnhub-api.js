@@ -32,7 +32,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 500,
                 headers,
-                body: JSON.stringify({ error: 'Finnhub API key not configured' })
+                body: JSON.stringify({
+                    error: 'Finnhub API key not configured',
+                    envKeys: Object.keys(process.env).filter(k => k.includes('FINN') || k.includes('API'))
+                })
             };
         }
 
@@ -104,7 +107,11 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: error.message })
+            body: JSON.stringify({
+                error: error.message,
+                stack: error.stack,
+                ticker: ticker
+            })
         };
     }
 };

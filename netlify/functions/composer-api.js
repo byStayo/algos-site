@@ -59,9 +59,10 @@ exports.handler = async (event) => {
         if (action === 'symphony-history') {
             // Fetch historical data for all symphonies
             const startDate = '2025-01-01';
-            const endDate = '2026-12-31';
+            const endDate = new Date().toISOString().split('T')[0]; // Today
 
             const results = {};
+            const debug = {};
 
             for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
                 try {
@@ -70,18 +71,30 @@ exports.handler = async (event) => {
                         headers: authHeaders
                     });
 
+                    const data = await response.json();
+                    debug[name] = { status: response.status, url, dataKeys: Object.keys(data), sample: JSON.stringify(data).slice(0, 500) };
+
                     if (response.ok) {
-                        const data = await response.json();
                         results[name] = data;
                     }
                 } catch (e) {
-                    console.error(`Error fetching ${name}:`, e);
+                    debug[name] = { error: e.message };
                 }
             }
 
             // Process and format the data
             const processed = processHistoricalData(results);
+            processed._debug = debug;
             return { statusCode: 200, headers, body: JSON.stringify(processed) };
+        }
+
+        // Debug action to see raw symphony response
+        if (action === 'debug') {
+            const symphonyId = SYMPHONY_IDS.ALPHA;
+            const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`;
+            const response = await fetch(url, { headers: authHeaders });
+            const data = await response.json();
+            return { statusCode: 200, headers, body: JSON.stringify({ url, status: response.status, data }) };
         }
 
         // Default: get current portfolio values
