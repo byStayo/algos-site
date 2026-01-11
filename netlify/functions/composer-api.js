@@ -110,14 +110,24 @@ exports.handler = async (event) => {
                 }
             }
 
-            // Also check each symphony
-            for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
+            // Check symphonies with different URL patterns
+            const symphonyId = SYMPHONY_IDS.ALPHA;
+            const testUrls = [
+                { name: 'symphony_basic', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}` },
+                { name: 'symphony_with_dates', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?start_date=2024-01-01&end_date=2025-12-31` },
+                { name: 'symphony_series', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/series` },
+                { name: 'symphony_values', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/values` },
+                { name: 'backtest', url: `/symphonies/${symphonyId}/backtest` },
+                { name: 'symphony_public', url: `/symphonies/${symphonyId}` },
+            ];
+
+            for (const t of testUrls) {
                 try {
-                    const response = await fetch(`https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`, { headers: authHeaders });
+                    const response = await fetch(`https://api.composer.trade/api/v0.1${t.url}`, { headers: authHeaders });
                     const data = await response.json();
-                    results[`symphony_${name}`] = { status: response.status, hasData: data.epoch_ms?.length > 0, dataKeys: Object.keys(data) };
+                    results[t.name] = { status: response.status, sample: JSON.stringify(data).slice(0, 500) };
                 } catch (e) {
-                    results[`symphony_${name}`] = { error: e.message };
+                    results[t.name] = { error: e.message };
                 }
             }
 
