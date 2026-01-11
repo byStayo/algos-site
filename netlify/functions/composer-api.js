@@ -42,11 +42,15 @@ exports.handler = async (event) => {
             };
         }
 
-        const authHeader = 'Basic ' + Buffer.from(`${API_KEY}:${API_SECRET}`).toString('base64');
+        // Correct Composer API authentication headers
+        const authHeaders = {
+            'x-api-key-id': API_KEY,
+            'authorization': `Bearer ${API_SECRET}`
+        };
 
         if (action === 'portfolios') {
-            const response = await fetch(`https://api.composer.trade/api/v2/portfolio/accounts/${ACCOUNT_ID}/portfolios`, {
-                headers: { 'Authorization': authHeader }
+            const response = await fetch(`https://api.composer.trade/api/v0.1/accounts/list`, {
+                headers: authHeaders
             });
             const data = await response.json();
             return { statusCode: 200, headers, body: JSON.stringify(data) };
@@ -61,9 +65,9 @@ exports.handler = async (event) => {
 
             for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
                 try {
-                    const url = `https://api.composer.trade/api/v2/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily-values?start_date=${startDate}&end_date=${endDate}`;
+                    const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily-values?start_date=${startDate}&end_date=${endDate}`;
                     const response = await fetch(url, {
-                        headers: { 'Authorization': authHeader }
+                        headers: authHeaders
                     });
 
                     if (response.ok) {
@@ -85,9 +89,9 @@ exports.handler = async (event) => {
 
         for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
             try {
-                const url = `https://api.composer.trade/api/v2/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`;
+                const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`;
                 const response = await fetch(url, {
-                    headers: { 'Authorization': authHeader }
+                    headers: authHeaders
                 });
 
                 if (response.ok) {
