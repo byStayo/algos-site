@@ -113,10 +113,35 @@ exports.handler = async (event) => {
                 const omniValue = symphonyInfo['OMNI']?.value || 0;
                 const totalValue = alphaValue + shieldValue + omniValue;
 
-                // Estimate per-symphony returns based on their final returns and total portfolio movement
-                const alphaFinalReturn = symphonyInfo['ALPHA']?.return || 36.87;
-                const shieldFinalReturn = symphonyInfo['SHEILD']?.return || symphonyInfo['SHIELD']?.return || 18.08;
-                const omniFinalReturn = symphonyInfo['OMNI']?.return || 20.73;
+                // Calculate per-symphony returns from current value and $1000 starting capital
+                // IMPORTANT: Don't use API's time_weighted_return for OMNI - it's wrong due to deposit history
+                const alphaCurrentValue = symphonyInfo['ALPHA']?.value || 1368.85;
+                const shieldCurrentValue = symphonyInfo['SHEILD']?.value || symphonyInfo['SHIELD']?.value || 1180.51;
+                const omniCurrentValue = symphonyInfo['OMNI']?.value || 1207.31;
+
+                // Calculate correct returns based on $1000 starting capital for all
+                const alphaFinalReturn = ((alphaCurrentValue / STARTING_CAPITAL.ALPHA) - 1) * 100;
+                const shieldFinalReturn = ((shieldCurrentValue / STARTING_CAPITAL.SHIELD) - 1) * 100;
+                const omniFinalReturn = ((omniCurrentValue / STARTING_CAPITAL.OMNI) - 1) * 100;
+
+                // Build corrected symphony info with proper returns
+                const correctedSymphonyInfo = {
+                    ALPHA: {
+                        value: alphaCurrentValue,
+                        return: parseFloat(alphaFinalReturn.toFixed(2)),
+                        startingCapital: STARTING_CAPITAL.ALPHA
+                    },
+                    SHIELD: {
+                        value: shieldCurrentValue,
+                        return: parseFloat(shieldFinalReturn.toFixed(2)),
+                        startingCapital: STARTING_CAPITAL.SHIELD
+                    },
+                    OMNI: {
+                        value: omniCurrentValue,
+                        return: parseFloat(omniFinalReturn.toFixed(2)),
+                        startingCapital: STARTING_CAPITAL.OMNI
+                    }
+                };
 
                 const result = {
                     dates,
@@ -128,7 +153,7 @@ exports.handler = async (event) => {
                     SHIELD: estimateSymphonyReturns(dates.length, shieldFinalReturn, totalReturns),
                     OMNI: estimateSymphonyReturns(dates.length, omniFinalReturn, totalReturns),
                     SPY: { values: [], returns: [] },
-                    symphonyInfo,
+                    symphonyInfo: correctedSymphonyInfo,
                     dataSource: 'composer-api'
                 };
 
