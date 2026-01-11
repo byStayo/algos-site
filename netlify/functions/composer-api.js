@@ -89,13 +89,32 @@ exports.handler = async (event) => {
             return { statusCode: 200, headers, body: JSON.stringify(processed) };
         }
 
-        // Debug action to see raw symphony response
+        // Debug action to explore available endpoints
         if (action === 'debug') {
             const symphonyId = SYMPHONY_IDS.ALPHA;
-            const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`;
-            const response = await fetch(url, { headers: authHeaders });
-            const data = await response.json();
-            return { statusCode: 200, headers, body: JSON.stringify({ url, status: response.status, data }) };
+            const results = {};
+
+            // Try multiple endpoints to find where the data is
+            const endpoints = [
+                { name: 'symphony', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}` },
+                { name: 'positions', url: `/portfolio/accounts/${ACCOUNT_ID}/positions` },
+                { name: 'holdings', url: `/portfolio/accounts/${ACCOUNT_ID}/holdings` },
+                { name: 'performance', url: `/portfolio/accounts/${ACCOUNT_ID}/performance` },
+                { name: 'history', url: `/portfolio/accounts/${ACCOUNT_ID}/history` },
+                { name: 'account', url: `/portfolio/accounts/${ACCOUNT_ID}` },
+            ];
+
+            for (const ep of endpoints) {
+                try {
+                    const response = await fetch(`https://api.composer.trade/api/v0.1${ep.url}`, { headers: authHeaders });
+                    const data = await response.json();
+                    results[ep.name] = { status: response.status, sample: JSON.stringify(data).slice(0, 800) };
+                } catch (e) {
+                    results[ep.name] = { error: e.message };
+                }
+            }
+
+            return { statusCode: 200, headers, body: JSON.stringify(results) };
         }
 
         // Default: get current portfolio values
