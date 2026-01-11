@@ -57,34 +57,35 @@ exports.handler = async (event) => {
         }
 
         if (action === 'symphony-history') {
-            // Fetch historical data for all symphonies
-            const startDate = '2025-01-01';
-            const endDate = new Date().toISOString().split('T')[0]; // Today
-
+            // Fetch historical data for all symphonies using the correct endpoint
             const results = {};
-            const debug = {};
 
             for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
                 try {
-                    const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily-values?start_date=${startDate}&end_date=${endDate}`;
+                    // Use the symphony endpoint which returns epoch_ms and series
+                    const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`;
                     const response = await fetch(url, {
                         headers: authHeaders
                     });
 
-                    const data = await response.json();
-                    debug[name] = { status: response.status, url, dataKeys: Object.keys(data), sample: JSON.stringify(data).slice(0, 500) };
-
                     if (response.ok) {
-                        results[name] = data;
+                        const data = await response.json();
+                        // Convert epoch_ms and series to our format
+                        if (data.epoch_ms && data.series) {
+                            results[name] = {
+                                epoch_ms: data.epoch_ms,
+                                series: data.series,
+                                deposit_adjusted_series: data.deposit_adjusted_series || data.series
+                            };
+                        }
                     }
                 } catch (e) {
-                    debug[name] = { error: e.message };
+                    console.error(`Error fetching ${name}:`, e);
                 }
             }
 
             // Process and format the data
-            const processed = processHistoricalData(results);
-            processed._debug = debug;
+            const processed = processHistoricalDataV2(results);
             return { statusCode: 200, headers, body: JSON.stringify(processed) };
         }
 
@@ -138,36 +139,48 @@ exports.handler = async (event) => {
 };
 
 function processHistoricalData(results) {
-    // Find common dates across all symphonies
-    const allDates = new Set();
+    // Legacy function - kept for compatibility
+    return { dates: [], ALPHA: { values: [], returns: [] }, SHIELD: { values: [], returns: [] }, OMNI: { values: [], returns: [] }, SPY: { values: [], returns: [] } };
+}
 
+function processHistoricalDataV2(results) {
+    // Process new format with epoch_ms and series arrays
+    const allTimestamps = new Set();
+
+    // Collect all timestamps
     for (const [name, data] of Object.entries(results)) {
-        if (data.daily_values) {
-            data.daily_values.forEach(d => allDates.add(d.date));
+        if (data.epoch_ms && data.epoch_ms.length > 0) {
+            data.epoch_ms.forEach(ts => allTimestamps.add(ts));
         }
     }
 
-    const dates = Array.from(allDates).sort();
-    if (dates.length === 0) {
+    const timestamps = Array.from(allTimestamps).sort((a, b) => a - b);
+    if (timestamps.length === 0) {
         return { dates: [], ALPHA: { values: [], returns: [] }, SHIELD: { values: [], returns: [] }, OMNI: { values: [], returns: [] }, SPY: { values: [], returns: [] } };
     }
+
+    // Convert timestamps to date strings
+    const dates = timestamps.map(ts => {
+        const d = new Date(ts);
+        return d.toISOString().split('T')[0];
+    });
 
     const processed = { dates };
 
     for (const [name, data] of Object.entries(results)) {
-        const valueMap = {};
-        if (data.daily_values) {
-            data.daily_values.forEach(d => {
-                valueMap[d.date] = parseFloat(d.value);
-            });
+        const tsValueMap = {};
+        if (data.epoch_ms && data.series) {
+            for (let i = 0; i < data.epoch_ms.length; i++) {
+                tsValueMap[data.epoch_ms[i]] = data.series[i];
+            }
         }
 
         const values = [];
         const returns = [];
         const startingCapital = STARTING_CAPITAL[name];
 
-        for (const date of dates) {
-            const value = valueMap[date] || null;
+        for (const ts of timestamps) {
+            const value = tsValueMap[ts] !== undefined ? tsValueMap[ts] : null;
             values.push(value);
 
             if (value !== null) {
@@ -181,7 +194,7 @@ function processHistoricalData(results) {
         processed[name] = { values, returns };
     }
 
-    // Add SPY placeholder (would need Yahoo Finance API for real data)
+    // Add SPY placeholder (fetched separately via Finnhub)
     processed.SPY = {
         values: dates.map(() => null),
         returns: dates.map(() => null)
