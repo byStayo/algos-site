@@ -91,26 +91,33 @@ exports.handler = async (event) => {
 
         // Debug action to explore available endpoints
         if (action === 'debug') {
-            const symphonyId = SYMPHONY_IDS.ALPHA;
             const results = {};
 
-            // Try multiple endpoints to find where the data is
+            // List all symphonies for this account
             const endpoints = [
-                { name: 'symphony', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}` },
-                { name: 'positions', url: `/portfolio/accounts/${ACCOUNT_ID}/positions` },
-                { name: 'holdings', url: `/portfolio/accounts/${ACCOUNT_ID}/holdings` },
-                { name: 'performance', url: `/portfolio/accounts/${ACCOUNT_ID}/performance` },
-                { name: 'history', url: `/portfolio/accounts/${ACCOUNT_ID}/history` },
-                { name: 'account', url: `/portfolio/accounts/${ACCOUNT_ID}` },
+                { name: 'symphonies_list', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies` },
+                { name: 'account_summary', url: `/accounts/${ACCOUNT_ID}` },
+                { name: 'account_portfolio', url: `/accounts/${ACCOUNT_ID}/portfolio` },
             ];
 
             for (const ep of endpoints) {
                 try {
                     const response = await fetch(`https://api.composer.trade/api/v0.1${ep.url}`, { headers: authHeaders });
                     const data = await response.json();
-                    results[ep.name] = { status: response.status, sample: JSON.stringify(data).slice(0, 800) };
+                    results[ep.name] = { status: response.status, data: data };
                 } catch (e) {
                     results[ep.name] = { error: e.message };
+                }
+            }
+
+            // Also check each symphony
+            for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
+                try {
+                    const response = await fetch(`https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`, { headers: authHeaders });
+                    const data = await response.json();
+                    results[`symphony_${name}`] = { status: response.status, hasData: data.epoch_ms?.length > 0, dataKeys: Object.keys(data) };
+                } catch (e) {
+                    results[`symphony_${name}`] = { error: e.message };
                 }
             }
 
