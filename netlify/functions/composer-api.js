@@ -91,49 +91,76 @@ exports.handler = async (event) => {
             return { statusCode: 200, headers, body: JSON.stringify(processed) };
         }
 
-        // Debug action to explore available endpoints
+        // Debug action to explore available endpoints - comprehensive test
         if (action === 'debug') {
             const results = {};
-
-            // List all symphonies for this account
-            const endpoints = [
-                { name: 'symphonies_list', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies` },
-                { name: 'account_summary', url: `/accounts/${ACCOUNT_ID}` },
-                { name: 'account_portfolio', url: `/accounts/${ACCOUNT_ID}/portfolio` },
-            ];
-
-            for (const ep of endpoints) {
-                try {
-                    const response = await fetch(`https://api.composer.trade/api/v0.1${ep.url}`, { headers: authHeaders });
-                    const data = await response.json();
-                    results[ep.name] = { status: response.status, data: data };
-                } catch (e) {
-                    results[ep.name] = { error: e.message };
-                }
-            }
-
-            // Check symphonies with different URL patterns
             const symphonyId = SYMPHONY_IDS.ALPHA;
+            const now = new Date().toISOString();
+            const startOfYear = '2025-01-01T00:00:00Z';
+
+            // Test various endpoint patterns
             const testUrls = [
+                // Basic endpoints
+                { name: 'symphonies_list', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies` },
                 { name: 'symphony_basic', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}` },
-                { name: 'symphony_with_dates', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?start_date=2024-01-01&end_date=2025-12-31` },
-                { name: 'symphony_series', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/series` },
+
+                // With ISO 8601 date parameters (since/until)
+                { name: 'symphony_iso_dates', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?since=${startOfYear}&until=${now}` },
+
+                // Daily performance endpoints
+                { name: 'symphony_daily_perf', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily-performance` },
+                { name: 'portfolio_daily_perf', url: `/portfolio/accounts/${ACCOUNT_ID}/daily-performance` },
+
+                // Performance/stats endpoints
+                { name: 'symphony_performance', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/performance` },
+                { name: 'symphony_stats', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/stats` },
+                { name: 'aggregate_stats', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/stats` },
+
+                // History/values endpoints
+                { name: 'symphony_history', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/history` },
                 { name: 'symphony_values', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/values` },
-                { name: 'backtest', url: `/symphonies/${symphonyId}/backtest` },
-                { name: 'symphony_public', url: `/symphonies/${symphonyId}` },
+                { name: 'symphony_series', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/series` },
+
+                // Account-level endpoints
+                { name: 'account_portfolio', url: `/accounts/${ACCOUNT_ID}/portfolio` },
+                { name: 'account_performance', url: `/accounts/${ACCOUNT_ID}/performance` },
+                { name: 'account_history', url: `/accounts/${ACCOUNT_ID}/history` },
+
+                // Reports endpoint
+                { name: 'reports', url: `/reports/${ACCOUNT_ID}?since=${startOfYear}&until=${now}` },
             ];
 
             for (const t of testUrls) {
                 try {
                     const response = await fetch(`https://api.composer.trade/api/v0.1${t.url}`, { headers: authHeaders });
-                    const data = await response.json();
-                    results[t.name] = { status: response.status, sample: JSON.stringify(data).slice(0, 500) };
+                    const text = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch {
+                        data = text.slice(0, 500);
+                    }
+
+                    // Check if this endpoint has useful historical data
+                    const hasHistoricalData = data && (
+                        (data.epoch_ms && data.epoch_ms.length > 0) ||
+                        (data.dates && data.dates.length > 0) ||
+                        (data.series && data.series.length > 0) ||
+                        (Array.isArray(data) && data.length > 0 && data[0].date)
+                    );
+
+                    results[t.name] = {
+                        status: response.status,
+                        hasHistoricalData,
+                        sample: typeof data === 'string' ? data : JSON.stringify(data).slice(0, 800),
+                        keys: typeof data === 'object' && data ? Object.keys(data) : []
+                    };
                 } catch (e) {
                     results[t.name] = { error: e.message };
                 }
             }
 
-            return { statusCode: 200, headers, body: JSON.stringify(results) };
+            return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
         }
 
         // Default: get current portfolio values
