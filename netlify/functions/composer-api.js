@@ -143,11 +143,14 @@ exports.handler = async (event) => {
                     }
                 };
 
+                // Ensure first return is 0 (starting point)
+                const normalizedReturns = totalReturns.map((r, i) => i === 0 ? 0 : parseFloat(r.toFixed(2)));
+
                 const result = {
                     dates,
                     portfolioHistory: {
                         values: filteredSeries,
-                        returns: totalReturns.map(r => parseFloat(r.toFixed(2)))
+                        returns: normalizedReturns
                     },
                     ALPHA: estimateSymphonyReturns(dates.length, alphaFinalReturn, totalReturns),
                     SHIELD: estimateSymphonyReturns(dates.length, shieldFinalReturn, totalReturns),
@@ -391,6 +394,7 @@ function processHistoricalData(results) {
 function estimateSymphonyReturns(numDays, finalReturn, totalReturns) {
     // Estimate per-symphony returns by scaling the total portfolio movement
     // to reach the known final return for each symphony
+    // ALL lines start at 0% return (or $1000) on day 1
     if (numDays === 0 || totalReturns.length === 0) {
         return { values: [], returns: [] };
     }
@@ -398,13 +402,12 @@ function estimateSymphonyReturns(numDays, finalReturn, totalReturns) {
     const totalFinalReturn = totalReturns[totalReturns.length - 1];
     const scaleFactor = totalFinalReturn !== 0 ? finalReturn / totalFinalReturn : 1;
 
-    // Scale the returns proportionally but add some variation
+    // Scale the returns proportionally
+    // First value is always 0 (starting point)
     const returns = totalReturns.map((r, i) => {
-        // Apply scaling with slight randomization for visual differentiation
+        if (i === 0) return 0; // Always start at 0%
         const scaled = r * scaleFactor;
-        // Add small variance that averages out to zero
-        const variance = (i % 3 - 1) * 0.1 * Math.abs(scaled) * 0.1;
-        return parseFloat((scaled + variance).toFixed(2));
+        return parseFloat(scaled.toFixed(2));
     });
 
     // Ensure final return matches exactly
@@ -412,7 +415,7 @@ function estimateSymphonyReturns(numDays, finalReturn, totalReturns) {
         returns[returns.length - 1] = parseFloat(finalReturn.toFixed(2));
     }
 
-    // Convert to values (starting at $1000)
+    // Convert to values (all starting at $1000)
     const values = returns.map(r => parseFloat((1000 * (1 + r / 100)).toFixed(2)));
 
     return { values, returns };
