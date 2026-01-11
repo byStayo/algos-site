@@ -1838,6 +1838,8 @@
         let projectionChart = null;
         let interactiveChart = null;
         let chartData = { ...demoChartData };
+        let fullChartData = null; // Store unfiltered data
+        let currentPeriod = 'YTD';
         let hiddenSeries = new Set();
         let comparisonStocks = [];
 
@@ -2139,9 +2141,80 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    // In production, would fetch data for selected period
-                    updateInteractiveChart();
+                    currentPeriod = btn.dataset.period;
+                    filterChartDataByPeriod(currentPeriod);
                 });
+            });
+        }
+
+        function filterChartDataByPeriod(period) {
+            if (!fullChartData || !fullChartData.dates || fullChartData.dates.length === 0) {
+                return;
+            }
+
+            const now = new Date();
+            let startDate;
+
+            switch(period) {
+                case '1W':
+                    startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+                case '1M':
+                    startDate = new Date(now);
+                    startDate.setMonth(startDate.getMonth() - 1);
+                    break;
+                case '3M':
+                    startDate = new Date(now);
+                    startDate.setMonth(startDate.getMonth() - 3);
+                    break;
+                case 'YTD':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    break;
+                case 'ALL':
+                default:
+                    startDate = new Date('2020-01-01');
+                    break;
+            }
+
+            // Find indices to include
+            const startIdx = fullChartData.dates.findIndex(d => new Date(d) >= startDate);
+            const filteredIdx = startIdx >= 0 ? startIdx : 0;
+
+            // Create filtered data
+            chartData = {
+                dates: fullChartData.dates.slice(filteredIdx),
+                ALPHA: filterSeriesData(fullChartData.ALPHA, filteredIdx),
+                SHIELD: filterSeriesData(fullChartData.SHIELD, filteredIdx),
+                OMNI: filterSeriesData(fullChartData.OMNI, filteredIdx),
+                SPY: filterSeriesData(fullChartData.SPY, filteredIdx),
+                portfolioHistory: fullChartData.portfolioHistory ? filterSeriesData(fullChartData.portfolioHistory, filteredIdx) : null,
+                symphonyInfo: fullChartData.symphonyInfo
+            };
+
+            // Recalculate returns relative to filtered start
+            normalizeReturnsToStart();
+            updateInteractiveChart();
+        }
+
+        function filterSeriesData(series, startIdx) {
+            if (!series) return { values: [], returns: [] };
+            return {
+                values: series.values ? series.values.slice(startIdx) : [],
+                returns: series.returns ? series.returns.slice(startIdx) : []
+            };
+        }
+
+        function normalizeReturnsToStart() {
+            // Recalculate returns relative to the start of filtered period
+            ['ALPHA', 'SHIELD', 'OMNI', 'SPY'].forEach(series => {
+                if (chartData[series] && chartData[series].values && chartData[series].values.length > 0) {
+                    const startVal = chartData[series].values[0];
+                    if (startVal && startVal > 0) {
+                        chartData[series].returns = chartData[series].values.map(v =>
+                            v !== null ? parseFloat(((v / startVal - 1) * 100).toFixed(2)) : null
+                        );
+                    }
+                }
             });
         }
 
@@ -2152,21 +2225,23 @@
                 if (composerResponse.ok) {
                     const data = await composerResponse.json();
                     if (data.dates && data.dates.length > 0) {
-                        chartData = data;
+                        // Store full data
+                        fullChartData = data;
 
-                        // Also fetch SPY data from Finnhub to replace placeholder
+                        // Also fetch SPY data from Yahoo Finance
                         try {
                             const spyData = await fetchStockData('SPY');
                             if (spyData && spyData.dates && spyData.dates.length > 0) {
-                                const aligned = alignStockDataToDates(spyData, chartData.dates);
-                                chartData.SPY = aligned;
+                                const aligned = alignStockDataToDates(spyData, fullChartData.dates);
+                                fullChartData.SPY = aligned;
                             }
                         } catch (spyErr) {
                             console.log('Could not fetch SPY data:', spyErr);
                         }
 
-                        updateInteractiveChart();
-                        console.log('Loaded live data:', chartData.dates.length, 'data points');
+                        // Apply current time period filter
+                        filterChartDataByPeriod(currentPeriod);
+                        console.log('Loaded live data:', fullChartData.dates.length, 'total data points');
                     }
                 }
             } catch (e) {
