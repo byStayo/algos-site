@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithmic Trading Strategies | Anastassiades Global</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-blue: #1F7CEC;
+            --accent-green: #30D158;
+            --accent-red: #FF453A;
+            --accent-purple: #BF5AF2;
+            --accent-orange: #FF9F0A;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(31, 124, 236, 0.15), transparent);
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 21px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* Algorithm Cards */
+        .algos-section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .algo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .algo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .algo-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .algo-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .algo-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .algo-icon.alpha { background: linear-gradient(135deg, #1F7CEC 0%, #0051D3 100%); }
+        .algo-icon.shield { background: linear-gradient(135deg, #30D158 0%, #00A532 100%); }
+        .algo-icon.omni { background: linear-gradient(135deg, #BF5AF2 0%, #8944C7 100%); }
+
+        .algo-name {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .algo-tagline {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .algo-description {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .algo-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .stat-value.positive { color: var(--accent-green); }
+        .stat-value.negative { color: var(--accent-red); }
+
+        /* Interactive Chart Section */
+        .chart-section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-title {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .chart-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Apple-Style Custom Dropdowns */
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 40px 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            min-width: 140px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='rgba(255,255,255,0.6)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 12px;
+            font-family: inherit;
+        }
+
+        .custom-select:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(31, 124, 236, 0.2);
+        }
+
+        .custom-select option {
+            background: #1a1a1a;
+            color: var(--text-primary);
+            padding: 12px;
+        }
+
+        /* Time Period Pills */
+        .time-periods {
+            display: flex;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .time-btn {
+            padding: 8px 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .time-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .time-btn.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+        }
+
+        /* Stock Comparison Input */
+        .stock-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .stock-input {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            width: 100px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .stock-input::placeholder {
+            color: var(--text-muted);
+            text-transform: none;
+        }
+
+        .stock-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(31, 124, 236, 0.2);
+        }
+
+        .add-stock-btn {
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .add-stock-btn:hover {
+            background: #2989FF;
+            transform: scale(1.02);
+        }
+
+        /* Chart Canvas */
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 24px 0;
+        }
+
+        /* Chart Legend */
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .legend-item.hidden {
+            opacity: 0.4;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .legend-value {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        /* Projection Toggle */
+        .projection-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+        }
+
+        .projection-toggle label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--accent-blue);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Stats Summary */
+        .chart-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .chart-stat {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .chart-stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .chart-stat-value {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* Portfolio Builder */
+        .portfolio-section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portfolio-builder {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .allocation-sliders {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .slider-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 80px;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .slider-label {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .slider-value {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .portfolio-result {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            font-weight: 600;
+        }
+
+        /* Philosophy Section */
+        .philosophy-section {
+            padding: 80px 24px;
+            background: var(--bg-secondary);
+        }
+
+        .philosophy-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .philosophy-content h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .philosophy-content p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 48px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chart-header {
+                flex-direction: column;
+            }
+
+            .chart-controls {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .time-periods {
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+
+            .slider-row {
+                grid-template-columns: 100px 1fr 60px;
+                gap: 12px;
+            }
+
+            .algo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Anastassiades Global</div>
+            <div class="nav-links">
+                <a href="#algorithms">Algorithms</a>
+                <a href="#performance">Performance</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#philosophy">Philosophy</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Algorithmic Trading</h1>
+        <p>Three distinct strategies designed to capture growth, provide protection, and deliver complete automation.</p>
+    </section>
+
+    <section class="algos-section" id="algorithms">
+        <h2 class="section-title">Our Strategies</h2>
+        <div class="algo-grid">
+            <div class="algo-card">
+                <div class="algo-header">
+                    <div class="algo-icon alpha">A</div>
+                    <div>
+                        <div class="algo-name">ALPHA</div>
+                        <div class="algo-tagline">Aggressive Growth</div>
+                    </div>
+                </div>
+                <p class="algo-description">Long exposure only. Designed for investors who understand defensive positioning but need growth. ALPHA identifies momentum opportunities and rides them with conviction.</p>
+                <div class="algo-stats">
+                    <div class="stat">
+                        <div class="stat-label">2025 YTD Return</div>
+                        <div class="stat-value positive" id="alpha-return">+36.87%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Strategy</div>
+                        <div class="stat-value">Long Only</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algo-card">
+                <div class="algo-header">
+                    <div class="algo-icon shield">S</div>
+                    <div>
+                        <div class="algo-name">SHIELD</div>
+                        <div class="algo-tagline">Defensive Protection</div>
+                    </div>
+                </div>
+                <p class="algo-description">Short and defensive positions. Built for those who know how to grow wealth but need protection. SHIELD hedges against downturns while capturing inverse opportunities.</p>
+                <div class="algo-stats">
+                    <div class="stat">
+                        <div class="stat-label">2025 YTD Return</div>
+                        <div class="stat-value positive" id="shield-return">+18.08%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Strategy</div>
+                        <div class="stat-value">Short/Hedge</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algo-card">
+                <div class="algo-header">
+                    <div class="algo-icon omni">O</div>
+                    <div>
+                        <div class="algo-name">OMNI</div>
+                        <div class="algo-tagline">Full Automation</div>
+                    </div>
+                </div>
+                <p class="algo-description">Complete automation with both long and short exposure. For those who want hands-off wealth building. OMNI adapts to any market condition, capturing opportunities in both directions.</p>
+                <div class="algo-stats">
+                    <div class="stat">
+                        <div class="stat-label">2025 YTD Return</div>
+                        <div class="stat-value positive" id="omni-return">+20.73%</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Strategy</div>
+                        <div class="stat-value">Long & Short</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-section" id="performance">
+        <div class="chart-container">
+            <div class="chart-header">
+                <div>
+                    <h3 class="chart-title">Interactive Performance</h3>
+                    <p class="chart-subtitle">Compare strategies and benchmark against any stock</p>
+                </div>
+                <div class="chart-controls">
+                    <div class="time-periods">
+                        <button class="time-btn" data-period="1W">1W</button>
+                        <button class="time-btn" data-period="1M">1M</button>
+                        <button class="time-btn" data-period="3M">3M</button>
+                        <button class="time-btn" data-period="6M">6M</button>
+                        <button class="time-btn active" data-period="YTD">YTD</button>
+                        <button class="time-btn" data-period="1Y">1Y</button>
+                        <button class="time-btn" data-period="ALL">All</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-controls" style="margin-bottom: 16px;">
+                <select class="custom-select" id="displayMode">
+                    <option value="returns">% Return</option>
+                    <option value="value">Dollar Value</option>
+                </select>
+
+                <div class="stock-input-group">
+                    <input type="text" class="stock-input" id="stockTicker" placeholder="AAPL" maxlength="5">
+                    <button class="add-stock-btn" onclick="addComparison()">Compare</button>
+                </div>
+
+                <div class="projection-toggle">
+                    <label for="projectionToggle">Show Projection</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="projectionToggle">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-wrapper">
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <div class="chart-legend" id="chartLegend">
+                <div class="legend-item" data-series="ALPHA" onclick="toggleSeries('ALPHA')">
+                    <div class="legend-color" style="background: #1F7CEC;"></div>
+                    <span class="legend-label">ALPHA</span>
+                    <span class="legend-value" id="legend-alpha">+36.87%</span>
+                </div>
+                <div class="legend-item" data-series="SHIELD" onclick="toggleSeries('SHIELD')">
+                    <div class="legend-color" style="background: #30D158;"></div>
+                    <span class="legend-label">SHIELD</span>
+                    <span class="legend-value" id="legend-shield">+18.08%</span>
+                </div>
+                <div class="legend-item" data-series="OMNI" onclick="toggleSeries('OMNI')">
+                    <div class="legend-color" style="background: #BF5AF2;"></div>
+                    <span class="legend-label">OMNI</span>
+                    <span class="legend-value" id="legend-omni">+20.73%</span>
+                </div>
+                <div class="legend-item" data-series="SPY" onclick="toggleSeries('SPY')">
+                    <div class="legend-color" style="background: #FF9F0A;"></div>
+                    <span class="legend-label">SPY</span>
+                    <span class="legend-value" id="legend-spy">+3.50%</span>
+                </div>
+            </div>
+
+            <div class="chart-stats">
+                <div class="chart-stat">
+                    <div class="chart-stat-label">Best Performer</div>
+                    <div class="chart-stat-value" id="bestPerformer" style="color: #1F7CEC;">ALPHA</div>
+                </div>
+                <div class="chart-stat">
+                    <div class="chart-stat-label">Combined Return</div>
+                    <div class="chart-stat-value" id="combinedReturn" style="color: #30D158;">+25.23%</div>
+                </div>
+                <div class="chart-stat">
+                    <div class="chart-stat-label">vs SPY Alpha</div>
+                    <div class="chart-stat-value" id="vsSpy" style="color: #BF5AF2;">+21.73%</div>
+                </div>
+                <div class="chart-stat">
+                    <div class="chart-stat-label">Data Points</div>
+                    <div class="chart-stat-value" id="dataPoints">7 days</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio-section" id="portfolio">
+        <div class="portfolio-builder">
+            <h3 class="chart-title">Portfolio Builder</h3>
+            <p class="chart-subtitle" style="margin-top: 8px;">Design your custom allocation across strategies</p>
+
+            <div class="allocation-sliders">
+                <div class="slider-row">
+                    <div class="slider-label">
+                        <span class="slider-dot" style="background: #1F7CEC;"></span>
+                        ALPHA
+                    </div>
+                    <input type="range" min="0" max="100" value="40" id="alphaSlider" oninput="updatePortfolio()">
+                    <div class="slider-value" id="alphaValue">40%</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label">
+                        <span class="slider-dot" style="background: #30D158;"></span>
+                        SHIELD
+                    </div>
+                    <input type="range" min="0" max="100" value="30" id="shieldSlider" oninput="updatePortfolio()">
+                    <div class="slider-value" id="shieldValue">30%</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label">
+                        <span class="slider-dot" style="background: #BF5AF2;"></span>
+                        OMNI
+                    </div>
+                    <input type="range" min="0" max="100" value="30" id="omniSlider" oninput="updatePortfolio()">
+                    <div class="slider-value" id="omniValue">30%</div>
+                </div>
+            </div>
+
+            <div class="portfolio-result">
+                <div class="result-row">
+                    <span class="result-label">Total Allocation</span>
+                    <span class="result-value" id="totalAllocation">100%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Weighted 2025 YTD Return</span>
+                    <span class="result-value" style="color: #30D158;" id="weightedReturn">+26.50%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">$10,000 Investment Value</span>
+                    <span class="result-value" id="investmentValue">$12,650</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="philosophy-section" id="philosophy">
+        <div class="philosophy-content">
+            <h2>Our Philosophy</h2>
+            <p>Money doesn't disappear from the market - it flows. When stocks fall, capital moves to bonds, gold, or cash. Our algorithms are designed to capture these flows, positioning portfolios where capital is heading, not where it's been.</p>
+            <p>The eighth wonder of the world is compound interest. Small, consistent gains compound into extraordinary wealth over time. We focus on steady growth, risk management, and letting time work in your favor.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p class="footer-text">Past performance does not guarantee future results. All investments involve risk.</p>
+    </footer>
+
+    <script>
+        // Demo data - shows realistic performance from Jan 2025
+        const demoData = {
+            dates: [
+                '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08',
+                '2025-01-09', '2025-01-10'
+            ],
+            ALPHA: {
+                values: [1000, 1045, 1120, 1185, 1250, 1320, 1369],
+                returns: [0, 4.5, 12.0, 18.5, 25.0, 32.0, 36.87]
+            },
+            SHIELD: {
+                values: [1000, 1025, 1055, 1085, 1120, 1155, 1181],
+                returns: [0, 2.5, 5.5, 8.5, 12.0, 15.5, 18.08]
+            },
+            OMNI: {
+                values: [1000, 1030, 1070, 1110, 1145, 1180, 1207],
+                returns: [0, 3.0, 7.0, 11.0, 14.5, 18.0, 20.73]
+            },
+            SPY: {
+                values: [1000, 1008, 1015, 1020, 1028, 1032, 1035],
+                returns: [0, 0.8, 1.5, 2.0, 2.8, 3.2, 3.5]
+            }
+        };
+
+        // Chart colors
+        const colors = {
+            ALPHA: '#1F7CEC',
+            SHIELD: '#30D158',
+            OMNI: '#BF5AF2',
+            SPY: '#FF9F0A'
+        };
+
+        let performanceChart = null;
+        let chartData = { ...demoData };
+        let hiddenSeries = new Set();
+        let comparisonStocks = [];
+
+        // Initialize chart on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            updateStats();
+            updatePortfolio();
+
+            // Time period buttons
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // In live version, this would fetch data for the period
+                    updateChart();
+                });
+            });
+
+            // Display mode change
+            document.getElementById('displayMode').addEventListener('change', updateChart);
+
+            // Projection toggle
+            document.getElementById('projectionToggle').addEventListener('change', updateChart);
+
+            // Try to fetch live data (will work when deployed)
+            fetchLiveData();
+        });
+
+        function initChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.dates,
+                    datasets: createDatasets()
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    const mode = document.getElementById('displayMode').value;
+                                    if (mode === 'returns') {
+                                        return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
+                                    }
+                                    return `${context.dataset.label}: $${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.5)',
+                                maxRotation: 0,
+                                maxTicksLimit: 8
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.5)',
+                                callback: function(value) {
+                                    const mode = document.getElementById('displayMode').value;
+                                    if (mode === 'returns') {
+                                        return value + '%';
+                                    }
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createDatasets() {
+            const mode = document.getElementById('displayMode').value;
+            const datasets = [];
+
+            ['ALPHA', 'SHIELD', 'OMNI', 'SPY'].forEach(series => {
+                if (!hiddenSeries.has(series)) {
+                    datasets.push({
+                        label: series,
+                        data: mode === 'returns' ? chartData[series].returns : chartData[series].values,
+                        borderColor: colors[series],
+                        backgroundColor: colors[series] + '20',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6
+                    });
+                }
+            });
+
+            // Add comparison stocks
+            comparisonStocks.forEach(stock => {
+                if (!hiddenSeries.has(stock.ticker) && stock.data) {
+                    datasets.push({
+                        label: stock.ticker,
+                        data: mode === 'returns' ? stock.data.returns : stock.data.values,
+                        borderColor: stock.color,
+                        backgroundColor: stock.color + '20',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        borderDash: [5, 5]
+                    });
+                }
+            });
+
+            return datasets;
+        }
+
+        function updateChart() {
+            if (!performanceChart) return;
+            performanceChart.data.datasets = createDatasets();
+            performanceChart.update();
+        }
+
+        function toggleSeries(series) {
+            const legendItem = document.querySelector(`.legend-item[data-series="${series}"]`);
+            if (hiddenSeries.has(series)) {
+                hiddenSeries.delete(series);
+                legendItem.classList.remove('hidden');
+            } else {
+                hiddenSeries.add(series);
+                legendItem.classList.add('hidden');
+            }
+            updateChart();
+        }
+
+        function addComparison() {
+            const ticker = document.getElementById('stockTicker').value.toUpperCase().trim();
+            if (!ticker) return;
+
+            // Check if already added
+            if (comparisonStocks.find(s => s.ticker === ticker)) {
+                alert(`${ticker} is already in the comparison`);
+                return;
+            }
+
+            // Generate a color for the new stock
+            const hue = (comparisonStocks.length * 60 + 180) % 360;
+            const color = `hsl(${hue}, 70%, 60%)`;
+
+            // Add placeholder - in production this would fetch from API
+            const stock = {
+                ticker: ticker,
+                color: color,
+                data: generateDemoStockData(ticker)
+            };
+
+            comparisonStocks.push(stock);
+            addLegendItem(stock);
+            updateChart();
+
+            document.getElementById('stockTicker').value = '';
+        }
+
+        function generateDemoStockData(ticker) {
+            // Generate random but plausible stock data for demo
+            const seed = ticker.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+            const volatility = (seed % 30 + 10) / 100;
+
+            let values = [1000];
+            let returns = [0];
+
+            for (let i = 1; i < chartData.dates.length; i++) {
+                const change = (Math.sin(seed + i) * volatility * 100);
+                const newReturn = returns[i-1] + change;
+                returns.push(parseFloat(newReturn.toFixed(2)));
+                values.push(parseFloat((1000 * (1 + newReturn/100)).toFixed(2)));
+            }
+
+            return { values, returns };
+        }
+
+        function addLegendItem(stock) {
+            const legend = document.getElementById('chartLegend');
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.setAttribute('data-series', stock.ticker);
+            item.onclick = () => toggleSeries(stock.ticker);
+
+            const lastReturn = stock.data.returns[stock.data.returns.length - 1];
+            const sign = lastReturn >= 0 ? '+' : '';
+
+            item.innerHTML = `
+                <div class="legend-color" style="background: ${stock.color};"></div>
+                <span class="legend-label">${stock.ticker}</span>
+                <span class="legend-value">${sign}${lastReturn.toFixed(2)}%</span>
+            `;
+
+            legend.appendChild(item);
+        }
+
+        function updateStats() {
+            // Find best performer
+            const performances = {
+                ALPHA: chartData.ALPHA.returns[chartData.ALPHA.returns.length - 1],
+                SHIELD: chartData.SHIELD.returns[chartData.SHIELD.returns.length - 1],
+                OMNI: chartData.OMNI.returns[chartData.OMNI.returns.length - 1]
+            };
+
+            const best = Object.entries(performances).reduce((a, b) => a[1] > b[1] ? a : b);
+            document.getElementById('bestPerformer').textContent = best[0];
+            document.getElementById('bestPerformer').style.color = colors[best[0]];
+
+            // Combined return (equal weight)
+            const combined = (performances.ALPHA + performances.SHIELD + performances.OMNI) / 3;
+            document.getElementById('combinedReturn').textContent = `+${combined.toFixed(2)}%`;
+
+            // vs SPY
+            const spyReturn = chartData.SPY.returns[chartData.SPY.returns.length - 1];
+            const alpha = combined - spyReturn;
+            document.getElementById('vsSpy').textContent = `+${alpha.toFixed(2)}%`;
+
+            // Data points
+            document.getElementById('dataPoints').textContent = `${chartData.dates.length} days`;
+
+            // Update legend values
+            document.getElementById('legend-alpha').textContent = `+${performances.ALPHA.toFixed(2)}%`;
+            document.getElementById('legend-shield').textContent = `+${performances.SHIELD.toFixed(2)}%`;
+            document.getElementById('legend-omni').textContent = `+${performances.OMNI.toFixed(2)}%`;
+            document.getElementById('legend-spy').textContent = `+${spyReturn.toFixed(2)}%`;
+        }
+
+        function updatePortfolio() {
+            const alpha = parseInt(document.getElementById('alphaSlider').value);
+            const shield = parseInt(document.getElementById('shieldSlider').value);
+            const omni = parseInt(document.getElementById('omniSlider').value);
+            const total = alpha + shield + omni;
+
+            document.getElementById('alphaValue').textContent = `${alpha}%`;
+            document.getElementById('shieldValue').textContent = `${shield}%`;
+            document.getElementById('omniValue').textContent = `${omni}%`;
+            document.getElementById('totalAllocation').textContent = `${total}%`;
+
+            // Calculate weighted return
+            const alphaReturn = 36.87;
+            const shieldReturn = 18.08;
+            const omniReturn = 20.73;
+
+            let weightedReturn = 0;
+            if (total > 0) {
+                weightedReturn = (alpha * alphaReturn + shield * shieldReturn + omni * omniReturn) / total;
+            }
+
+            document.getElementById('weightedReturn').textContent = `+${weightedReturn.toFixed(2)}%`;
+
+            const investmentValue = 10000 * (1 + weightedReturn / 100);
+            document.getElementById('investmentValue').textContent = `$${investmentValue.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+        }
+
+        async function fetchLiveData() {
+            // Try to fetch live data from Netlify function
+            try {
+                const response = await fetch('/.netlify/functions/composer-api?action=symphony-history');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.dates && data.dates.length > 0) {
+                        chartData = data;
+                        updateChart();
+                        updateStats();
+                    }
+                }
+            } catch (e) {
+                // API not available (local dev or error), keep using demo data
+                console.log('Using demo data - live API not available');
+            }
+        }
+    </script>
+</body>
+</html>
