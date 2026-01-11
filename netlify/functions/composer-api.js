@@ -163,6 +163,55 @@ exports.handler = async (event) => {
             return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
         }
 
+        // Test full symphony response
+        if (action === 'symphony-full') {
+            const results = {};
+            for (const [name, symphonyId] of Object.entries(SYMPHONY_IDS)) {
+                try {
+                    const url = `https://api.composer.trade/api/v0.1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`;
+                    const response = await fetch(url, { headers: authHeaders });
+                    const data = await response.json();
+                    results[name] = {
+                        status: response.status,
+                        allKeys: Object.keys(data),
+                        fullData: data
+                    };
+                } catch (e) {
+                    results[name] = { error: e.message };
+                }
+            }
+            return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
+        }
+
+        // Test reports endpoint with report-type
+        if (action === 'test-reports') {
+            const now = new Date().toISOString();
+            const startOfYear = '2025-01-01T00:00:00Z';
+            const reportTypes = ['trade-activity', 'performance', 'holdings', 'transactions'];
+            const results = {};
+
+            for (const reportType of reportTypes) {
+                try {
+                    const url = `https://api.composer.trade/api/v0.1/reports/${ACCOUNT_ID}?since=${startOfYear}&until=${now}&report-type=${reportType}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            ...authHeaders,
+                            'accept': 'text/csv'
+                        }
+                    });
+                    const text = await response.text();
+                    results[reportType] = {
+                        status: response.status,
+                        contentType: response.headers.get('content-type'),
+                        sample: text.slice(0, 1000)
+                    };
+                } catch (e) {
+                    results[reportType] = { error: e.message };
+                }
+            }
+            return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
+        }
+
         // Default: get current portfolio values
         const portfolioData = {};
 
