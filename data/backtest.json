@@ -1,0 +1,508 @@
+{
+  "periods": {
+    "1Y": {
+      "dateRange": { "start": "2023-10-25", "end": "2024-10-25" },
+      "vehicles": {
+        "OMNI": {
+          "type": "reactive",
+          "cumulativeReturn": 126.60,
+          "annualizedReturn": 125.90,
+          "maxDrawdown": -25.10,
+          "sharpeRatio": 1.92,
+          "standardDeviation": 48.70,
+          "calmarRatio": 5.02,
+          "alpha": 0.23,
+          "beta": 0.12
+        },
+        "SHIELD": {
+          "type": "reactive",
+          "cumulativeReturn": 19.00,
+          "annualizedReturn": 18.90,
+          "maxDrawdown": -7.10,
+          "sharpeRatio": 1.26,
+          "standardDeviation": 14.60,
+          "calmarRatio": 2.67,
+          "alpha": 0.35,
+          "beta": -0.02
+        },
+        "ALPHA": {
+          "type": "reactive",
+          "cumulativeReturn": 49.80,
+          "annualizedReturn": 49.60,
+          "maxDrawdown": -40.00,
+          "sharpeRatio": 1.01,
+          "standardDeviation": 54.70,
+          "calmarRatio": 1.24,
+          "alpha": 0.29,
+          "beta": 0.10
+        },
+        "SPY": {
+          "type": "growth",
+          "cumulativeReturn": 40.00,
+          "annualizedReturn": 39.90,
+          "maxDrawdown": -8.40,
+          "sharpeRatio": 2.84,
+          "standardDeviation": 12.10,
+          "calmarRatio": 4.73,
+          "alpha": null,
+          "beta": null
+        },
+        "QQQ": {
+          "type": "growth",
+          "cumulativeReturn": 42.40,
+          "annualizedReturn": 42.20,
+          "maxDrawdown": -13.60,
+          "sharpeRatio": 2.13,
+          "standardDeviation": 17.30,
+          "calmarRatio": 3.11,
+          "alpha": 0.10,
+          "beta": 0.66
+        },
+        "GBTC": {
+          "type": "growth",
+          "cumulativeReturn": 122.20,
+          "annualizedReturn": 121.50,
+          "maxDrawdown": -27.20,
+          "sharpeRatio": 1.70,
+          "standardDeviation": 56.10,
+          "calmarRatio": 4.48,
+          "alpha": 0.28,
+          "beta": 0.07
+        },
+        "TLT": {
+          "type": "safeHaven",
+          "cumulativeReturn": 14.80,
+          "annualizedReturn": 14.80,
+          "maxDrawdown": -11.80,
+          "sharpeRatio": 0.99,
+          "standardDeviation": 15.20,
+          "calmarRatio": 1.25,
+          "alpha": 0.33,
+          "beta": 0.09
+        },
+        "AGG": {
+          "type": "safeHaven",
+          "cumulativeReturn": 11.10,
+          "annualizedReturn": 11.10,
+          "maxDrawdown": -3.70,
+          "sharpeRatio": 1.77,
+          "standardDeviation": 6.10,
+          "calmarRatio": 2.98,
+          "alpha": 0.28,
+          "beta": 0.07
+        },
+        "GLD": {
+          "type": "safeHaven",
+          "cumulativeReturn": 37.90,
+          "annualizedReturn": 37.70,
+          "maxDrawdown": -5.80,
+          "sharpeRatio": 2.35,
+          "standardDeviation": 14.10,
+          "calmarRatio": 6.53,
+          "alpha": 0.27,
+          "beta": 0.23
+        }
+      }
+    },
+    "3Y": {
+      "dateRange": { "start": "2021-10-25", "end": "2024-10-25" },
+      "vehicles": {
+        "OMNI": {
+          "type": "reactive",
+          "cumulativeReturn": 15886.80,
+          "annualizedReturn": 442.80,
+          "maxDrawdown": -25.10,
+          "sharpeRatio": 3.67,
+          "standardDeviation": 49.60,
+          "calmarRatio": 17.67,
+          "alpha": -0.14,
+          "beta": 0.14
+        },
+        "SHIELD": {
+          "type": "reactive",
+          "cumulativeReturn": 648.40,
+          "annualizedReturn": 95.60,
+          "maxDrawdown": -27.10,
+          "sharpeRatio": 1.83,
+          "standardDeviation": 41.40,
+          "calmarRatio": 3.52,
+          "alpha": -0.01,
+          "beta": 0.15
+        },
+        "ALPHA": {
+          "type": "reactive",
+          "cumulativeReturn": 1100.40,
+          "annualizedReturn": 129.00,
+          "maxDrawdown": -40.00,
+          "sharpeRatio": 1.93,
+          "standardDeviation": 49.20,
+          "calmarRatio": 3.23,
+          "alpha": -0.01,
+          "beta": 0.12
+        },
+        "SPY": {
+          "type": "growth",
+          "cumulativeReturn": 31.30,
+          "annualizedReturn": 9.50,
+          "maxDrawdown": -24.50,
+          "sharpeRatio": 0.61,
+          "standardDeviation": 17.40,
+          "calmarRatio": 0.39,
+          "alpha": null,
+          "beta": null
+        },
+        "QQQ": {
+          "type": "growth",
+          "cumulativeReturn": 33.70,
+          "annualizedReturn": 10.20,
+          "maxDrawdown": -35.10,
+          "sharpeRatio": 0.53,
+          "standardDeviation": 23.70,
+          "calmarRatio": 0.29,
+          "alpha": 0.02,
+          "beta": 0.70
+        },
+        "GBTC": {
+          "type": "growth",
+          "cumulativeReturn": 17.00,
+          "annualizedReturn": 5.40,
+          "maxDrawdown": -85.40,
+          "sharpeRatio": 0.41,
+          "standardDeviation": 66.90,
+          "calmarRatio": 0.06,
+          "alpha": 0.07,
+          "beta": 0.12
+        },
+        "TLT": {
+          "type": "safeHaven",
+          "cumulativeReturn": -29.90,
+          "annualizedReturn": -11.20,
+          "maxDrawdown": -43.70,
+          "sharpeRatio": -0.57,
+          "standardDeviation": 17.90,
+          "calmarRatio": -0.26,
+          "alpha": 0.11,
+          "beta": 0.07
+        },
+        "AGG": {
+          "type": "safeHaven",
+          "cumulativeReturn": -5.90,
+          "annualizedReturn": -2.00,
+          "maxDrawdown": -17.30,
+          "sharpeRatio": -0.25,
+          "standardDeviation": 7.00,
+          "calmarRatio": -0.12,
+          "alpha": 0.12,
+          "beta": 0.57
+        },
+        "GLD": {
+          "type": "safeHaven",
+          "cumulativeReturn": 50.00,
+          "annualizedReturn": 14.50,
+          "maxDrawdown": -21.00,
+          "sharpeRatio": 1.03,
+          "standardDeviation": 14.20,
+          "calmarRatio": 0.69,
+          "alpha": 0.08,
+          "beta": 0.20
+        }
+      }
+    },
+    "5Y": {
+      "dateRange": { "start": "2019-10-25", "end": "2024-10-25" },
+      "vehicles": {
+        "OMNI": {
+          "type": "reactive",
+          "cumulativeReturn": 5205515.40,
+          "annualizedReturn": 779.20,
+          "maxDrawdown": -27.50,
+          "sharpeRatio": 3.89,
+          "standardDeviation": 60.60,
+          "calmarRatio": 28.30,
+          "alpha": -0.12,
+          "beta": 0.12
+        },
+        "SHIELD": {
+          "type": "reactive",
+          "cumulativeReturn": 4689.00,
+          "annualizedReturn": 116.90,
+          "maxDrawdown": -27.20,
+          "sharpeRatio": 1.95,
+          "standardDeviation": 44.50,
+          "calmarRatio": 4.29,
+          "alpha": 0.02,
+          "beta": 0.16
+        },
+        "ALPHA": {
+          "type": "reactive",
+          "cumulativeReturn": 161978.40,
+          "annualizedReturn": 339.00,
+          "maxDrawdown": -40.00,
+          "sharpeRatio": 2.64,
+          "standardDeviation": 63.00,
+          "calmarRatio": 8.48,
+          "alpha": 0.04,
+          "beta": 0.07
+        },
+        "SPY": {
+          "type": "growth",
+          "cumulativeReturn": 103.60,
+          "annualizedReturn": 15.30,
+          "maxDrawdown": -33.20,
+          "sharpeRatio": 0.79,
+          "standardDeviation": 20.60,
+          "calmarRatio": 0.46,
+          "alpha": null,
+          "beta": null
+        },
+        "QQQ": {
+          "type": "growth",
+          "cumulativeReturn": 161.60,
+          "annualizedReturn": 21.20,
+          "maxDrawdown": -35.10,
+          "sharpeRatio": 0.88,
+          "standardDeviation": 25.50,
+          "calmarRatio": 0.60,
+          "alpha": -0.01,
+          "beta": 0.75
+        },
+        "GBTC": {
+          "type": "growth",
+          "cumulativeReturn": 477.70,
+          "annualizedReturn": 42.10,
+          "maxDrawdown": -86.30,
+          "sharpeRatio": 0.84,
+          "standardDeviation": 75.60,
+          "calmarRatio": 0.49,
+          "alpha": 0.09,
+          "beta": 0.11
+        },
+        "TLT": {
+          "type": "safeHaven",
+          "cumulativeReturn": -24.80,
+          "annualizedReturn": -5.60,
+          "maxDrawdown": -48.40,
+          "sharpeRatio": -0.23,
+          "standardDeviation": 17.90,
+          "calmarRatio": -0.11,
+          "alpha": 0.16,
+          "beta": -0.18
+        },
+        "AGG": {
+          "type": "safeHaven",
+          "cumulativeReturn": -0.60,
+          "annualizedReturn": -0.10,
+          "maxDrawdown": -18.40,
+          "sharpeRatio": 0.02,
+          "standardDeviation": 6.80,
+          "calmarRatio": -0.01,
+          "alpha": 0.16,
+          "beta": 0.56
+        },
+        "GLD": {
+          "type": "safeHaven",
+          "cumulativeReturn": 78.60,
+          "annualizedReturn": 12.30,
+          "maxDrawdown": -22.00,
+          "sharpeRatio": 0.84,
+          "standardDeviation": 15.30,
+          "calmarRatio": 0.56,
+          "alpha": 0.14,
+          "beta": 0.21
+        }
+      }
+    },
+    "10Y": {
+      "dateRange": { "start": "2014-10-24", "end": "2024-10-25" },
+      "vehicles": {
+        "OMNI": {
+          "type": "reactive",
+          "cumulativeReturn": 153103398.70,
+          "annualizedReturn": 315.90,
+          "maxDrawdown": -36.40,
+          "sharpeRatio": 2.94,
+          "standardDeviation": 53.20,
+          "calmarRatio": 8.68,
+          "alpha": -0.08,
+          "beta": 0.14
+        },
+        "SHIELD": {
+          "type": "reactive",
+          "cumulativeReturn": 13770.50,
+          "annualizedReturn": 63.80,
+          "maxDrawdown": -29.20,
+          "sharpeRatio": 1.55,
+          "standardDeviation": 35.90,
+          "calmarRatio": 2.19,
+          "alpha": 0.05,
+          "beta": 0.15
+        },
+        "ALPHA": {
+          "type": "reactive",
+          "cumulativeReturn": 4626320.30,
+          "annualizedReturn": 193.00,
+          "maxDrawdown": -40.00,
+          "sharpeRatio": 2.27,
+          "standardDeviation": 53.40,
+          "calmarRatio": 4.83,
+          "alpha": 0.01,
+          "beta": 0.10
+        },
+        "SPY": {
+          "type": "growth",
+          "cumulativeReturn": 238.80,
+          "annualizedReturn": 13.00,
+          "maxDrawdown": -33.40,
+          "sharpeRatio": 0.79,
+          "standardDeviation": 17.40,
+          "calmarRatio": 0.39,
+          "alpha": null,
+          "beta": null
+        },
+        "QQQ": {
+          "type": "growth",
+          "cumulativeReturn": 444.70,
+          "annualizedReturn": 18.50,
+          "maxDrawdown": -35.10,
+          "sharpeRatio": 0.89,
+          "standardDeviation": 21.70,
+          "calmarRatio": 0.53,
+          "alpha": -0.01,
+          "beta": 0.74
+        },
+        "GBTC": {
+          "type": "growth",
+          "cumulativeReturn": 12848.80,
+          "annualizedReturn": 67.10,
+          "maxDrawdown": -89.90,
+          "sharpeRatio": 1.02,
+          "standardDeviation": 87.80,
+          "calmarRatio": 0.75,
+          "alpha": 0.10,
+          "beta": 0.05
+        },
+        "TLT": {
+          "type": "safeHaven",
+          "cumulativeReturn": -1.40,
+          "annualizedReturn": -0.10,
+          "maxDrawdown": -48.40,
+          "sharpeRatio": 0.07,
+          "standardDeviation": 15.30,
+          "calmarRatio": 0.00,
+          "alpha": 0.14,
+          "beta": -0.24
+        },
+        "AGG": {
+          "type": "safeHaven",
+          "cumulativeReturn": 15.30,
+          "annualizedReturn": 1.40,
+          "maxDrawdown": -18.40,
+          "sharpeRatio": 0.30,
+          "standardDeviation": 5.30,
+          "calmarRatio": 0.08,
+          "alpha": 0.13,
+          "beta": 0.30
+        },
+        "GLD": {
+          "type": "safeHaven",
+          "cumulativeReturn": 114.00,
+          "annualizedReturn": 7.90,
+          "maxDrawdown": -22.00,
+          "sharpeRatio": 0.61,
+          "standardDeviation": 14.20,
+          "calmarRatio": 0.36,
+          "alpha": 0.13,
+          "beta": 0.05
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "athWithVolatility": [
+      {
+        "name": "2024 ATH with Japan Carry Trade Unwind",
+        "dateRange": { "start": "2024-01-19", "end": "2024-10-22" },
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 80.40, "maxDrawdown": -25.10, "sharpeRatio": 1.72 },
+          "SHIELD": { "cumulativeReturn": 20.90, "maxDrawdown": -6.30, "sharpeRatio": 1.67 },
+          "ALPHA": { "cumulativeReturn": 9.90, "maxDrawdown": -40.00, "sharpeRatio": 0.50 },
+          "SPY": { "cumulativeReturn": 22.10, "maxDrawdown": -8.40, "sharpeRatio": 2.17 }
+        }
+      },
+      {
+        "name": "COVID Recovery Bull Run",
+        "dateRange": { "start": "2020-02-19", "end": "2022-01-04" },
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 27741.00, "maxDrawdown": -27.60, "sharpeRatio": 4.28 },
+          "SHIELD": { "cumulativeReturn": 509.30, "maxDrawdown": -18.00, "sharpeRatio": 2.14 },
+          "ALPHA": { "cumulativeReturn": 9725.30, "maxDrawdown": -34.20, "sharpeRatio": 3.37 },
+          "SPY": { "cumulativeReturn": 45.70, "maxDrawdown": -33.70, "sharpeRatio": 0.90 }
+        }
+      }
+    ],
+    "drawdownPeriods": [
+      {
+        "name": "2024 Summer Correction",
+        "dateRange": { "start": "2024-07-16", "end": "2024-09-19" },
+        "keyFactor": "Japan Carry Trade Unwind",
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 33.38, "maxDrawdown": -15.40, "sharpeRatio": 2.29 },
+          "SHIELD": { "cumulativeReturn": 22.14, "maxDrawdown": -1.50, "sharpeRatio": 3.96 },
+          "ALPHA": { "cumulativeReturn": -24.35, "maxDrawdown": -40.00, "sharpeRatio": -0.95 },
+          "SPY": { "cumulativeReturn": 1.08, "maxDrawdown": -8.41, "sharpeRatio": 0.42 }
+        }
+      },
+      {
+        "name": "2022 Bear Market",
+        "dateRange": { "start": "2022-01-04", "end": "2024-01-19" },
+        "keyFactor": "Interest Rates Increased",
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 5656.38, "maxDrawdown": -14.40, "sharpeRatio": 4.41 },
+          "SHIELD": { "cumulativeReturn": 562.36, "maxDrawdown": -27.20, "sharpeRatio": 2.13 },
+          "ALPHA": { "cumulativeReturn": 891.99, "maxDrawdown": -23.60, "sharpeRatio": 2.69 },
+          "SPY": { "cumulativeReturn": 4.22, "maxDrawdown": -24.50, "sharpeRatio": 0.20 }
+        }
+      },
+      {
+        "name": "COVID Crash",
+        "dateRange": { "start": "2020-02-19", "end": "2020-11-09" },
+        "keyFactor": "COVID-19 Pandemic",
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 4539.72, "maxDrawdown": -27.80, "sharpeRatio": 5.63 },
+          "SHIELD": { "cumulativeReturn": 503.76, "maxDrawdown": -18.00, "sharpeRatio": 3.51 },
+          "ALPHA": { "cumulativeReturn": 2436.01, "maxDrawdown": -34.30, "sharpeRatio": 4.23 },
+          "SPY": { "cumulativeReturn": 6.30, "maxDrawdown": -33.70, "sharpeRatio": 0.41 }
+        }
+      }
+    ],
+    "bullMarkets": [
+      {
+        "name": "2024 Pre-Correction Bull",
+        "dateRange": { "start": "2024-01-19", "end": "2024-07-16" },
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 19.80, "maxDrawdown": -25.10, "sharpeRatio": 1.10 },
+          "SHIELD": { "cumulativeReturn": -0.40, "maxDrawdown": -6.40, "sharpeRatio": -0.06 },
+          "ALPHA": { "cumulativeReturn": 37.60, "maxDrawdown": -10.20, "sharpeRatio": 1.94 },
+          "SPY": { "cumulativeReturn": 17.80, "maxDrawdown": -5.40, "sharpeRatio": 3.29 }
+        }
+      },
+      {
+        "name": "2020-2022 Post-COVID Bull",
+        "dateRange": { "start": "2020-11-09", "end": "2022-01-04" },
+        "vehicles": {
+          "OMNI": { "cumulativeReturn": 498.90, "maxDrawdown": -22.10, "sharpeRatio": 3.25 },
+          "SHIELD": { "cumulativeReturn": 1.00, "maxDrawdown": -11.50, "sharpeRatio": 0.13 },
+          "ALPHA": { "cumulativeReturn": 287.60, "maxDrawdown": -20.40, "sharpeRatio": 3.27 },
+          "SPY": { "cumulativeReturn": 37.10, "maxDrawdown": -5.10, "sharpeRatio": 2.22 }
+        }
+      }
+    ]
+  },
+  "realPerformance2025": {
+    "note": "Real money performance from Jan 2025 - Present ($1,000 initial investment per algo)",
+    "ALPHA": { "return": 36.87, "initialInvestment": 1000 },
+    "SHIELD": { "return": 18.08, "initialInvestment": 1000 },
+    "OMNI": { "return": 20.73, "initialInvestment": 1000 },
+    "combined": { "return": 25.23, "totalInvestment": 3000 }
+  }
+}

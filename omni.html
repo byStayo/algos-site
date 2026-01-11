@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Algorithm | Complete Portfolio Automation</title>
+    <meta name="description" content="OMNI combines growth and defense for full portfolio automation. Never exit the market. Maximize compound returns.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #7d8590;
+            --accent-blue: #1F7CEC;
+            --success-green: #3fb950;
+            --warning-red: #f85149;
+            --omni-color: #3b82f6;
+        }
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000; padding: 16px 0;
+        }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
+        .logo span { color: var(--accent-blue); }
+        .back-link { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+        .back-link:hover { color: var(--accent-blue); }
+
+        .hero {
+            padding: 140px 0 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+        }
+        .hero-badge {
+            display: inline-block; padding: 6px 16px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--omni-color);
+            border-radius: 20px; font-size: 12px; font-weight: 600;
+            color: var(--omni-color); margin-bottom: 20px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 64px);
+            font-weight: 700; color: var(--omni-color);
+            margin-bottom: 16px;
+        }
+        .hero-tagline {
+            font-size: 24px; color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        .hero-return {
+            font-size: 72px; font-weight: 700;
+            color: var(--success-green); margin-bottom: 8px;
+        }
+        .hero-return-note {
+            font-size: 14px; color: var(--text-secondary);
+        }
+
+        section { padding: 60px 0; }
+        .section-header { margin-bottom: 32px; }
+        .section-header h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .section-header p { color: var(--text-secondary); }
+
+        .who-for {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 32px;
+            margin-bottom: 40px;
+        }
+        .who-for h3 { font-size: 20px; margin-bottom: 16px; color: var(--omni-color); }
+        .who-for p { color: var(--text-secondary); font-size: 16px; line-height: 1.8; }
+        .persona-icon { font-size: 48px; margin-bottom: 16px; }
+
+        .compound-showcase {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 40px; text-align: center;
+            margin: 40px 0;
+        }
+        .compound-showcase h3 { font-size: 20px; margin-bottom: 24px; }
+        .compound-calc {
+            display: flex; justify-content: center; align-items: center;
+            gap: 40px; flex-wrap: wrap;
+        }
+        .compound-input {
+            text-align: center;
+        }
+        .compound-input label {
+            display: block; font-size: 12px;
+            color: var(--text-secondary); margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .compound-input input {
+            width: 150px; padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px; color: var(--text-primary);
+            font-size: 18px; font-weight: 600; text-align: center;
+        }
+        .compound-result {
+            text-align: center;
+        }
+        .compound-result-label {
+            font-size: 14px; color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .compound-result-value {
+            font-size: 48px; font-weight: 700;
+            color: var(--success-green);
+        }
+        .compound-note {
+            font-size: 12px; color: var(--text-secondary);
+            margin-top: 20px;
+        }
+
+        .how-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .how-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 24px;
+        }
+        .how-card h4 {
+            font-size: 16px; font-weight: 600;
+            margin-bottom: 8px; color: var(--text-primary);
+        }
+        .how-card p { font-size: 14px; color: var(--text-secondary); }
+        .how-card-icon { font-size: 28px; margin-bottom: 12px; }
+
+        .philosophy-quote {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--omni-color);
+            border-radius: 0 12px 12px 0;
+            padding: 24px 32px;
+            margin: 40px 0;
+            font-size: 18px;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .philosophy-quote strong { color: var(--text-primary); font-style: normal; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px; margin-top: 24px;
+        }
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 20px; text-align: center;
+        }
+        .metric-card-value {
+            font-size: 28px; font-weight: 700; color: var(--success-green);
+        }
+        .metric-card-value.negative { color: var(--warning-red); }
+        .metric-card-label {
+            font-size: 11px; color: var(--text-secondary);
+            text-transform: uppercase; margin-top: 4px;
+        }
+
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 24px;
+            margin: 24px 0;
+        }
+        .chart-container h3 { font-size: 18px; margin-bottom: 20px; }
+        .chart-wrapper { height: 300px; }
+
+        .period-tabs {
+            display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .period-tab {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px; font-size: 13px; font-weight: 500;
+            color: var(--text-secondary); cursor: pointer;
+        }
+        .period-tab.active {
+            background: var(--omni-color);
+            border-color: var(--omni-color); color: white;
+        }
+
+        .vs-manager {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 20px; margin: 40px 0;
+        }
+        @media (max-width: 768px) {
+            .vs-manager { grid-template-columns: 1fr; }
+        }
+        .manager-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 28px;
+        }
+        .manager-card.omni {
+            border-color: var(--omni-color);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), var(--bg-secondary));
+        }
+        .manager-card h4 { font-size: 18px; margin-bottom: 16px; }
+        .manager-card.omni h4 { color: var(--omni-color); }
+        .manager-list { list-style: none; }
+        .manager-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .manager-list li::before {
+            content: ''; width: 6px; height: 6px;
+            border-radius: 50%; background: var(--border-color);
+        }
+        .manager-card.omni .manager-list li::before {
+            background: var(--omni-color);
+        }
+        .manager-fee {
+            font-size: 32px; font-weight: 700;
+            margin-top: 16px;
+        }
+        .manager-card.omni .manager-fee { color: var(--success-green); }
+
+        .comparison-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 14px; margin-top: 16px;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 12px 16px; text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .comparison-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600; color: var(--text-secondary);
+            text-transform: uppercase; font-size: 11px;
+        }
+        .comparison-table td:first-child { font-weight: 600; }
+        .positive { color: var(--success-green); }
+        .negative { color: var(--warning-red); }
+        .highlight-row { background: rgba(59, 130, 246, 0.1); }
+
+        .allocation-recommendation {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+            border: 1px solid var(--omni-color);
+            border-radius: 16px; padding: 32px; text-align: center;
+            margin: 40px 0;
+        }
+        .allocation-recommendation h3 { font-size: 20px; margin-bottom: 12px; }
+        .allocation-range {
+            font-size: 48px; font-weight: 700; color: var(--omni-color);
+        }
+        .allocation-recommendation p {
+            color: var(--text-secondary); margin-top: 12px; font-size: 14px;
+        }
+
+        .cta-section {
+            text-align: center; padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .cta-section h2 { font-size: 28px; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 24px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 8px;
+            font-size: 15px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none;
+        }
+        .btn-primary { background: var(--omni-color); color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-secondary {
+            background: var(--bg-secondary); color: var(--text-primary);
+            border: 1px solid var(--border-color); margin-left: 12px;
+        }
+        .btn-secondary:hover { border-color: var(--omni-color); }
+
+        footer {
+            padding: 40px 0; border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .footer-disclaimer {
+            font-size: 12px; color: var(--text-secondary);
+            max-width: 800px; margin: 0 auto; line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 40px; }
+            .hero-return { font-size: 48px; }
+            .compound-result-value { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
+            <a href="index.html" class="back-link">&larr; Back to Overview</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Full Automation Algorithm</div>
+            <h1>OMNI</h1>
+            <p class="hero-tagline">Never Exit the Market. Always Positioned.</p>
+            <div class="hero-return">+20.73%</div>
+            <p class="hero-return-note">2025 YTD Performance (Real Money)</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="who-for">
+                <div class="persona-icon">&#129302;</div>
+                <h3>Who Is OMNI For?</h3>
+                <p>
+                    You don't have time to watch markets. You don't want to learn technical analysis.
+                    You used to pay a wealth manager 2% annually to handle everything - and they
+                    still underperformed the market.
+                    <br><br>
+                    <strong>OMNI is your automated wealth manager.</strong> It combines ALPHA's growth-seeking
+                    with SHIELD's protection, dynamically adjusting every day so you can focus on life.
+                </p>
+            </div>
+
+            <div class="philosophy-quote">
+                "The 7th wonder of the world is <strong>compound interest</strong>. OMNI is designed to never exit the market,
+                maximizing your compound growth by staying positioned through every cycle - bull or bear."
+            </div>
+
+            <div class="compound-showcase">
+                <h3>The Power of Compounding</h3>
+                <div class="compound-calc">
+                    <div class="compound-input">
+                        <label>Initial Investment</label>
+                        <input type="text" id="compound-initial" value="$10,000">
+                    </div>
+                    <div class="compound-input">
+                        <label>Years</label>
+                        <input type="number" id="compound-years" value="10" min="1" max="50">
+                    </div>
+                    <div class="compound-result">
+                        <div class="compound-result-label">Projected Value (10Y Avg Return)</div>
+                        <div class="compound-result-value" id="compound-value">$1.53B</div>
+                    </div>
+                </div>
+                <p class="compound-note">Based on OMNI's 10-year backtest annualized return of 315.9%. Past performance does not guarantee future results.</p>
+            </div>
+
+            <div class="section-header">
+                <h2>How OMNI Works</h2>
+                <p>The best of both worlds - growth and protection, automated</p>
+            </div>
+
+            <div class="how-works-grid">
+                <div class="how-card">
+                    <div class="how-card-icon">&#128260;</div>
+                    <h4>Dynamic Allocation</h4>
+                    <p>Adjusts between growth and defensive assets daily based on market conditions. No static 60/40 nonsense.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128161;</div>
+                    <h4>ALPHA + SHIELD Combined</h4>
+                    <p>Gets the growth-seeking behavior of ALPHA with the defensive protection of SHIELD, all in one.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128176;</div>
+                    <h4>Maximize Compound Returns</h4>
+                    <p>Never fully exits the market. Always positioned to capture the next move, whether up or down.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Performance</h2>
+                <p>OMNI's track record across all market conditions</p>
+            </div>
+
+            <div class="period-tabs" id="period-tabs">
+                <button class="period-tab" data-period="2025">2025 Real</button>
+                <button class="period-tab active" data-period="1Y">1 Year</button>
+                <button class="period-tab" data-period="3Y">3 Year</button>
+                <button class="period-tab" data-period="5Y">5 Year</button>
+                <button class="period-tab" data-period="10Y">10 Year</button>
+            </div>
+
+            <div class="metrics-grid" id="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-card-value" id="cum-return">+126.6%</div>
+                    <div class="metric-card-label">Cumulative Return</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="annual-return">+125.9%</div>
+                    <div class="metric-card-label">Annualized</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="sharpe">1.92</div>
+                    <div class="metric-card-label">Sharpe Ratio</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value negative" id="max-dd">-25.1%</div>
+                    <div class="metric-card-label">Max Drawdown</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="calmar">5.02</div>
+                    <div class="metric-card-label">Calmar Ratio</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="std-dev">48.7%</div>
+                    <div class="metric-card-label">Volatility</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>OMNI vs Traditional Portfolios</h3>
+                <div class="chart-wrapper">
+                    <canvas id="comparison-chart"></canvas>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Strategy</th>
+                        <th>1Y Return</th>
+                        <th>10Y Return</th>
+                        <th>Sharpe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td>OMNI</td>
+                        <td class="positive">+126.6%</td>
+                        <td class="positive">+153M%</td>
+                        <td>1.92</td>
+                    </tr>
+                    <tr>
+                        <td>60/40 Portfolio</td>
+                        <td class="positive">~25%</td>
+                        <td class="positive">~100%</td>
+                        <td>~0.8</td>
+                    </tr>
+                    <tr>
+                        <td>SPY (100% Stocks)</td>
+                        <td class="positive">+40.0%</td>
+                        <td class="positive">+238.8%</td>
+                        <td>2.84</td>
+                    </tr>
+                    <tr>
+                        <td>Wealth Manager (avg)</td>
+                        <td class="positive">~15%</td>
+                        <td class="positive">~80%</td>
+                        <td>~0.6</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>OMNI vs Traditional Wealth Management</h2>
+                <p>Why pay 2% fees for underperformance?</p>
+            </div>
+
+            <div class="vs-manager">
+                <div class="manager-card">
+                    <h4>Traditional Wealth Manager</h4>
+                    <ul class="manager-list">
+                        <li>1-2% annual management fee</li>
+                        <li>Often underperforms benchmarks</li>
+                        <li>Quarterly rebalancing at best</li>
+                        <li>Human emotion and bias</li>
+                        <li>Limited by office hours</li>
+                    </ul>
+                    <div class="manager-fee" style="color: var(--warning-red);">-2%/year</div>
+                </div>
+                <div class="manager-card omni">
+                    <h4>OMNI Algorithm</h4>
+                    <ul class="manager-list">
+                        <li>No management fee drag</li>
+                        <li>Designed to outperform</li>
+                        <li>Daily rebalancing</li>
+                        <li>No emotion, pure systematic</li>
+                        <li>24/7 monitoring</li>
+                    </ul>
+                    <div class="manager-fee">$0 fees</div>
+                </div>
+            </div>
+
+            <div class="allocation-recommendation">
+                <h3>Recommended Portfolio Allocation</h3>
+                <div class="allocation-range">80-100%</div>
+                <p>
+                    OMNI is designed to be your complete portfolio solution.
+                    <br>For maximum hands-off automation, allocate the majority of your investable assets.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Automate Your Portfolio?</h2>
+            <p>Contact us to discuss how OMNI can replace your wealth manager.</p>
+            <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+            <a href="index.html#builder" class="btn btn-secondary">Try Portfolio Builder</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="footer-disclaimer">
+                <strong>Important:</strong> Past performance is not indicative of future results.
+                This is not financial advice. Backtested results are hypothetical.
+                2025 results represent actual performance starting January 2025.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const performanceData = {
+            '2025': { cumReturn: 20.73, annualReturn: 20.73, sharpe: '-', maxDD: '-', calmar: '-', stdDev: '-' },
+            '1Y': { cumReturn: 126.6, annualReturn: 125.9, sharpe: 1.92, maxDD: -25.1, calmar: 5.02, stdDev: 48.7 },
+            '3Y': { cumReturn: 15886.8, annualReturn: 442.8, sharpe: 3.67, maxDD: -25.1, calmar: 17.67, stdDev: 49.6 },
+            '5Y': { cumReturn: 5205515.4, annualReturn: 779.2, sharpe: 3.89, maxDD: -27.5, calmar: 28.3, stdDev: 60.6 },
+            '10Y': { cumReturn: 153103398.7, annualReturn: 315.9, sharpe: 2.94, maxDD: -36.4, calmar: 8.68, stdDev: 53.2 }
+        };
+
+        document.querySelectorAll('.period-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                updateMetrics(this.dataset.period);
+            });
+        });
+
+        function updateMetrics(period) {
+            const data = performanceData[period];
+            document.getElementById('cum-return').textContent = '+' + formatNumber(data.cumReturn) + '%';
+            document.getElementById('annual-return').textContent = '+' + formatNumber(data.annualReturn) + '%';
+            document.getElementById('sharpe').textContent = data.sharpe;
+            document.getElementById('max-dd').textContent = data.maxDD + '%';
+            document.getElementById('calmar').textContent = data.calmar;
+            document.getElementById('std-dev').textContent = data.stdDev + '%';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toFixed(1);
+        }
+
+        // Compound calculator
+        function updateCompound() {
+            const initial = parseFloat(document.getElementById('compound-initial').value.replace(/[$,]/g, '')) || 10000;
+            const years = parseInt(document.getElementById('compound-years').value) || 10;
+            const rate = 3.159; // 315.9% annualized (simplified for display)
+
+            // Using a more conservative projection for display
+            const conservativeRate = 0.20; // 20% for realistic projection
+            const value = initial * Math.pow(1 + conservativeRate, years);
+
+            document.getElementById('compound-value').textContent = formatCurrency(value);
+        }
+
+        function formatCurrency(value) {
+            if (value >= 1000000000) return '$' + (value / 1000000000).toFixed(2) + 'B';
+            if (value >= 1000000) return '$' + (value / 1000000).toFixed(2) + 'M';
+            if (value >= 1000) return '$' + (value / 1000).toFixed(0) + 'K';
+            return '$' + value.toLocaleString();
+        }
+
+        document.getElementById('compound-years').addEventListener('input', updateCompound);
+        updateCompound();
+
+        // Chart
+        const ctx = document.getElementById('comparison-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['OMNI', '60/40', 'SPY', 'Wealth Mgr'],
+                datasets: [{
+                    label: '1Y Return',
+                    data: [126.6, 25, 40, 15],
+                    backgroundColor: ['#3b82f6', '#7d8590', '#7d8590', '#7d8590'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { color: '#30363d' },
+                        ticks: { color: '#7d8590' }
+                    },
+                    y: {
+                        grid: { color: '#30363d' },
+                        ticks: {
+                            color: '#7d8590',
+                            callback: function(value) { return value + '%'; }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algorithmic Trading Strategies | Anastassiades Global</title>
+    <title>Algorithmic Portfolio Management | ALPHA, SHIELD, OMNI</title>
+    <meta name="description" content="Proprietary algorithmic investment strategies designed to replace traditional portfolio management. ALPHA for growth, SHIELD for protection, OMNI for complete automation.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <style>
@@ -14,26 +18,32 @@
         }
 
         :root {
-            --bg-primary: #000000;
-            --bg-secondary: #0a0a0a;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.5);
-            --border-color: rgba(255, 255, 255, 0.08);
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #7d8590;
             --accent-blue: #1F7CEC;
-            --accent-green: #30D158;
-            --accent-red: #FF453A;
-            --accent-purple: #BF5AF2;
-            --accent-orange: #FF9F0A;
+            --accent-blue-hover: #3993FF;
+            --success-green: #3fb950;
+            --warning-red: #f85149;
+            --alpha-color: #22c55e;
+            --shield-color: #ef4444;
+            --omni-color: #3b82f6;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         /* Navigation */
@@ -42,39 +52,42 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 16px 0;
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            height: 52px;
+        nav .container {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
         }
 
         .nav-links {
             display: flex;
             gap: 32px;
+            list-style: none;
         }
 
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.2s ease;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .nav-links a:hover {
@@ -83,147 +96,306 @@
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 140px 0 80px;
             text-align: center;
-            padding: 120px 24px 80px;
-            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(31, 124, 236, 0.15), transparent);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .hero h1 {
-            font-size: clamp(48px, 8vw, 80px);
+            font-size: clamp(36px, 6vw, 56px);
             font-weight: 700;
-            letter-spacing: -2px;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .hero p {
-            font-size: 21px;
+        .hero-subtitle {
+            font-size: 18px;
             color: var(--text-secondary);
             max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* Performance Highlights */
+        .performance-highlights {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .perf-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 32px;
+            text-align: center;
+            min-width: 140px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .perf-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+        }
+
+        .perf-card.alpha { border-top: 3px solid var(--alpha-color); }
+        .perf-card.shield { border-top: 3px solid var(--shield-color); }
+        .perf-card.omni { border-top: 3px solid var(--omni-color); }
+
+        .perf-card-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .perf-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        .perf-card-note {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
             margin-bottom: 48px;
         }
 
-        /* Algorithm Cards */
-        .algos-section {
-            padding: 80px 24px;
-            max-width: 1200px;
+        .section-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
-        .section-title {
-            font-size: 32px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-bottom: 48px;
-            text-align: center;
+        /* Philosophy Section */
+        .philosophy {
+            background: var(--bg-secondary);
         }
 
-        .algo-grid {
+        .philosophy-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
         }
 
-        .algo-card {
-            background: var(--bg-card);
+        .philosophy-card {
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 12px;
             padding: 32px;
-            transition: all 0.3s ease;
         }
 
-        .algo-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.12);
-            transform: translateY(-4px);
-        }
-
-        .algo-header {
+        .philosophy-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 12px;
         }
 
-        .algo-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+        .philosophy-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 18px;
         }
 
-        .algo-icon.alpha { background: linear-gradient(135deg, #1F7CEC 0%, #0051D3 100%); }
-        .algo-icon.shield { background: linear-gradient(135deg, #30D158 0%, #00A532 100%); }
-        .algo-icon.omni { background: linear-gradient(135deg, #BF5AF2 0%, #8944C7 100%); }
+        .icon-circle.green { background: rgba(34, 197, 94, 0.2); }
+        .icon-circle.red { background: rgba(239, 68, 68, 0.2); }
+        .icon-circle.blue { background: rgba(59, 130, 246, 0.2); }
 
-        .algo-name {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+        /* Algo Cards Section */
+        .algo-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
         }
 
-        .algo-tagline {
+        .algo-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .algo-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .algo-card.alpha:hover { border-color: var(--alpha-color); }
+        .algo-card.shield:hover { border-color: var(--shield-color); }
+        .algo-card.omni:hover { border-color: var(--omni-color); }
+
+        .algo-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .algo-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .algo-card.alpha h3 { color: var(--alpha-color); }
+        .algo-card.shield h3 { color: var(--shield-color); }
+        .algo-card.omni h3 { color: var(--omni-color); }
+
+        .algo-card-return {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        .algo-card-tagline {
             font-size: 14px;
-            color: var(--text-muted);
+            color: var(--text-secondary);
+            margin-bottom: 16px;
         }
 
-        .algo-description {
+        .algo-card-description {
+            font-size: 14px;
             color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             line-height: 1.7;
         }
 
-        .algo-stats {
+        .algo-card-stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
         }
 
-        .stat {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 16px;
-            border-radius: 12px;
+        .algo-stat {
+            text-align: center;
         }
 
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            font-size: 24px;
+        .algo-stat-value {
+            font-size: 16px;
             font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .stat-value.positive { color: var(--accent-green); }
-        .stat-value.negative { color: var(--accent-red); }
+        .algo-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .algo-card-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .algo-card-link:hover {
+            text-decoration: underline;
+        }
 
         /* Interactive Chart Section */
-        .chart-section {
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
+        .interactive-section {
+            background: var(--bg-secondary);
         }
 
-        .chart-container {
-            background: var(--bg-card);
+        .interactive-chart-container {
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 32px;
         }
 
@@ -232,25 +404,24 @@
             justify-content: space-between;
             align-items: flex-start;
             flex-wrap: wrap;
-            gap: 24px;
-            margin-bottom: 32px;
+            gap: 20px;
+            margin-bottom: 24px;
         }
 
-        .chart-title {
-            font-size: 24px;
+        .chart-title-group h3 {
+            font-size: 20px;
             font-weight: 600;
-            letter-spacing: -0.5px;
+            margin-bottom: 4px;
         }
 
-        .chart-subtitle {
+        .chart-title-group p {
             font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 4px;
+            color: var(--text-secondary);
         }
 
         .chart-controls {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -351,7 +522,7 @@
         }
 
         .stock-input::placeholder {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-transform: none;
         }
 
@@ -375,24 +546,20 @@
         }
 
         .add-stock-btn:hover {
-            background: #2989FF;
-            transform: scale(1.02);
+            background: var(--accent-blue-hover);
         }
 
-        /* Chart Canvas */
-        .chart-wrapper {
-            position: relative;
+        .interactive-chart-wrapper {
             height: 400px;
             margin: 24px 0;
         }
 
-        /* Chart Legend */
         .chart-legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-            padding-top: 24px;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
             border-top: 1px solid var(--border-color);
         }
 
@@ -400,7 +567,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 8px 14px;
             background: rgba(255, 255, 255, 0.04);
             border-radius: 8px;
             cursor: pointer;
@@ -428,570 +595,1278 @@
 
         .legend-value {
             font-size: 13px;
-            color: var(--text-muted);
-            margin-left: 4px;
-        }
-
-        /* Projection Toggle */
-        .projection-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-        }
-
-        .projection-toggle label {
-            font-size: 13px;
             color: var(--text-secondary);
-            cursor: pointer;
         }
 
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
-            border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: white;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-            background: var(--accent-blue);
-        }
-
-        .toggle-switch input:checked + .toggle-slider:before {
-            transform: translateX(20px);
-        }
-
-        /* Stats Summary */
         .chart-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 16px;
             margin-top: 24px;
         }
 
-        .chart-stat {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 20px;
+        .chart-stat-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
+            padding: 16px;
             text-align: center;
         }
 
-        .chart-stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
         .chart-stat-value {
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--success-green);
         }
 
-        /* Portfolio Builder */
-        .portfolio-section {
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
+        .chart-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 4px;
         }
 
-        .portfolio-builder {
-            background: var(--bg-card);
+        /* Portfolio Builder Section */
+        .builder {
+            background: var(--bg-primary);
+        }
+
+        .builder-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .builder-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .builder-controls {
+            background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 32px;
         }
 
-        .allocation-sliders {
+        .builder-controls h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        .control-label {
             display: flex;
-            flex-direction: column;
-            gap: 24px;
-            margin: 32px 0;
-        }
-
-        .slider-row {
-            display: grid;
-            grid-template-columns: 120px 1fr 80px;
+            justify-content: space-between;
             align-items: center;
-            gap: 20px;
+            margin-bottom: 8px;
         }
 
-        .slider-label {
+        .control-label span {
+            font-size: 14px;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .slider-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
+        .control-value {
+            font-size: 14px;
+            color: var(--accent-blue);
+            font-weight: 600;
         }
 
         input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
             width: 100%;
             height: 6px;
             border-radius: 3px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--bg-tertiary);
             outline: none;
+            -webkit-appearance: none;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: white;
+            background: var(--accent-blue);
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease;
+            transition: transform 0.1s;
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.1);
         }
 
-        .slider-value {
-            font-size: 18px;
-            font-weight: 600;
-            text-align: right;
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
         }
 
-        .portfolio-result {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 32px;
+        input[type="number"]:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
         }
 
-        .result-row {
+        .allocation-list {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .allocation-item {
             display: flex;
+            align-items: center;
             justify-content: space-between;
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .result-row:last-child {
+        .allocation-item:last-child {
             border-bottom: none;
-            padding-bottom: 0;
         }
 
-        .result-label {
-            color: var(--text-secondary);
+        .allocation-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .result-value {
+        .allocation-ticker {
             font-weight: 600;
+            font-size: 14px;
         }
 
-        /* Philosophy Section */
-        .philosophy-section {
-            padding: 80px 24px;
+        .allocation-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .allocation-type.reactive { background: rgba(59, 130, 246, 0.2); color: var(--omni-color); }
+        .allocation-type.growth { background: rgba(34, 197, 94, 0.2); color: var(--alpha-color); }
+        .allocation-type.safehaven { background: rgba(239, 68, 68, 0.2); color: var(--shield-color); }
+
+        .allocation-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .allocation-slider {
+            width: 120px;
+        }
+
+        .allocation-percent {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+        }
+
+        .remove-btn:hover {
+            color: var(--warning-red);
+        }
+
+        .add-asset {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .add-asset input {
+            flex: 1;
+        }
+
+        .add-asset button {
+            padding: 12px 20px;
+        }
+
+        .total-allocation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .total-allocation span:first-child {
+            font-weight: 500;
+        }
+
+        .total-allocation span:last-child {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .total-allocation.warning span:last-child {
+            color: var(--warning-red);
+        }
+
+        .total-allocation.success span:last-child {
+            color: var(--success-green);
+        }
+
+        /* Results Panel */
+        .builder-results {
             background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
         }
 
-        .philosophy-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .philosophy-content h2 {
-            font-size: 32px;
+        .builder-results h3 {
+            font-size: 18px;
             font-weight: 600;
             margin-bottom: 24px;
         }
 
-        .philosophy-content p {
+        .projection-chart {
+            height: 300px;
+            margin-bottom: 24px;
+        }
+
+        .results-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .metric-box {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric-box-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        .metric-box-value.negative {
+            color: var(--warning-red);
+        }
+
+        .metric-box-label {
+            font-size: 12px;
             color: var(--text-secondary);
-            font-size: 18px;
-            line-height: 1.8;
+            margin-top: 4px;
+        }
+
+        .data-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .toggle-btn:hover:not(.active) {
+            border-color: var(--accent-blue);
+        }
+
+        /* Example Portfolios */
+        .example-portfolios {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .example-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .example-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
             margin-bottom: 16px;
+        }
+
+        .example-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .example-icon.growth { background: rgba(34, 197, 94, 0.15); }
+        .example-icon.income { background: rgba(59, 130, 246, 0.15); }
+        .example-icon.auto { background: rgba(168, 85, 247, 0.15); }
+
+        .example-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .example-card-persona {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .example-card-story {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .example-allocation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .allocation-chip {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .allocation-chip.highlight {
+            background: rgba(31, 124, 236, 0.2);
+            color: var(--accent-blue);
+        }
+
+        /* Performance Table */
+        .performance-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .performance-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .performance-table tr:hover td {
+            background: var(--bg-secondary);
+        }
+
+        .performance-table td:first-child {
+            font-weight: 600;
+        }
+
+        .positive { color: var(--success-green); }
+        .negative { color: var(--warning-red); }
+
+        /* Contact Section */
+        .contact {
+            background: var(--bg-secondary);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contact-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .contact-info p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .contact-form {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
         }
 
         /* Footer */
         footer {
-            padding: 48px 24px;
-            text-align: center;
+            padding: 48px 0;
             border-top: 1px solid var(--border-color);
         }
 
-        .footer-text {
-            color: var(--text-muted);
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-disclaimer {
+            font-size: 12px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 24px;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
             font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .performance-highlights {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .perf-card {
+                width: 100%;
+                max-width: 280px;
+            }
+
             .chart-header {
                 flex-direction: column;
             }
 
             .chart-controls {
                 width: 100%;
-                justify-content: flex-start;
             }
 
             .time-periods {
                 width: 100%;
                 overflow-x: auto;
-                justify-content: flex-start;
             }
+        }
 
-            .slider-row {
-                grid-template-columns: 100px 1fr 60px;
-                gap: 12px;
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-            .algo-grid {
-                grid-template-columns: 1fr;
-            }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav>
-        <div class="nav-container">
-            <div class="logo">Anastassiades Global</div>
-            <div class="nav-links">
-                <a href="#algorithms">Algorithms</a>
-                <a href="#performance">Performance</a>
-                <a href="#portfolio">Portfolio</a>
-                <a href="#philosophy">Philosophy</a>
-            </div>
+        <div class="container">
+            <a href="/" class="logo">Anastasiades<span>Algos</span></a>
+            <ul class="nav-links">
+                <li><a href="#philosophy">Philosophy</a></li>
+                <li><a href="#algorithms">Algorithms</a></li>
+                <li><a href="#interactive">Live Performance</a></li>
+                <li><a href="#builder">Portfolio Builder</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <section class="hero">
-        <h1>Algorithmic Trading</h1>
-        <p>Three distinct strategies designed to capture growth, provide protection, and deliver complete automation.</p>
+        <div class="container">
+            <div class="hero-badge">2+ Years Development | 1 Year Live</div>
+            <h1>Algorithmic Portfolio Management for Everyone</h1>
+            <p class="hero-subtitle">
+                Money never disappears, it just flows. Our algorithms follow that flow,
+                solving financial literacy and speed-to-market so you can focus on living.
+            </p>
+
+            <div class="performance-highlights">
+                <div class="perf-card alpha">
+                    <div class="perf-card-label">ALPHA</div>
+                    <div class="perf-card-value" id="hero-alpha">+36.87%</div>
+                    <div class="perf-card-note">2025 YTD</div>
+                </div>
+                <div class="perf-card shield">
+                    <div class="perf-card-label">SHIELD</div>
+                    <div class="perf-card-value" id="hero-shield">+18.08%</div>
+                    <div class="perf-card-note">2025 YTD</div>
+                </div>
+                <div class="perf-card omni">
+                    <div class="perf-card-label">OMNI</div>
+                    <div class="perf-card-value" id="hero-omni">+20.73%</div>
+                    <div class="perf-card-note">2025 YTD</div>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#builder" class="btn btn-primary">Build Your Portfolio</a>
+                <a href="#contact" class="btn btn-secondary">Contact for Investment</a>
+            </div>
+        </div>
     </section>
 
-    <section class="algos-section" id="algorithms">
-        <h2 class="section-title">Our Strategies</h2>
-        <div class="algo-grid">
-            <div class="algo-card">
-                <div class="algo-header">
-                    <div class="algo-icon alpha">A</div>
-                    <div>
-                        <div class="algo-name">ALPHA</div>
-                        <div class="algo-tagline">Aggressive Growth</div>
-                    </div>
-                </div>
-                <p class="algo-description">Long exposure only. Designed for investors who understand defensive positioning but need growth. ALPHA identifies momentum opportunities and rides them with conviction.</p>
-                <div class="algo-stats">
-                    <div class="stat">
-                        <div class="stat-label">2025 YTD Return</div>
-                        <div class="stat-value positive" id="alpha-return">+36.87%</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Strategy</div>
-                        <div class="stat-value">Long Only</div>
-                    </div>
-                </div>
+    <!-- Philosophy Section -->
+    <section id="philosophy" class="philosophy">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Philosophy</h2>
+                <p>Traditional algorithms solve for mathematical inefficiencies. We solve for human ones.</p>
             </div>
 
-            <div class="algo-card">
-                <div class="algo-header">
-                    <div class="algo-icon shield">S</div>
-                    <div>
-                        <div class="algo-name">SHIELD</div>
-                        <div class="algo-tagline">Defensive Protection</div>
-                    </div>
+            <div class="philosophy-grid">
+                <div class="philosophy-card">
+                    <h3>
+                        <span class="icon-circle blue">$</span>
+                        Money Flows, Never Gone
+                    </h3>
+                    <p>Markets don't destroy wealth, they redistribute it. Our algorithms follow the flow of capital between growth and safe-haven assets, positioning you where the money is moving.</p>
                 </div>
-                <p class="algo-description">Short and defensive positions. Built for those who know how to grow wealth but need protection. SHIELD hedges against downturns while capturing inverse opportunities.</p>
-                <div class="algo-stats">
-                    <div class="stat">
-                        <div class="stat-label">2025 YTD Return</div>
-                        <div class="stat-value positive" id="shield-return">+18.08%</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Strategy</div>
-                        <div class="stat-value">Short/Hedge</div>
-                    </div>
+                <div class="philosophy-card">
+                    <h3>
+                        <span class="icon-circle green">%</span>
+                        Compound Interest is King
+                    </h3>
+                    <p>The 7th wonder of the world. OMNI is designed to never exit the market, maximizing your compound growth by staying positioned through every cycle.</p>
+                </div>
+                <div class="philosophy-card">
+                    <h3>
+                        <span class="icon-circle red">!</span>
+                        Solving Human Inefficiency
+                    </h3>
+                    <p>Most investors lack time to watch news, knowledge to read markets, or speed to act. We replace that with systematic execution that's faster and more consistent than any human.</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="algo-card">
-                <div class="algo-header">
-                    <div class="algo-icon omni">O</div>
-                    <div>
-                        <div class="algo-name">OMNI</div>
-                        <div class="algo-tagline">Full Automation</div>
+    <!-- Algorithms Section -->
+    <section id="algorithms">
+        <div class="container">
+            <div class="section-header">
+                <h2>Three Algorithms, One Solution</h2>
+                <p>Choose based on what you already know. Let us handle what you don't.</p>
+            </div>
+
+            <div class="algo-cards">
+                <!-- ALPHA Card -->
+                <div class="algo-card alpha">
+                    <div class="algo-card-header">
+                        <h3>ALPHA</h3>
+                        <div class="algo-card-return">+36.87%</div>
+                    </div>
+                    <div class="algo-card-tagline">Capture the Next Big Thing</div>
+                    <p class="algo-card-description">
+                        <strong>For:</strong> Investors who understand fixed income and defense, but need help finding growth opportunities.
+                        <br><br>
+                        ALPHA provides long-only exposure to high-growth sectors. It continuously monitors market trends and reallocates to where the upside is forming.
+                    </p>
+                    <div class="algo-card-stats">
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">49.8%</div>
+                            <div class="algo-stat-label">1Y Backtest</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">1.01</div>
+                            <div class="algo-stat-label">Sharpe</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">-40%</div>
+                            <div class="algo-stat-label">Max DD</div>
+                        </div>
+                    </div>
+                    <a href="alpha.html" class="algo-card-link">Learn more about ALPHA &rarr;</a>
+                </div>
+
+                <!-- SHIELD Card -->
+                <div class="algo-card shield">
+                    <div class="algo-card-header">
+                        <h3>SHIELD</h3>
+                        <div class="algo-card-return">+18.08%</div>
+                    </div>
+                    <div class="algo-card-tagline">Protect Your Downside</div>
+                    <p class="algo-card-description">
+                        <strong>For:</strong> Investors who know growth and can pick winners, but need automated downside protection.
+                        <br><br>
+                        SHIELD provides defensive exposure when markets turn. It shifts to safe-haven assets (bonds, gold, treasuries) to minimize drawdowns.
+                    </p>
+                    <div class="algo-card-stats">
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">19.0%</div>
+                            <div class="algo-stat-label">1Y Backtest</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">1.26</div>
+                            <div class="algo-stat-label">Sharpe</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">-7.1%</div>
+                            <div class="algo-stat-label">Max DD</div>
+                        </div>
+                    </div>
+                    <a href="shield.html" class="algo-card-link">Learn more about SHIELD &rarr;</a>
+                </div>
+
+                <!-- OMNI Card -->
+                <div class="algo-card omni">
+                    <div class="algo-card-header">
+                        <h3>OMNI</h3>
+                        <div class="algo-card-return">+20.73%</div>
+                    </div>
+                    <div class="algo-card-tagline">Complete Portfolio Automation</div>
+                    <p class="algo-card-description">
+                        <strong>For:</strong> Investors who want full automation without paying 2% management fees.
+                        <br><br>
+                        OMNI combines ALPHA's growth-seeking with SHIELD's protection. It never exits the market, always following the money flow to maximize compound returns.
+                    </p>
+                    <div class="algo-card-stats">
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">126.6%</div>
+                            <div class="algo-stat-label">1Y Backtest</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">1.92</div>
+                            <div class="algo-stat-label">Sharpe</div>
+                        </div>
+                        <div class="algo-stat">
+                            <div class="algo-stat-value">-25.1%</div>
+                            <div class="algo-stat-label">Max DD</div>
+                        </div>
+                    </div>
+                    <a href="omni.html" class="algo-card-link">Learn more about OMNI &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Performance Section -->
+    <section id="interactive" class="interactive-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Live Performance</h2>
+                <p>Track real-time performance and compare against any stock or benchmark.</p>
+            </div>
+
+            <div class="interactive-chart-container">
+                <div class="chart-header">
+                    <div class="chart-title-group">
+                        <h3>2025 Performance Comparison</h3>
+                        <p>Daily returns since January 1, 2025</p>
+                    </div>
+                    <div class="chart-controls">
+                        <div class="time-periods">
+                            <button class="time-btn" data-period="1W">1W</button>
+                            <button class="time-btn" data-period="1M">1M</button>
+                            <button class="time-btn" data-period="3M">3M</button>
+                            <button class="time-btn active" data-period="YTD">YTD</button>
+                            <button class="time-btn" data-period="ALL">All</button>
+                        </div>
                     </div>
                 </div>
-                <p class="algo-description">Complete automation with both long and short exposure. For those who want hands-off wealth building. OMNI adapts to any market condition, capturing opportunities in both directions.</p>
-                <div class="algo-stats">
-                    <div class="stat">
-                        <div class="stat-label">2025 YTD Return</div>
-                        <div class="stat-value positive" id="omni-return">+20.73%</div>
+
+                <div class="chart-controls" style="margin-bottom: 16px;">
+                    <select class="custom-select" id="displayMode">
+                        <option value="returns">% Return</option>
+                        <option value="value">Dollar Value</option>
+                    </select>
+
+                    <div class="stock-input-group">
+                        <input type="text" class="stock-input" id="stockTicker" placeholder="AAPL" maxlength="5">
+                        <button class="add-stock-btn" onclick="addComparison()">Compare</button>
                     </div>
-                    <div class="stat">
-                        <div class="stat-label">Strategy</div>
-                        <div class="stat-value">Long & Short</div>
+                </div>
+
+                <div class="interactive-chart-wrapper">
+                    <canvas id="interactiveChart"></canvas>
+                </div>
+
+                <div class="chart-legend" id="chartLegend">
+                    <div class="legend-item" data-series="ALPHA" onclick="toggleSeries('ALPHA')">
+                        <div class="legend-color" style="background: #22c55e;"></div>
+                        <span class="legend-label">ALPHA</span>
+                        <span class="legend-value" id="legend-alpha">--</span>
+                    </div>
+                    <div class="legend-item" data-series="SHIELD" onclick="toggleSeries('SHIELD')">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span class="legend-label">SHIELD</span>
+                        <span class="legend-value" id="legend-shield">--</span>
+                    </div>
+                    <div class="legend-item" data-series="OMNI" onclick="toggleSeries('OMNI')">
+                        <div class="legend-color" style="background: #3b82f6;"></div>
+                        <span class="legend-label">OMNI</span>
+                        <span class="legend-value" id="legend-omni">--</span>
+                    </div>
+                    <div class="legend-item" data-series="SPY" onclick="toggleSeries('SPY')" id="spy-legend-item" style="display: none;">
+                        <div class="legend-color" style="background: #f59e0b;"></div>
+                        <span class="legend-label">SPY</span>
+                        <span class="legend-value" id="legend-spy">--</span>
+                    </div>
+                </div>
+
+                <div class="chart-stats">
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-value" id="bestPerformer">--</div>
+                        <div class="chart-stat-label">Best Performer</div>
+                    </div>
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-value" id="avgReturn">--</div>
+                        <div class="chart-stat-label">Avg Algo Return</div>
+                    </div>
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-value" id="vsSpy">--</div>
+                        <div class="chart-stat-label">vs SPY Alpha</div>
+                    </div>
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-value" id="dataPoints">Loading...</div>
+                        <div class="chart-stat-label">Data Points</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="chart-section" id="performance">
-        <div class="chart-container">
-            <div class="chart-header">
-                <div>
-                    <h3 class="chart-title">Interactive Performance</h3>
-                    <p class="chart-subtitle">Compare strategies and benchmark against any stock</p>
-                </div>
-                <div class="chart-controls">
-                    <div class="time-periods">
-                        <button class="time-btn" data-period="1W">1W</button>
-                        <button class="time-btn" data-period="1M">1M</button>
-                        <button class="time-btn" data-period="3M">3M</button>
-                        <button class="time-btn" data-period="6M">6M</button>
-                        <button class="time-btn active" data-period="YTD">YTD</button>
-                        <button class="time-btn" data-period="1Y">1Y</button>
-                        <button class="time-btn" data-period="ALL">All</button>
+    <!-- Portfolio Builder Section -->
+    <section id="builder" class="builder">
+        <div class="container">
+            <div class="section-header">
+                <h2>Build Your Portfolio</h2>
+                <p>See how your custom allocation would have performed and project future growth.</p>
+            </div>
+
+            <div class="builder-container">
+                <!-- Controls Panel -->
+                <div class="builder-controls">
+                    <h3>Configure Your Portfolio</h3>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Starting Investment</span>
+                            <span class="control-value" id="investment-display">$10,000</span>
+                        </div>
+                        <input type="range" id="investment-slider" min="1000" max="1000000" step="1000" value="10000">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Time Horizon</span>
+                            <span class="control-value" id="years-display">10 years</span>
+                        </div>
+                        <input type="range" id="years-slider" min="1" max="35" value="10">
+                    </div>
+
+                    <div class="data-toggle">
+                        <button class="toggle-btn active" data-source="real">2025 Real</button>
+                        <button class="toggle-btn" data-source="backtest">Backtest</button>
+                        <button class="toggle-btn" data-source="blended">Blended</button>
+                    </div>
+
+                    <div class="allocation-list" id="allocation-list">
+                        <!-- Allocations will be populated by JS -->
+                    </div>
+
+                    <div class="add-asset">
+                        <input type="text" id="ticker-input" placeholder="Add ticker (e.g., AAPL, TSLA)">
+                        <button class="btn btn-primary" onclick="addTicker()">Add</button>
+                    </div>
+
+                    <div class="total-allocation" id="total-allocation">
+                        <span>Total Allocation</span>
+                        <span>100%</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="chart-controls" style="margin-bottom: 16px;">
-                <select class="custom-select" id="displayMode">
-                    <option value="returns">% Return</option>
-                    <option value="value">Dollar Value</option>
-                </select>
+                <!-- Results Panel -->
+                <div class="builder-results">
+                    <h3>Projected Performance</h3>
 
-                <div class="stock-input-group">
-                    <input type="text" class="stock-input" id="stockTicker" placeholder="AAPL" maxlength="5">
-                    <button class="add-stock-btn" onclick="addComparison()">Compare</button>
-                </div>
-
-                <div class="projection-toggle">
-                    <label for="projectionToggle">Show Projection</label>
-                    <div class="toggle-switch">
-                        <input type="checkbox" id="projectionToggle">
-                        <span class="toggle-slider"></span>
+                    <div class="projection-chart">
+                        <canvas id="projection-chart"></canvas>
                     </div>
-                </div>
-            </div>
 
-            <div class="chart-wrapper">
-                <canvas id="performanceChart"></canvas>
-            </div>
-
-            <div class="chart-legend" id="chartLegend">
-                <div class="legend-item" data-series="ALPHA" onclick="toggleSeries('ALPHA')">
-                    <div class="legend-color" style="background: #1F7CEC;"></div>
-                    <span class="legend-label">ALPHA</span>
-                    <span class="legend-value" id="legend-alpha">+36.87%</span>
-                </div>
-                <div class="legend-item" data-series="SHIELD" onclick="toggleSeries('SHIELD')">
-                    <div class="legend-color" style="background: #30D158;"></div>
-                    <span class="legend-label">SHIELD</span>
-                    <span class="legend-value" id="legend-shield">+18.08%</span>
-                </div>
-                <div class="legend-item" data-series="OMNI" onclick="toggleSeries('OMNI')">
-                    <div class="legend-color" style="background: #BF5AF2;"></div>
-                    <span class="legend-label">OMNI</span>
-                    <span class="legend-value" id="legend-omni">+20.73%</span>
-                </div>
-                <div class="legend-item" data-series="SPY" onclick="toggleSeries('SPY')">
-                    <div class="legend-color" style="background: #FF9F0A;"></div>
-                    <span class="legend-label">SPY</span>
-                    <span class="legend-value" id="legend-spy">+3.50%</span>
-                </div>
-            </div>
-
-            <div class="chart-stats">
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Best Performer</div>
-                    <div class="chart-stat-value" id="bestPerformer" style="color: #1F7CEC;">ALPHA</div>
-                </div>
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Combined Return</div>
-                    <div class="chart-stat-value" id="combinedReturn" style="color: #30D158;">+25.23%</div>
-                </div>
-                <div class="chart-stat">
-                    <div class="chart-stat-label">vs SPY Alpha</div>
-                    <div class="chart-stat-value" id="vsSpy" style="color: #BF5AF2;">+21.73%</div>
-                </div>
-                <div class="chart-stat">
-                    <div class="chart-stat-label">Data Points</div>
-                    <div class="chart-stat-value" id="dataPoints">7 days</div>
+                    <div class="results-metrics">
+                        <div class="metric-box">
+                            <div class="metric-box-value" id="final-value">$26,700</div>
+                            <div class="metric-box-label">Final Value</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-box-value" id="total-return">+167%</div>
+                            <div class="metric-box-label">Total Return</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-box-value" id="annual-return">+10.3%</div>
+                            <div class="metric-box-label">Annualized</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-box-value" id="vs-spy">+42%</div>
+                            <div class="metric-box-label">vs S&P 500</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="portfolio-section" id="portfolio">
-        <div class="portfolio-builder">
-            <h3 class="chart-title">Portfolio Builder</h3>
-            <p class="chart-subtitle" style="margin-top: 8px;">Design your custom allocation across strategies</p>
-
-            <div class="allocation-sliders">
-                <div class="slider-row">
-                    <div class="slider-label">
-                        <span class="slider-dot" style="background: #1F7CEC;"></span>
-                        ALPHA
-                    </div>
-                    <input type="range" min="0" max="100" value="40" id="alphaSlider" oninput="updatePortfolio()">
-                    <div class="slider-value" id="alphaValue">40%</div>
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label">
-                        <span class="slider-dot" style="background: #30D158;"></span>
-                        SHIELD
-                    </div>
-                    <input type="range" min="0" max="100" value="30" id="shieldSlider" oninput="updatePortfolio()">
-                    <div class="slider-value" id="shieldValue">30%</div>
-                </div>
-                <div class="slider-row">
-                    <div class="slider-label">
-                        <span class="slider-dot" style="background: #BF5AF2;"></span>
-                        OMNI
-                    </div>
-                    <input type="range" min="0" max="100" value="30" id="omniSlider" oninput="updatePortfolio()">
-                    <div class="slider-value" id="omniValue">30%</div>
-                </div>
+    <!-- Example Portfolios -->
+    <section id="examples">
+        <div class="container">
+            <div class="section-header">
+                <h2>Example Portfolios</h2>
+                <p>Click to load a pre-built portfolio based on common investor profiles.</p>
             </div>
 
-            <div class="portfolio-result">
-                <div class="result-row">
-                    <span class="result-label">Total Allocation</span>
-                    <span class="result-value" id="totalAllocation">100%</span>
+            <div class="example-portfolios">
+                <!-- Growth Protector -->
+                <div class="example-card" onclick="loadExample('growth')">
+                    <div class="example-card-header">
+                        <div class="example-icon growth">&#128640;</div>
+                        <div>
+                            <h4>The Growth Protector</h4>
+                            <div class="example-card-persona">Young Investor</div>
+                        </div>
+                    </div>
+                    <p class="example-card-story">
+                        You believe tech and crypto are the future. You pick winners.
+                        But you've been burned by drawdowns before. SHIELD guards your downside
+                        while you chase alpha.
+                    </p>
+                    <div class="example-allocation">
+                        <span class="allocation-chip">40% QQQ</span>
+                        <span class="allocation-chip">20% GBTC</span>
+                        <span class="allocation-chip highlight">30% SHIELD</span>
+                        <span class="allocation-chip">10% NVDA</span>
+                    </div>
                 </div>
-                <div class="result-row">
-                    <span class="result-label">Weighted 2025 YTD Return</span>
-                    <span class="result-value" style="color: #30D158;" id="weightedReturn">+26.50%</span>
+
+                <!-- Income Optimizer -->
+                <div class="example-card" onclick="loadExample('income')">
+                    <div class="example-card-header">
+                        <div class="example-icon income">&#128176;</div>
+                        <div>
+                            <h4>The Income Optimizer</h4>
+                            <div class="example-card-persona">Seasoned Investor</div>
+                        </div>
+                    </div>
+                    <p class="example-card-story">
+                        You've mastered fixed income. Bonds, treasuries, dividend stocks - you know defense.
+                        But finding the next growth opportunity? That's where ALPHA comes in.
+                    </p>
+                    <div class="example-allocation">
+                        <span class="allocation-chip">30% TLT</span>
+                        <span class="allocation-chip">20% AGG</span>
+                        <span class="allocation-chip highlight">40% ALPHA</span>
+                        <span class="allocation-chip">10% VYM</span>
+                    </div>
                 </div>
-                <div class="result-row">
-                    <span class="result-label">$10,000 Investment Value</span>
-                    <span class="result-value" id="investmentValue">$12,650</span>
+
+                <!-- The Delegator -->
+                <div class="example-card" onclick="loadExample('delegator')">
+                    <div class="example-card-header">
+                        <div class="example-icon auto">&#129302;</div>
+                        <div>
+                            <h4>The Delegator</h4>
+                            <div class="example-card-persona">Hands-Off Investor</div>
+                        </div>
+                    </div>
+                    <p class="example-card-story">
+                        You don't have time to watch markets. You used to pay a wealth manager 2% annually.
+                        Now OMNI handles everything - growth and protection - automatically.
+                    </p>
+                    <div class="example-allocation">
+                        <span class="allocation-chip highlight">80% OMNI</span>
+                        <span class="allocation-chip">20% Cash/T-Bills</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="philosophy-section" id="philosophy">
-        <div class="philosophy-content">
-            <h2>Our Philosophy</h2>
-            <p>Money doesn't disappear from the market - it flows. When stocks fall, capital moves to bonds, gold, or cash. Our algorithms are designed to capture these flows, positioning portfolios where capital is heading, not where it's been.</p>
-            <p>The eighth wonder of the world is compound interest. Small, consistent gains compound into extraordinary wealth over time. We focus on steady growth, risk management, and letting time work in your favor.</p>
+    <!-- Performance Table Section -->
+    <section id="performance">
+        <div class="container">
+            <div class="section-header">
+                <h2>Performance Comparison</h2>
+                <p>How our algorithms stack up against traditional benchmarks.</p>
+            </div>
+
+            <div class="performance-table-wrapper">
+                <table class="performance-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Type</th>
+                            <th>1Y Return</th>
+                            <th>3Y Return</th>
+                            <th>5Y Return</th>
+                            <th>10Y Return</th>
+                            <th>Sharpe</th>
+                            <th>Max DD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OMNI</td>
+                            <td><span class="allocation-type reactive">Reactive</span></td>
+                            <td class="positive">+126.6%</td>
+                            <td class="positive">+15,887%</td>
+                            <td class="positive">+5.2M%</td>
+                            <td class="positive">+153M%</td>
+                            <td>1.92</td>
+                            <td class="negative">-25.1%</td>
+                        </tr>
+                        <tr>
+                            <td>ALPHA</td>
+                            <td><span class="allocation-type reactive">Reactive</span></td>
+                            <td class="positive">+49.8%</td>
+                            <td class="positive">+1,100%</td>
+                            <td class="positive">+162K%</td>
+                            <td class="positive">+4.6M%</td>
+                            <td>1.01</td>
+                            <td class="negative">-40.0%</td>
+                        </tr>
+                        <tr>
+                            <td>SHIELD</td>
+                            <td><span class="allocation-type reactive">Reactive</span></td>
+                            <td class="positive">+19.0%</td>
+                            <td class="positive">+648%</td>
+                            <td class="positive">+4,689%</td>
+                            <td class="positive">+13,771%</td>
+                            <td>1.26</td>
+                            <td class="negative">-7.1%</td>
+                        </tr>
+                        <tr style="background: var(--bg-secondary);">
+                            <td>SPY</td>
+                            <td><span class="allocation-type growth">Growth</span></td>
+                            <td class="positive">+40.0%</td>
+                            <td class="positive">+31.3%</td>
+                            <td class="positive">+103.6%</td>
+                            <td class="positive">+238.8%</td>
+                            <td>2.84</td>
+                            <td class="negative">-8.4%</td>
+                        </tr>
+                        <tr style="background: var(--bg-secondary);">
+                            <td>QQQ</td>
+                            <td><span class="allocation-type growth">Growth</span></td>
+                            <td class="positive">+42.4%</td>
+                            <td class="positive">+33.7%</td>
+                            <td class="positive">+161.6%</td>
+                            <td class="positive">+444.7%</td>
+                            <td>2.13</td>
+                            <td class="negative">-13.6%</td>
+                        </tr>
+                        <tr style="background: var(--bg-secondary);">
+                            <td>TLT</td>
+                            <td><span class="allocation-type safehaven">Safe-Haven</span></td>
+                            <td class="positive">+14.8%</td>
+                            <td class="negative">-29.9%</td>
+                            <td class="negative">-24.8%</td>
+                            <td class="negative">-1.4%</td>
+                            <td>0.99</td>
+                            <td class="negative">-11.8%</td>
+                        </tr>
+                        <tr style="background: var(--bg-secondary);">
+                            <td>GLD</td>
+                            <td><span class="allocation-type safehaven">Safe-Haven</span></td>
+                            <td class="positive">+37.9%</td>
+                            <td class="positive">+50.0%</td>
+                            <td class="positive">+78.6%</td>
+                            <td class="positive">+114.0%</td>
+                            <td>2.35</td>
+                            <td class="negative">-5.8%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ready to Invest?</h2>
+                <p>Get in touch to discuss how these algorithms can work for your portfolio.</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's Talk</h3>
+                    <p>
+                        These algorithms represent 2+ years of development and 1 year of live trading with real capital.
+                        I'm now raising capital to scale these strategies further.
+                    </p>
+                    <div class="contact-detail">
+                        <span>&#x2709;</span>
+                        <a href="mailto:invest@anastasiadesglobal.com" style="color: var(--accent-blue);">invest@anastasiadesglobal.com</a>
+                    </div>
+                    <div class="contact-detail">
+                        <span>&#x1F310;</span>
+                        <a href="https://anastasiadesglobal.com" target="_blank" style="color: var(--text-secondary);">anastasiadesglobal.com</a>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="investment-range">Investment Range</label>
+                        <select id="investment-range" name="investment-range" class="custom-select" style="width: 100%;">
+                            <option value="10k-50k">$10,000 - $50,000</option>
+                            <option value="50k-100k">$50,000 - $100,000</option>
+                            <option value="100k-500k">$100,000 - $500,000</option>
+                            <option value="500k-1m">$500,000 - $1,000,000</option>
+                            <option value="1m+">$1,000,000+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Tell me about your investment goals..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-        <p class="footer-text">Past performance does not guarantee future results. All investments involve risk.</p>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-disclaimer">
+                    <strong>Important Disclosures:</strong> Past performance is not indicative of future results.
+                    This is not financial advice. Consult a qualified financial advisor before making investment decisions.
+                    Investments involve risk including possible loss of principal. Backtested results are hypothetical
+                    and do not represent actual trading. 2025 results represent actual performance of $1,000 invested
+                    per algorithm starting January 2025. All performance figures are net of any trading costs.
+                </p>
+                <div class="footer-links">
+                    <a href="https://anastasiadesglobal.com">Main Site</a>
+                    <a href="alpha.html">ALPHA</a>
+                    <a href="shield.html">SHIELD</a>
+                    <a href="omni.html">OMNI</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // Demo data - shows realistic performance from Jan 2025
-        const demoData = {
-            dates: [
-                '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08',
-                '2025-01-09', '2025-01-10'
-            ],
-            ALPHA: {
-                values: [1000, 1045, 1120, 1185, 1250, 1320, 1369],
-                returns: [0, 4.5, 12.0, 18.5, 25.0, 32.0, 36.87]
-            },
-            SHIELD: {
-                values: [1000, 1025, 1055, 1085, 1120, 1155, 1181],
-                returns: [0, 2.5, 5.5, 8.5, 12.0, 15.5, 18.08]
-            },
-            OMNI: {
-                values: [1000, 1030, 1070, 1110, 1145, 1180, 1207],
-                returns: [0, 3.0, 7.0, 11.0, 14.5, 18.0, 20.73]
-            },
-            SPY: {
-                values: [1000, 1008, 1015, 1020, 1028, 1032, 1035],
-                returns: [0, 0.8, 1.5, 2.0, 2.8, 3.2, 3.5]
-            }
+        // ============================
+        // Data
+        // ============================
+        const backtestData = {
+            OMNI: { return1Y: 126.6, return3Y: 15886.8, return5Y: 5205515.4, return10Y: 153103398.7, sharpe: 1.92, maxDD: -25.1 },
+            SHIELD: { return1Y: 19.0, return3Y: 648.4, return5Y: 4689.0, return10Y: 13770.5, sharpe: 1.26, maxDD: -7.1 },
+            ALPHA: { return1Y: 49.8, return3Y: 1100.4, return5Y: 161978.4, return10Y: 4626320.3, sharpe: 1.01, maxDD: -40.0 },
+            SPY: { return1Y: 40.0, return3Y: 31.3, return5Y: 103.6, return10Y: 238.8, sharpe: 2.84, maxDD: -8.4 },
+            QQQ: { return1Y: 42.4, return3Y: 33.7, return5Y: 161.6, return10Y: 444.7, sharpe: 2.13, maxDD: -13.6 },
+            GBTC: { return1Y: 122.2, return3Y: 17.0, return5Y: 477.7, return10Y: 12848.8, sharpe: 1.70, maxDD: -27.2 },
+            TLT: { return1Y: 14.8, return3Y: -29.9, return5Y: -24.8, return10Y: -1.4, sharpe: 0.99, maxDD: -11.8 },
+            AGG: { return1Y: 11.1, return3Y: -5.9, return5Y: -0.6, return10Y: 15.3, sharpe: 1.77, maxDD: -3.7 },
+            GLD: { return1Y: 37.9, return3Y: 50.0, return5Y: 78.6, return10Y: 114.0, sharpe: 2.35, maxDD: -5.8 }
+        };
+
+        const realData2025 = {
+            OMNI: { return: 20.73 },
+            SHIELD: { return: 18.08 },
+            ALPHA: { return: 36.87 },
+            SPY: { return: 3.5 },
+            QQQ: { return: 5.0 },
+            GBTC: { return: 10.0 },
+            TLT: { return: 2.0 },
+            AGG: { return: 1.5 },
+            GLD: { return: 5.0 }
+        };
+
+        // Demo data placeholder - shows loading message until live API data loads
+        // Real data comes from Composer API (algos) and Finnhub API (stocks)
+        const demoChartData = {
+            dates: [],
+            ALPHA: { values: [], returns: [] },
+            SHIELD: { values: [], returns: [] },
+            OMNI: { values: [], returns: [] },
+            SPY: { values: [], returns: [] }
         };
 
         // Chart colors
-        const colors = {
-            ALPHA: '#1F7CEC',
-            SHIELD: '#30D158',
-            OMNI: '#BF5AF2',
-            SPY: '#FF9F0A'
+        const chartColors = {
+            ALPHA: '#22c55e',
+            SHIELD: '#ef4444',
+            OMNI: '#3b82f6',
+            SPY: '#f59e0b'
         };
 
-        let performanceChart = null;
-        let chartData = { ...demoData };
+        // Default allocations
+        let allocations = [
+            { ticker: 'OMNI', type: 'reactive', percent: 40 },
+            { ticker: 'ALPHA', type: 'reactive', percent: 30 },
+            { ticker: 'SHIELD', type: 'reactive', percent: 30 }
+        ];
+
+        let dataSource = 'real';
+        let investment = 10000;
+        let years = 10;
+        let projectionChart = null;
+        let interactiveChart = null;
+        let chartData = { ...demoChartData };
         let hiddenSeries = new Set();
         let comparisonStocks = [];
 
-        // Initialize chart on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            initChart();
-            updateStats();
-            updatePortfolio();
+        // ============================
+        // Initialize
+        // ============================
+        document.addEventListener('DOMContentLoaded', function() {
+            initSliders();
+            initDataToggle();
+            initProjectionChart();
+            initInteractiveChart();
+            renderAllocations();
+            updateResults();
+            initTimePeriodButtons();
 
-            // Time period buttons
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    // In live version, this would fetch data for the period
-                    updateChart();
-                });
-            });
-
-            // Display mode change
-            document.getElementById('displayMode').addEventListener('change', updateChart);
-
-            // Projection toggle
-            document.getElementById('projectionToggle').addEventListener('change', updateChart);
-
-            // Try to fetch live data (will work when deployed)
+            // Try to fetch live data
             fetchLiveData();
         });
 
-        function initChart() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-
-            performanceChart = new Chart(ctx, {
+        // ============================
+        // Interactive Chart
+        // ============================
+        function initInteractiveChart() {
+            const ctx = document.getElementById('interactiveChart').getContext('2d');
+            interactiveChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: chartData.dates,
-                    datasets: createDatasets()
+                    datasets: createInteractiveDatasets()
                 },
                 options: {
                     responsive: true,
@@ -1001,9 +1876,7 @@
                         intersect: false
                     },
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             titleColor: '#fff',
@@ -1025,56 +1898,63 @@
                     },
                     scales: {
                         x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.5)',
-                                maxRotation: 0,
-                                maxTicksLimit: 8
-                            }
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: 'rgba(255, 255, 255, 0.5)', maxRotation: 0, maxTicksLimit: 8 }
                         },
                         y: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)',
-                                drawBorder: false
-                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
                             ticks: {
                                 color: 'rgba(255, 255, 255, 0.5)',
                                 callback: function(value) {
                                     const mode = document.getElementById('displayMode').value;
-                                    if (mode === 'returns') {
-                                        return value + '%';
-                                    }
-                                    return '$' + value;
+                                    return mode === 'returns' ? value + '%' : '$' + value;
                                 }
                             }
                         }
                     }
                 }
             });
+
+            // Display mode change
+            document.getElementById('displayMode').addEventListener('change', updateInteractiveChart);
         }
 
-        function createDatasets() {
-            const mode = document.getElementById('displayMode').value;
+        function createInteractiveDatasets() {
+            const mode = document.getElementById('displayMode')?.value || 'returns';
             const datasets = [];
 
-            ['ALPHA', 'SHIELD', 'OMNI', 'SPY'].forEach(series => {
-                if (!hiddenSeries.has(series)) {
+            // Always show algos if they have data
+            ['ALPHA', 'SHIELD', 'OMNI'].forEach(series => {
+                if (!hiddenSeries.has(series) && chartData[series]) {
                     datasets.push({
                         label: series,
                         data: mode === 'returns' ? chartData[series].returns : chartData[series].values,
-                        borderColor: colors[series],
-                        backgroundColor: colors[series] + '20',
+                        borderColor: chartColors[series],
+                        backgroundColor: chartColors[series] + '20',
                         borderWidth: 2,
                         fill: false,
-                        tension: 0.4,
+                        tension: 0,
                         pointRadius: 0,
                         pointHoverRadius: 6
                     });
                 }
             });
+
+            // Only show SPY if it has real data (not all nulls)
+            const hasRealSpyData = chartData.SPY?.returns?.some(r => r !== null);
+            if (!hiddenSeries.has('SPY') && chartData.SPY && hasRealSpyData) {
+                datasets.push({
+                    label: 'SPY',
+                    data: mode === 'returns' ? chartData.SPY.returns : chartData.SPY.values,
+                    borderColor: chartColors.SPY,
+                    backgroundColor: chartColors.SPY + '20',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0,
+                    pointRadius: 0,
+                    pointHoverRadius: 6
+                });
+            }
 
             // Add comparison stocks
             comparisonStocks.forEach(stock => {
@@ -1086,7 +1966,7 @@
                         backgroundColor: stock.color + '20',
                         borderWidth: 2,
                         fill: false,
-                        tension: 0.4,
+                        tension: 0,
                         pointRadius: 0,
                         pointHoverRadius: 6,
                         borderDash: [5, 5]
@@ -1097,68 +1977,107 @@
             return datasets;
         }
 
-        function updateChart() {
-            if (!performanceChart) return;
-            performanceChart.data.datasets = createDatasets();
-            performanceChart.update();
+        function updateInteractiveChart() {
+            if (!interactiveChart) return;
+            interactiveChart.data.labels = chartData.dates;
+            interactiveChart.data.datasets = createInteractiveDatasets();
+            interactiveChart.update();
+            updateChartStats();
         }
 
         function toggleSeries(series) {
             const legendItem = document.querySelector(`.legend-item[data-series="${series}"]`);
             if (hiddenSeries.has(series)) {
                 hiddenSeries.delete(series);
-                legendItem.classList.remove('hidden');
+                legendItem?.classList.remove('hidden');
             } else {
                 hiddenSeries.add(series);
-                legendItem.classList.add('hidden');
+                legendItem?.classList.add('hidden');
             }
-            updateChart();
+            updateInteractiveChart();
         }
 
-        function addComparison() {
+        async function addComparison() {
             const ticker = document.getElementById('stockTicker').value.toUpperCase().trim();
             if (!ticker) return;
 
-            // Check if already added
             if (comparisonStocks.find(s => s.ticker === ticker)) {
                 alert(`${ticker} is already in the comparison`);
                 return;
             }
 
-            // Generate a color for the new stock
-            const hue = (comparisonStocks.length * 60 + 180) % 360;
-            const color = `hsl(${hue}, 70%, 60%)`;
+            // Show loading state
+            const btn = document.querySelector('.add-stock-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Loading...';
+            btn.disabled = true;
 
-            // Add placeholder - in production this would fetch from API
-            const stock = {
-                ticker: ticker,
-                color: color,
-                data: generateDemoStockData(ticker)
-            };
+            try {
+                const data = await fetchStockData(ticker);
+                if (!data) {
+                    alert(`Could not fetch data for ${ticker}`);
+                    return;
+                }
 
-            comparisonStocks.push(stock);
-            addLegendItem(stock);
-            updateChart();
+                const hue = (comparisonStocks.length * 60 + 180) % 360;
+                const color = `hsl(${hue}, 70%, 60%)`;
 
-            document.getElementById('stockTicker').value = '';
+                const stock = {
+                    ticker: ticker,
+                    color: color,
+                    data: alignStockDataToDates(data, chartData.dates)
+                };
+
+                comparisonStocks.push(stock);
+                addLegendItem(stock);
+                updateInteractiveChart();
+            } catch (e) {
+                console.error('Error fetching stock:', e);
+                alert(`Error fetching ${ticker}: ${e.message}`);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                document.getElementById('stockTicker').value = '';
+            }
         }
 
-        function generateDemoStockData(ticker) {
-            // Generate random but plausible stock data for demo
-            const seed = ticker.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-            const volatility = (seed % 30 + 10) / 100;
+        async function fetchStockData(ticker) {
+            try {
+                const response = await fetch(`/.netlify/functions/finnhub-api?ticker=${ticker}&start=2025-01-01`);
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Failed to fetch');
+                }
+                return await response.json();
+            } catch (e) {
+                console.error(`Error fetching ${ticker}:`, e);
+                return null;
+            }
+        }
 
-            let values = [1000];
-            let returns = [0];
+        function alignStockDataToDates(stockData, targetDates) {
+            // Create a map of date -> index for the stock data
+            const stockDateMap = {};
+            stockData.dates.forEach((date, idx) => {
+                stockDateMap[date] = idx;
+            });
 
-            for (let i = 1; i < chartData.dates.length; i++) {
-                const change = (Math.sin(seed + i) * volatility * 100);
-                const newReturn = returns[i-1] + change;
-                returns.push(parseFloat(newReturn.toFixed(2)));
-                values.push(parseFloat((1000 * (1 + newReturn/100)).toFixed(2)));
+            const alignedValues = [];
+            const alignedReturns = [];
+
+            for (const date of targetDates) {
+                if (stockDateMap[date] !== undefined) {
+                    const idx = stockDateMap[date];
+                    alignedValues.push(stockData.values[idx]);
+                    alignedReturns.push(stockData.returns[idx]);
+                } else {
+                    // Use last known value for missing dates
+                    alignedValues.push(alignedValues.length > 0 ? alignedValues[alignedValues.length - 1] : null);
+                    alignedReturns.push(alignedReturns.length > 0 ? alignedReturns[alignedReturns.length - 1] : null);
+                }
             }
 
-            return { values, returns };
+            return { values: alignedValues, returns: alignedReturns };
         }
 
         function addLegendItem(stock) {
@@ -1180,81 +2099,394 @@
             legend.appendChild(item);
         }
 
-        function updateStats() {
-            // Find best performer
+        function updateChartStats() {
             const performances = {
-                ALPHA: chartData.ALPHA.returns[chartData.ALPHA.returns.length - 1],
-                SHIELD: chartData.SHIELD.returns[chartData.SHIELD.returns.length - 1],
-                OMNI: chartData.OMNI.returns[chartData.OMNI.returns.length - 1]
+                ALPHA: chartData.ALPHA?.returns[chartData.ALPHA.returns.length - 1] || 0,
+                SHIELD: chartData.SHIELD?.returns[chartData.SHIELD.returns.length - 1] || 0,
+                OMNI: chartData.OMNI?.returns[chartData.OMNI.returns.length - 1] || 0
             };
 
             const best = Object.entries(performances).reduce((a, b) => a[1] > b[1] ? a : b);
             document.getElementById('bestPerformer').textContent = best[0];
-            document.getElementById('bestPerformer').style.color = colors[best[0]];
 
-            // Combined return (equal weight)
-            const combined = (performances.ALPHA + performances.SHIELD + performances.OMNI) / 3;
-            document.getElementById('combinedReturn').textContent = `+${combined.toFixed(2)}%`;
+            const avg = (performances.ALPHA + performances.SHIELD + performances.OMNI) / 3;
+            document.getElementById('avgReturn').textContent = `+${avg.toFixed(2)}%`;
 
-            // vs SPY
-            const spyReturn = chartData.SPY.returns[chartData.SPY.returns.length - 1];
-            const alpha = combined - spyReturn;
-            document.getElementById('vsSpy').textContent = `+${alpha.toFixed(2)}%`;
+            // Check if SPY has real data (not null values)
+            const spyLegendItem = document.getElementById('spy-legend-item');
+            const hasRealSpyData = chartData.SPY?.returns?.some(r => r !== null);
 
-            // Data points
-            document.getElementById('dataPoints').textContent = `${chartData.dates.length} days`;
-
-            // Update legend values
-            document.getElementById('legend-alpha').textContent = `+${performances.ALPHA.toFixed(2)}%`;
-            document.getElementById('legend-shield').textContent = `+${performances.SHIELD.toFixed(2)}%`;
-            document.getElementById('legend-omni').textContent = `+${performances.OMNI.toFixed(2)}%`;
-            document.getElementById('legend-spy').textContent = `+${spyReturn.toFixed(2)}%`;
-        }
-
-        function updatePortfolio() {
-            const alpha = parseInt(document.getElementById('alphaSlider').value);
-            const shield = parseInt(document.getElementById('shieldSlider').value);
-            const omni = parseInt(document.getElementById('omniSlider').value);
-            const total = alpha + shield + omni;
-
-            document.getElementById('alphaValue').textContent = `${alpha}%`;
-            document.getElementById('shieldValue').textContent = `${shield}%`;
-            document.getElementById('omniValue').textContent = `${omni}%`;
-            document.getElementById('totalAllocation').textContent = `${total}%`;
-
-            // Calculate weighted return
-            const alphaReturn = 36.87;
-            const shieldReturn = 18.08;
-            const omniReturn = 20.73;
-
-            let weightedReturn = 0;
-            if (total > 0) {
-                weightedReturn = (alpha * alphaReturn + shield * shieldReturn + omni * omniReturn) / total;
+            if (hasRealSpyData) {
+                const spyReturn = chartData.SPY.returns.filter(r => r !== null).pop() || 0;
+                const alpha = avg - spyReturn;
+                document.getElementById('vsSpy').textContent = `${alpha >= 0 ? '+' : ''}${alpha.toFixed(2)}%`;
+                document.getElementById('legend-spy').textContent = `${spyReturn >= 0 ? '+' : ''}${spyReturn.toFixed(2)}%`;
+                spyLegendItem.style.display = 'flex';
+            } else {
+                document.getElementById('vsSpy').textContent = '--';
+                spyLegendItem.style.display = 'none';
             }
 
-            document.getElementById('weightedReturn').textContent = `+${weightedReturn.toFixed(2)}%`;
+            document.getElementById('dataPoints').textContent = `${chartData.dates.length} days`;
 
-            const investmentValue = 10000 * (1 + weightedReturn / 100);
-            document.getElementById('investmentValue').textContent = `$${investmentValue.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+            document.getElementById('legend-alpha').textContent = `${performances.ALPHA >= 0 ? '+' : ''}${performances.ALPHA.toFixed(2)}%`;
+            document.getElementById('legend-shield').textContent = `${performances.SHIELD >= 0 ? '+' : ''}${performances.SHIELD.toFixed(2)}%`;
+            document.getElementById('legend-omni').textContent = `${performances.OMNI >= 0 ? '+' : ''}${performances.OMNI.toFixed(2)}%`;
+        }
+
+        function initTimePeriodButtons() {
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // In production, would fetch data for selected period
+                    updateInteractiveChart();
+                });
+            });
         }
 
         async function fetchLiveData() {
-            // Try to fetch live data from Netlify function
             try {
-                const response = await fetch('/.netlify/functions/composer-api?action=symphony-history');
-                if (response.ok) {
-                    const data = await response.json();
+                // Fetch algo data from Composer API
+                const composerResponse = await fetch('/.netlify/functions/composer-api?action=symphony-history');
+                if (composerResponse.ok) {
+                    const data = await composerResponse.json();
                     if (data.dates && data.dates.length > 0) {
                         chartData = data;
-                        updateChart();
-                        updateStats();
+
+                        // Also fetch SPY data from Finnhub to replace placeholder
+                        try {
+                            const spyData = await fetchStockData('SPY');
+                            if (spyData && spyData.dates && spyData.dates.length > 0) {
+                                const aligned = alignStockDataToDates(spyData, chartData.dates);
+                                chartData.SPY = aligned;
+                            }
+                        } catch (spyErr) {
+                            console.log('Could not fetch SPY data:', spyErr);
+                        }
+
+                        updateInteractiveChart();
+                        console.log('Loaded live data:', chartData.dates.length, 'data points');
                     }
                 }
             } catch (e) {
-                // API not available (local dev or error), keep using demo data
-                console.log('Using demo data - live API not available');
+                console.log('Using demo data - live API not available:', e.message);
             }
         }
+
+        // ============================
+        // Sliders
+        // ============================
+        function initSliders() {
+            const investmentSlider = document.getElementById('investment-slider');
+            const yearsSlider = document.getElementById('years-slider');
+
+            investmentSlider.addEventListener('input', function() {
+                investment = parseInt(this.value);
+                document.getElementById('investment-display').textContent = formatCurrency(investment);
+                updateResults();
+            });
+
+            yearsSlider.addEventListener('input', function() {
+                years = parseInt(this.value);
+                document.getElementById('years-display').textContent = years + ' year' + (years > 1 ? 's' : '');
+                updateResults();
+            });
+        }
+
+        // ============================
+        // Data Toggle
+        // ============================
+        function initDataToggle() {
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+            toggleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    toggleBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    dataSource = this.dataset.source;
+                    updateResults();
+                });
+            });
+        }
+
+        // ============================
+        // Allocations
+        // ============================
+        function renderAllocations() {
+            const list = document.getElementById('allocation-list');
+            list.innerHTML = '';
+
+            allocations.forEach((alloc, index) => {
+                const item = document.createElement('div');
+                item.className = 'allocation-item';
+                item.innerHTML = `
+                    <div class="allocation-info">
+                        <span class="allocation-ticker">${alloc.ticker}</span>
+                        <span class="allocation-type ${alloc.type}">${alloc.type}</span>
+                    </div>
+                    <div class="allocation-controls">
+                        <input type="range" class="allocation-slider" min="0" max="100" value="${alloc.percent}"
+                               onchange="updateAllocation(${index}, this.value)">
+                        <span class="allocation-percent">${alloc.percent}%</span>
+                        <button class="remove-btn" onclick="removeAllocation(${index})">&times;</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            updateTotalAllocation();
+        }
+
+        function updateAllocation(index, value) {
+            allocations[index].percent = parseInt(value);
+            renderAllocations();
+            updateResults();
+        }
+
+        function removeAllocation(index) {
+            allocations.splice(index, 1);
+            renderAllocations();
+            updateResults();
+        }
+
+        function addTicker() {
+            const input = document.getElementById('ticker-input');
+            const ticker = input.value.toUpperCase().trim();
+
+            if (!ticker) return;
+
+            if (allocations.find(a => a.ticker === ticker)) {
+                alert('Ticker already in portfolio');
+                return;
+            }
+
+            let type = 'growth';
+            if (['OMNI', 'SHIELD', 'ALPHA'].includes(ticker)) {
+                type = 'reactive';
+            } else if (['TLT', 'AGG', 'GLD', 'BND', 'SHY', 'IEF'].includes(ticker)) {
+                type = 'safehaven';
+            }
+
+            allocations.push({ ticker, type, percent: 10 });
+            input.value = '';
+            renderAllocations();
+            updateResults();
+        }
+
+        function updateTotalAllocation() {
+            const total = allocations.reduce((sum, a) => sum + a.percent, 0);
+            const display = document.getElementById('total-allocation');
+            display.querySelector('span:last-child').textContent = total + '%';
+
+            display.classList.remove('warning', 'success');
+            if (total === 100) {
+                display.classList.add('success');
+            } else {
+                display.classList.add('warning');
+            }
+        }
+
+        // ============================
+        // Example Portfolios
+        // ============================
+        function loadExample(type) {
+            switch(type) {
+                case 'growth':
+                    allocations = [
+                        { ticker: 'QQQ', type: 'growth', percent: 40 },
+                        { ticker: 'GBTC', type: 'growth', percent: 20 },
+                        { ticker: 'SHIELD', type: 'reactive', percent: 30 },
+                        { ticker: 'NVDA', type: 'growth', percent: 10 }
+                    ];
+                    break;
+                case 'income':
+                    allocations = [
+                        { ticker: 'TLT', type: 'safehaven', percent: 30 },
+                        { ticker: 'AGG', type: 'safehaven', percent: 20 },
+                        { ticker: 'ALPHA', type: 'reactive', percent: 40 },
+                        { ticker: 'VYM', type: 'growth', percent: 10 }
+                    ];
+                    break;
+                case 'delegator':
+                    allocations = [
+                        { ticker: 'OMNI', type: 'reactive', percent: 80 },
+                        { ticker: 'SHY', type: 'safehaven', percent: 20 }
+                    ];
+                    break;
+            }
+            renderAllocations();
+            updateResults();
+
+            document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============================
+        // Projection Chart & Results
+        // ============================
+        function initProjectionChart() {
+            const ctx = document.getElementById('projection-chart').getContext('2d');
+            projectionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Your Portfolio',
+                        data: [],
+                        borderColor: '#1F7CEC',
+                        backgroundColor: 'rgba(31, 124, 236, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'S&P 500 Only',
+                        data: [],
+                        borderColor: '#7d8590',
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: { color: '#7d8590' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#30363d' },
+                            ticks: { color: '#7d8590' }
+                        },
+                        y: {
+                            grid: { color: '#30363d' },
+                            ticks: {
+                                color: '#7d8590',
+                                callback: function(value) {
+                                    return formatCurrency(value, true);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateResults() {
+            let weightedReturn = 0;
+            let totalWeight = 0;
+
+            allocations.forEach(alloc => {
+                const returnData = getReturnForTicker(alloc.ticker);
+                if (returnData !== null) {
+                    weightedReturn += (alloc.percent / 100) * returnData;
+                    totalWeight += alloc.percent / 100;
+                }
+            });
+
+            if (totalWeight > 0) {
+                weightedReturn = weightedReturn / totalWeight;
+            }
+
+            const displayReturn = Math.min(weightedReturn, 500);
+            const annualizedReturn = Math.pow(1 + displayReturn / 100, 1) - 1;
+
+            const labels = [];
+            const portfolioData = [];
+            const spyData = [];
+            const spyReturn = getReturnForTicker('SPY') / 100;
+
+            for (let i = 0; i <= years; i++) {
+                labels.push('Year ' + i);
+                portfolioData.push(investment * Math.pow(1 + annualizedReturn, i));
+                spyData.push(investment * Math.pow(1 + spyReturn, i));
+            }
+
+            projectionChart.data.labels = labels;
+            projectionChart.data.datasets[0].data = portfolioData;
+            projectionChart.data.datasets[1].data = spyData;
+            projectionChart.update();
+
+            const finalValue = portfolioData[portfolioData.length - 1];
+            const totalReturn = ((finalValue - investment) / investment) * 100;
+            const vsSpy = ((finalValue - spyData[spyData.length - 1]) / spyData[spyData.length - 1]) * 100;
+
+            document.getElementById('final-value').textContent = formatCurrency(finalValue);
+            document.getElementById('total-return').textContent = (totalReturn >= 0 ? '+' : '') + formatPercent(totalReturn);
+            document.getElementById('annual-return').textContent = (weightedReturn >= 0 ? '+' : '') + formatPercent(weightedReturn);
+            document.getElementById('vs-spy').textContent = (vsSpy >= 0 ? '+' : '') + formatPercent(vsSpy);
+
+            const vSpyEl = document.getElementById('vs-spy');
+            vSpyEl.classList.remove('negative');
+            if (vsSpy < 0) vSpyEl.classList.add('negative');
+        }
+
+        function getReturnForTicker(ticker) {
+            if (dataSource === 'real') {
+                return realData2025[ticker]?.return ?? backtestData[ticker]?.return1Y ?? 10;
+            } else if (dataSource === 'backtest') {
+                return backtestData[ticker]?.return1Y ?? 10;
+            } else {
+                const real = realData2025[ticker]?.return ?? backtestData[ticker]?.return1Y ?? 10;
+                const backtest = backtestData[ticker]?.return1Y ?? 10;
+                return (real + backtest) / 2;
+            }
+        }
+
+        // ============================
+        // Utilities
+        // ============================
+        function formatCurrency(value, short = false) {
+            if (short && value >= 1000000) {
+                return '$' + (value / 1000000).toFixed(1) + 'M';
+            } else if (short && value >= 1000) {
+                return '$' + (value / 1000).toFixed(0) + 'K';
+            }
+            return '$' + value.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
+        function formatPercent(value) {
+            if (Math.abs(value) >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M%';
+            } else if (Math.abs(value) >= 1000) {
+                return (value / 1000).toFixed(1) + 'K%';
+            }
+            return value.toFixed(1) + '%';
+        }
+
+        // ============================
+        // Contact Form
+        // ============================
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const range = document.getElementById('investment-range').value;
+            const message = document.getElementById('message').value;
+
+            const subject = encodeURIComponent('Investment Inquiry - ' + range);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nInvestment Range: ${range}\n\nMessage:\n${message}`);
+            window.location.href = `mailto:invest@anastasiadesglobal.com?subject=${subject}&body=${body}`;
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
 </body>
 </html>

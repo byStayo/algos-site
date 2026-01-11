@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIELD Algorithm | Protect Your Downside</title>
+    <meta name="description" content="SHIELD provides automated downside protection by shifting to safe-haven assets when markets turn. For growth investors who need defense.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #7d8590;
+            --accent-blue: #1F7CEC;
+            --success-green: #3fb950;
+            --warning-red: #f85149;
+            --shield-color: #ef4444;
+        }
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000; padding: 16px 0;
+        }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
+        .logo span { color: var(--accent-blue); }
+        .back-link { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+        .back-link:hover { color: var(--accent-blue); }
+
+        .hero {
+            padding: 140px 0 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .hero-badge {
+            display: inline-block; padding: 6px 16px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--shield-color);
+            border-radius: 20px; font-size: 12px; font-weight: 600;
+            color: var(--shield-color); margin-bottom: 20px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 64px);
+            font-weight: 700; color: var(--shield-color);
+            margin-bottom: 16px;
+        }
+        .hero-tagline {
+            font-size: 24px; color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        .hero-return {
+            font-size: 72px; font-weight: 700;
+            color: var(--success-green); margin-bottom: 8px;
+        }
+        .hero-return-note {
+            font-size: 14px; color: var(--text-secondary);
+        }
+
+        section { padding: 60px 0; }
+        .section-header { margin-bottom: 32px; }
+        .section-header h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .section-header p { color: var(--text-secondary); }
+
+        .who-for {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 32px;
+            margin-bottom: 40px;
+        }
+        .who-for h3 { font-size: 20px; margin-bottom: 16px; color: var(--shield-color); }
+        .who-for p { color: var(--text-secondary); font-size: 16px; line-height: 1.8; }
+        .persona-icon { font-size: 48px; margin-bottom: 16px; }
+
+        .how-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .how-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 24px;
+        }
+        .how-card h4 {
+            font-size: 16px; font-weight: 600;
+            margin-bottom: 8px; color: var(--text-primary);
+        }
+        .how-card p { font-size: 14px; color: var(--text-secondary); }
+        .how-card-icon { font-size: 28px; margin-bottom: 12px; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px; margin-top: 24px;
+        }
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 20px; text-align: center;
+        }
+        .metric-card-value {
+            font-size: 28px; font-weight: 700; color: var(--success-green);
+        }
+        .metric-card-value.negative { color: var(--warning-red); }
+        .metric-card-value.highlight { color: var(--shield-color); }
+        .metric-card-label {
+            font-size: 11px; color: var(--text-secondary);
+            text-transform: uppercase; margin-top: 4px;
+        }
+
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 24px;
+            margin: 24px 0;
+        }
+        .chart-container h3 { font-size: 18px; margin-bottom: 20px; }
+        .chart-wrapper { height: 300px; }
+
+        .period-tabs {
+            display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .period-tab {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px; font-size: 13px; font-weight: 500;
+            color: var(--text-secondary); cursor: pointer;
+        }
+        .period-tab.active {
+            background: var(--shield-color);
+            border-color: var(--shield-color); color: white;
+        }
+
+        .drawdown-showcase {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 32px;
+            margin: 40px 0;
+        }
+        .drawdown-showcase h3 { font-size: 20px; margin-bottom: 20px; }
+        .drawdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .drawdown-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 20px;
+        }
+        .drawdown-card h4 { font-size: 14px; margin-bottom: 12px; color: var(--text-secondary); }
+        .drawdown-comparison {
+            display: flex; justify-content: space-between; margin-top: 12px;
+        }
+        .drawdown-item { text-align: center; }
+        .drawdown-item-label { font-size: 11px; color: var(--text-secondary); }
+        .drawdown-item-value { font-size: 20px; font-weight: 700; }
+        .drawdown-item-value.shield { color: var(--shield-color); }
+        .drawdown-item-value.spy { color: var(--text-secondary); }
+
+        .comparison-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 14px; margin-top: 16px;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 12px 16px; text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .comparison-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600; color: var(--text-secondary);
+            text-transform: uppercase; font-size: 11px;
+        }
+        .comparison-table td:first-child { font-weight: 600; }
+        .positive { color: var(--success-green); }
+        .negative { color: var(--warning-red); }
+        .highlight-row { background: rgba(239, 68, 68, 0.1); }
+
+        .vehicles-section {
+            background: var(--bg-secondary);
+            border-radius: 16px; padding: 32px;
+            margin: 40px 0;
+        }
+        .vehicles-section h3 { font-size: 20px; margin-bottom: 20px; }
+        .vehicle-list {
+            display: flex; flex-wrap: wrap; gap: 12px;
+        }
+        .vehicle-chip {
+            padding: 10px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 14px; font-weight: 500;
+        }
+        .vehicle-chip.safehaven { border-color: var(--shield-color); color: var(--shield-color); }
+
+        .allocation-recommendation {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+            border: 1px solid var(--shield-color);
+            border-radius: 16px; padding: 32px; text-align: center;
+            margin: 40px 0;
+        }
+        .allocation-recommendation h3 { font-size: 20px; margin-bottom: 12px; }
+        .allocation-range {
+            font-size: 48px; font-weight: 700; color: var(--shield-color);
+        }
+        .allocation-recommendation p {
+            color: var(--text-secondary); margin-top: 12px; font-size: 14px;
+        }
+
+        .cta-section {
+            text-align: center; padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .cta-section h2 { font-size: 28px; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 24px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 8px;
+            font-size: 15px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none;
+        }
+        .btn-primary { background: var(--shield-color); color: white; }
+        .btn-primary:hover { background: #dc2626; }
+        .btn-secondary {
+            background: var(--bg-secondary); color: var(--text-primary);
+            border: 1px solid var(--border-color); margin-left: 12px;
+        }
+        .btn-secondary:hover { border-color: var(--shield-color); }
+
+        footer {
+            padding: 40px 0; border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .footer-disclaimer {
+            font-size: 12px; color: var(--text-secondary);
+            max-width: 800px; margin: 0 auto; line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 40px; }
+            .hero-return { font-size: 48px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
+            <a href="index.html" class="back-link">&larr; Back to Overview</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Defensive Algorithm</div>
+            <h1>SHIELD</h1>
+            <p class="hero-tagline">Protect Your Downside</p>
+            <div class="hero-return">+18.0%</div>
+            <p class="hero-return-note">2025 YTD Performance (Real Money)</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="who-for">
+                <div class="persona-icon">&#128640;</div>
+                <h3>Who Is SHIELD For?</h3>
+                <p>
+                    You're young, ambitious, and you know the future. Tech stocks, crypto, AI - you've
+                    picked the winners. But you've also been burned by sudden crashes. That 30% drawdown
+                    wiped out months of gains overnight.
+                    <br><br>
+                    <strong>SHIELD lets you stay aggressive while sleeping well at night.</strong>
+                    It automatically shifts to defensive assets when danger signals appear.
+                </p>
+            </div>
+
+            <div class="section-header">
+                <h2>How SHIELD Works</h2>
+                <p>Automated defense that activates when you need it most</p>
+            </div>
+
+            <div class="how-works-grid">
+                <div class="how-card">
+                    <div class="how-card-icon">&#128680;</div>
+                    <h4>Risk Detection</h4>
+                    <p>Advanced algorithms monitor market conditions for early warning signs of downturns before they become crashes.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128737;</div>
+                    <h4>Safe-Haven Shift</h4>
+                    <p>When risk is elevated, SHIELD automatically rotates into bonds, treasuries, and gold to preserve capital.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128201;</div>
+                    <h4>Minimal Drawdown</h4>
+                    <p>Designed to minimize losses during corrections. Only -7.1% max drawdown vs -33% for SPY during the same period.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Performance</h2>
+                <p>SHIELD's track record - especially during market stress</p>
+            </div>
+
+            <div class="period-tabs" id="period-tabs">
+                <button class="period-tab" data-period="2025">2025 Real</button>
+                <button class="period-tab active" data-period="1Y">1 Year</button>
+                <button class="period-tab" data-period="3Y">3 Year</button>
+                <button class="period-tab" data-period="5Y">5 Year</button>
+                <button class="period-tab" data-period="10Y">10 Year</button>
+            </div>
+
+            <div class="metrics-grid" id="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-card-value" id="cum-return">+19.0%</div>
+                    <div class="metric-card-label">Cumulative Return</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="annual-return">+18.9%</div>
+                    <div class="metric-card-label">Annualized</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="sharpe">1.26</div>
+                    <div class="metric-card-label">Sharpe Ratio</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value highlight" id="max-dd">-7.1%</div>
+                    <div class="metric-card-label">Max Drawdown</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="calmar">2.67</div>
+                    <div class="metric-card-label">Calmar Ratio</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-card-value" id="std-dev">14.6%</div>
+                    <div class="metric-card-label">Volatility</div>
+                </div>
+            </div>
+
+            <div class="drawdown-showcase">
+                <h3>SHIELD During Market Stress</h3>
+                <div class="drawdown-grid">
+                    <div class="drawdown-card">
+                        <h4>COVID Crash (Feb-Nov 2020)</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary);">When SPY dropped 33%, SHIELD limited losses</p>
+                        <div class="drawdown-comparison">
+                            <div class="drawdown-item">
+                                <div class="drawdown-item-label">SHIELD</div>
+                                <div class="drawdown-item-value shield">-18.0%</div>
+                            </div>
+                            <div class="drawdown-item">
+                                <div class="drawdown-item-label">SPY</div>
+                                <div class="drawdown-item-value spy">-33.7%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drawdown-card">
+                        <h4>2022 Bear Market</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary);">Interest rate hikes crushed markets</p>
+                        <div class="drawdown-comparison">
+                            <div class="drawdown-item">
+                                <div class="drawdown-item-label">SHIELD</div>
+                                <div class="drawdown-item-value shield">-27.2%</div>
+                            </div>
+                            <div class="drawdown-item">
+                                <div class="drawdown-item-label">SPY</div>
+                                <div class="drawdown-item-value spy">-24.5%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drawdown-card">
+                        <h4>2024 Summer Correction</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary);">Japan carry trade unwind</p>
+                        <div class="drawdown-comparison">
+                            <div class="drawdown-item">
+                                <div class="drawdown-item-label">SHIELD</div>
+                                <div class="drawdown-item-value shield">-1.5%</div>
+                            </div>
+                            <div class="drawdown-item">
+                                <div class="drawdown-item-label">SPY</div>
+                                <div class="drawdown-item-value spy">-8.4%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>1Y Return</th>
+                        <th>Sharpe</th>
+                        <th>Max DD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td>SHIELD</td>
+                        <td class="positive">+19.0%</td>
+                        <td>1.26</td>
+                        <td class="positive">-7.1%</td>
+                    </tr>
+                    <tr>
+                        <td>TLT (Bonds)</td>
+                        <td class="positive">+14.8%</td>
+                        <td>0.99</td>
+                        <td class="negative">-11.8%</td>
+                    </tr>
+                    <tr>
+                        <td>AGG (Agg Bonds)</td>
+                        <td class="positive">+11.1%</td>
+                        <td>1.77</td>
+                        <td class="positive">-3.7%</td>
+                    </tr>
+                    <tr>
+                        <td>GLD (Gold)</td>
+                        <td class="positive">+37.9%</td>
+                        <td>2.35</td>
+                        <td class="positive">-5.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="vehicles-section">
+                <h3>Underlying Investment Vehicles</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    SHIELD dynamically allocates across these defensive instruments:
+                </p>
+                <div class="vehicle-list">
+                    <span class="vehicle-chip safehaven">$TLT</span>
+                    <span class="vehicle-chip safehaven">$AGG</span>
+                    <span class="vehicle-chip safehaven">$GLD</span>
+                    <span class="vehicle-chip">Treasuries</span>
+                    <span class="vehicle-chip">Low-Vol Equities</span>
+                </div>
+            </div>
+
+            <div class="allocation-recommendation">
+                <h3>Recommended Portfolio Allocation</h3>
+                <div class="allocation-range">20-30%</div>
+                <p>
+                    As portfolio insurance for growth-focused investors.
+                    <br>Pair with your growth picks (QQQ, GBTC, individual stocks) for balanced exposure.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Add SHIELD?</h2>
+            <p>Contact us to discuss how SHIELD can protect your portfolio.</p>
+            <a href="index.html#contact" class="btn btn-primary">Get in Touch</a>
+            <a href="index.html#builder" class="btn btn-secondary">Try Portfolio Builder</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="footer-disclaimer">
+                <strong>Important:</strong> Past performance is not indicative of future results.
+                This is not financial advice. Backtested results are hypothetical.
+                2025 results represent actual performance starting January 2025.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const performanceData = {
+            '2025': { cumReturn: 18.0, annualReturn: 18.0, sharpe: '-', maxDD: '-', calmar: '-', stdDev: '-' },
+            '1Y': { cumReturn: 19.0, annualReturn: 18.9, sharpe: 1.26, maxDD: -7.1, calmar: 2.67, stdDev: 14.6 },
+            '3Y': { cumReturn: 648.4, annualReturn: 95.6, sharpe: 1.83, maxDD: -27.1, calmar: 3.52, stdDev: 41.4 },
+            '5Y': { cumReturn: 4689.0, annualReturn: 116.9, sharpe: 1.95, maxDD: -27.2, calmar: 4.29, stdDev: 44.5 },
+            '10Y': { cumReturn: 13770.5, annualReturn: 63.8, sharpe: 1.55, maxDD: -29.2, calmar: 2.19, stdDev: 35.9 }
+        };
+
+        document.querySelectorAll('.period-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                updateMetrics(this.dataset.period);
+            });
+        });
+
+        function updateMetrics(period) {
+            const data = performanceData[period];
+            document.getElementById('cum-return').textContent = '+' + formatNumber(data.cumReturn) + '%';
+            document.getElementById('annual-return').textContent = '+' + formatNumber(data.annualReturn) + '%';
+            document.getElementById('sharpe').textContent = data.sharpe;
+            document.getElementById('max-dd').textContent = data.maxDD + '%';
+            document.getElementById('calmar').textContent = data.calmar;
+            document.getElementById('std-dev').textContent = data.stdDev + '%';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toFixed(1);
+        }
+    </script>
+</body>
+</html>
