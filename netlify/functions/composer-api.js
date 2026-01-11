@@ -260,6 +260,94 @@ exports.handler = async (event) => {
             return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
         }
 
+        // Comprehensive search for per-symphony historical data endpoint
+        if (action === 'find-symphony-data') {
+            const results = {};
+            const symphonyId = SYMPHONY_IDS.ALPHA;
+            const now = Date.now();
+            const startOfYear = new Date('2025-01-01').getTime();
+
+            // Try MANY different URL patterns the UI might use
+            const testUrls = [
+                // Chart-specific endpoints
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/chart`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/chart-data`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/timeseries`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/time-series`,
+
+                // Performance variations
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/performance`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/performance-history`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/perf`,
+
+                // History variations
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/history`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/value-history`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/historical`,
+
+                // Daily variations
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily-values`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/daily-performance`,
+
+                // Values/returns
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/values`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/returns`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/nav`,
+
+                // With query params
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?period=1Y`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?timeframe=daily`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?include_history=true`,
+                `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?expand=history`,
+
+                // Account-level symphony history
+                `/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/history`,
+                `/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/performance`,
+
+                // Different base paths
+                `/symphonies/${symphonyId}/account/${ACCOUNT_ID}/history`,
+                `/symphonies/${symphonyId}/performance?account_id=${ACCOUNT_ID}`,
+
+                // V1 API variations
+                `/v1/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}/history`,
+                `/v1/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}`,
+            ];
+
+            for (const url of testUrls) {
+                try {
+                    const fullUrl = `https://api.composer.trade/api/v0.1${url}`;
+                    const response = await fetch(fullUrl, { headers: authHeaders });
+                    const text = await response.text();
+                    let data;
+                    try { data = JSON.parse(text); } catch { data = text.slice(0, 300); }
+
+                    // Check if this has historical data
+                    const hasData = data && (
+                        (data.epoch_ms && data.epoch_ms.length > 0) ||
+                        (data.series && data.series.length > 0) ||
+                        (data.dates && data.dates.length > 0) ||
+                        (data.values && data.values.length > 0) ||
+                        (data.history && data.history.length > 0) ||
+                        (Array.isArray(data) && data.length > 0)
+                    );
+
+                    if (response.status === 200 || hasData) {
+                        results[url] = {
+                            status: response.status,
+                            hasData,
+                            keys: typeof data === 'object' && data ? Object.keys(data) : [],
+                            sample: typeof data === 'string' ? data : JSON.stringify(data).slice(0, 500)
+                        };
+                    }
+                } catch (e) {
+                    // Skip errors silently
+                }
+            }
+
+            return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
+        }
+
         // Test newly discovered endpoints
         if (action === 'debug2') {
             const results = {};
