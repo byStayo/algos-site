@@ -183,6 +183,63 @@ exports.handler = async (event) => {
             return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
         }
 
+        // Test newly discovered endpoints
+        if (action === 'debug2') {
+            const results = {};
+            const now = Date.now();
+            const startOfYear = new Date('2025-01-01').getTime();
+            const symphonyId = SYMPHONY_IDS.ALPHA;
+
+            const testUrls = [
+                // Portfolio history endpoint (documented but not tested)
+                { name: 'portfolio_history', url: `/portfolio/accounts/${ACCOUNT_ID}/portfolio-history` },
+                { name: 'portfolio_history_dates', url: `/portfolio/accounts/${ACCOUNT_ID}/portfolio-history?since=${startOfYear}&until=${now}` },
+
+                // Symphony stats meta endpoint
+                { name: 'symphony_stats_meta', url: `/portfolio/accounts/${ACCOUNT_ID}/symphony-stats-meta` },
+
+                // Try millisecond timestamps
+                { name: 'symphony_ms_dates', url: `/portfolio/accounts/${ACCOUNT_ID}/symphonies/${symphonyId}?since=${startOfYear}&until=${now}` },
+
+                // Try with period parameter (like Alpaca)
+                { name: 'portfolio_history_period', url: `/portfolio/accounts/${ACCOUNT_ID}/portfolio-history?period=1Y` },
+                { name: 'portfolio_history_all', url: `/portfolio/accounts/${ACCOUNT_ID}/portfolio-history?period=all` },
+
+                // Account-level history variations
+                { name: 'account_history_v2', url: `/portfolio/accounts/${ACCOUNT_ID}/history?since=${startOfYear}&until=${now}` },
+
+                // MCP-style endpoints
+                { name: 'portfolio_performance', url: `/portfolio/accounts/${ACCOUNT_ID}/performance` },
+                { name: 'aggregate_portfolio_stats', url: `/portfolio/accounts/${ACCOUNT_ID}/aggregate-stats` },
+            ];
+
+            for (const t of testUrls) {
+                try {
+                    const response = await fetch(`https://api.composer.trade/api/v0.1${t.url}`, { headers: authHeaders });
+                    const text = await response.text();
+                    let data;
+                    try { data = JSON.parse(text); } catch { data = text.slice(0, 500); }
+
+                    const hasHistoricalData = data && (
+                        (data.epoch_ms && data.epoch_ms.length > 0) ||
+                        (data.timestamps && data.timestamps.length > 0) ||
+                        (Array.isArray(data) && data.length > 0)
+                    );
+
+                    results[t.name] = {
+                        status: response.status,
+                        hasHistoricalData,
+                        keys: typeof data === 'object' && data ? Object.keys(data) : [],
+                        sample: typeof data === 'string' ? data : JSON.stringify(data).slice(0, 600)
+                    };
+                } catch (e) {
+                    results[t.name] = { error: e.message };
+                }
+            }
+
+            return { statusCode: 200, headers, body: JSON.stringify(results, null, 2) };
+        }
+
         // Test reports endpoint with report-type
         if (action === 'test-reports') {
             const now = new Date().toISOString();
