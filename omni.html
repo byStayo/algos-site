@@ -41,8 +41,13 @@
         nav .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
         .logo span { color: var(--accent-blue); }
-        .back-link { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
-        .back-link:hover { color: var(--accent-blue); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--omni-color); }
+        .nav-links .live-link { color: var(--success-green); }
+        .nav-links .live-link::before { content: '●'; margin-right: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .hero {
             padding: 140px 0 60px;
@@ -314,7 +319,13 @@
     <nav>
         <div class="container">
             <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
-            <a href="index.html" class="back-link">&larr; Back to Overview</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="alpha.html">ALPHA</a>
+                <a href="shield.html">SHIELD</a>
+                <a href="omni.html" class="active">OMNI</a>
+                <a href="live.html" class="live-link">Live 2026</a>
+            </div>
         </div>
     </nav>
 
@@ -325,70 +336,6 @@
             <p class="hero-tagline">Never Exit the Market. Always Positioned.</p>
             <div class="hero-return">+16.59%</div>
             <p class="hero-return-note">2025 Full Year Performance (Real Money)</p>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <div class="who-for">
-                <div class="persona-icon">&#129302;</div>
-                <h3>Who Is OMNI For?</h3>
-                <p>
-                    You don't have time to watch markets. You don't want to learn technical analysis.
-                    You used to pay a wealth manager 2% annually to handle everything - and they
-                    still underperformed the market.
-                    <br><br>
-                    <strong>OMNI is your automated wealth manager.</strong> It combines ALPHA's growth-seeking
-                    with SHIELD's protection, dynamically adjusting every day so you can focus on life.
-                </p>
-            </div>
-
-            <div class="philosophy-quote">
-                "The 7th wonder of the world is <strong>compound interest</strong>. OMNI is designed to never exit the market,
-                maximizing your compound growth by staying positioned through every cycle - bull or bear."
-            </div>
-
-            <div class="compound-showcase">
-                <h3>The Power of Compounding</h3>
-                <div class="compound-calc">
-                    <div class="compound-input">
-                        <label>Initial Investment</label>
-                        <input type="text" id="compound-initial" value="$10,000">
-                    </div>
-                    <div class="compound-input">
-                        <label>Years</label>
-                        <input type="number" id="compound-years" value="10" min="1" max="50">
-                    </div>
-                    <div class="compound-result">
-                        <div class="compound-result-label">Projected Value (10Y Avg Return)</div>
-                        <div class="compound-result-value" id="compound-value">$1.53B</div>
-                    </div>
-                </div>
-                <p class="compound-note">Based on OMNI's 10-year backtest annualized return of 315.9%. Past performance does not guarantee future results.</p>
-            </div>
-
-            <div class="section-header">
-                <h2>How OMNI Works</h2>
-                <p>The best of both worlds - growth and protection, automated</p>
-            </div>
-
-            <div class="how-works-grid">
-                <div class="how-card">
-                    <div class="how-card-icon">&#128260;</div>
-                    <h4>Dynamic Allocation</h4>
-                    <p>Adjusts between growth and defensive assets daily based on market conditions. No static 60/40 nonsense.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-card-icon">&#128161;</div>
-                    <h4>ALPHA + SHIELD Combined</h4>
-                    <p>Gets the growth-seeking behavior of ALPHA with the defensive protection of SHIELD, all in one.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-card-icon">&#128176;</div>
-                    <h4>Maximize Compound Returns</h4>
-                    <p>Never fully exits the market. Always positioned to capture the next move, whether up or down.</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -482,6 +429,70 @@
 
     <section>
         <div class="container">
+            <div class="who-for">
+                <div class="persona-icon">&#129302;</div>
+                <h3>Who Is OMNI For?</h3>
+                <p>
+                    You don't have time to watch markets. You don't want to learn technical analysis.
+                    You used to pay a wealth manager 2% annually to handle everything - and they
+                    still underperformed the market.
+                    <br><br>
+                    <strong>OMNI is your automated wealth manager.</strong> It combines ALPHA's growth-seeking
+                    with SHIELD's protection, dynamically adjusting every day so you can focus on life.
+                </p>
+            </div>
+
+            <div class="philosophy-quote">
+                "The 7th wonder of the world is <strong>compound interest</strong>. OMNI is designed to never exit the market,
+                maximizing your compound growth by staying positioned through every cycle - bull or bear."
+            </div>
+
+            <div class="compound-showcase">
+                <h3>The Power of Compounding</h3>
+                <div class="compound-calc">
+                    <div class="compound-input">
+                        <label>Initial Investment</label>
+                        <input type="text" id="compound-initial" value="$10,000">
+                    </div>
+                    <div class="compound-input">
+                        <label>Years</label>
+                        <input type="number" id="compound-years" value="10" min="1" max="50">
+                    </div>
+                    <div class="compound-result">
+                        <div class="compound-result-label">Projected Value (10Y Avg Return)</div>
+                        <div class="compound-result-value" id="compound-value">$1.53B</div>
+                    </div>
+                </div>
+                <p class="compound-note">Based on OMNI's 10-year backtest annualized return of 315.9%. Past performance does not guarantee future results.</p>
+            </div>
+
+            <div class="section-header">
+                <h2>How OMNI Works</h2>
+                <p>The best of both worlds - growth and protection, automated</p>
+            </div>
+
+            <div class="how-works-grid">
+                <div class="how-card">
+                    <div class="how-card-icon">&#128260;</div>
+                    <h4>Dynamic Allocation</h4>
+                    <p>Adjusts between growth and defensive assets daily based on market conditions. No static 60/40 nonsense.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128161;</div>
+                    <h4>ALPHA + SHIELD Combined</h4>
+                    <p>Gets the growth-seeking behavior of ALPHA with the defensive protection of SHIELD, all in one.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128176;</div>
+                    <h4>Maximize Compound Returns</h4>
+                    <p>Never fully exits the market. Always positioned to capture the next move, whether up or down.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
             <div class="section-header">
                 <h2>OMNI vs Traditional Wealth Management</h2>
                 <p>Why pay 2% fees for underperformance?</p>
@@ -551,11 +562,30 @@
             '10Y': { cumReturn: 153103398.7, annualReturn: 315.9, sharpe: 2.94, maxDD: -36.4, calmar: 8.68, stdDev: 53.2 }
         };
 
+        // Benchmark data for chart comparison across periods
+        const benchmarkData = {
+            '2025': { OMNI: 16.59, SIXTY_FORTY: 15, SPY: 23, WEALTH_MGR: 10 },
+            '1Y': { OMNI: 126.6, SIXTY_FORTY: 25, SPY: 40, WEALTH_MGR: 15 },
+            '3Y': { OMNI: 15886.8, SIXTY_FORTY: 80, SPY: 35, WEALTH_MGR: 45 },
+            '5Y': { OMNI: 5205515.4, SIXTY_FORTY: 150, SPY: 85, WEALTH_MGR: 80 },
+            '10Y': { OMNI: 153103398.7, SIXTY_FORTY: 250, SPY: 238.8, WEALTH_MGR: 150 }
+        };
+
+        const periodLabels = {
+            '2025': '2025 Return',
+            '1Y': '1Y Return',
+            '3Y': '3Y Return',
+            '5Y': '5Y Return',
+            '10Y': '10Y Return'
+        };
+
         document.querySelectorAll('.period-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                updateMetrics(this.dataset.period);
+                const period = this.dataset.period;
+                updateMetrics(period);
+                updateChart(period);
             });
         });
 
@@ -570,9 +600,17 @@
         }
 
         function formatNumber(num) {
+            if (typeof num === 'string') return num;
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toFixed(1);
+        }
+
+        function updateChart(period) {
+            const data = benchmarkData[period];
+            comparisonChart.data.datasets[0].label = periodLabels[period];
+            comparisonChart.data.datasets[0].data = [data.OMNI, data.SIXTY_FORTY, data.SPY, data.WEALTH_MGR];
+            comparisonChart.update();
         }
 
         // Compound calculator
@@ -600,7 +638,7 @@
 
         // Chart
         const ctx = document.getElementById('comparison-chart').getContext('2d');
-        new Chart(ctx, {
+        let comparisonChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['OMNI', '60/40', 'SPY', 'Wealth Mgr'],
@@ -626,7 +664,7 @@
                         grid: { color: '#30363d' },
                         ticks: {
                             color: '#7d8590',
-                            callback: function(value) { return value + '%'; }
+                            callback: function(value) { return formatNumber(value) + '%'; }
                         }
                     }
                 }

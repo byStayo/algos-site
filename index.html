@@ -94,6 +94,21 @@
             color: var(--text-primary);
         }
 
+        .nav-links .live-link {
+            color: var(--success-green);
+        }
+
+        .nav-links .live-link::before {
+            content: '●';
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         /* Hero Section */
         .hero {
             padding: 140px 0 80px;
@@ -1129,6 +1144,79 @@
             color: var(--accent-blue);
         }
 
+        /* Investment Preview */
+        .investment-preview {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .investment-preview-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .amount-selector {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .amount-btn {
+            padding: 10px 24px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .amount-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+        .amount-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+        .preview-results {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .preview-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 28px;
+            text-align: center;
+            min-width: 160px;
+        }
+        .preview-card.alpha { border-top: 3px solid var(--alpha-color); }
+        .preview-card.shield { border-top: 3px solid var(--shield-color); }
+        .preview-card.omni { border-top: 3px solid var(--omni-color); }
+        .preview-algo {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .preview-result {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .preview-gain {
+            font-size: 14px;
+            color: var(--success-green);
+            margin-top: 4px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -1184,15 +1272,15 @@
     <!-- Navigation -->
     <nav>
         <div class="container">
-            <a href="/" class="logo">Anastasiades<span>Algos</span></a>
-            <ul class="nav-links">
-                <li><a href="#philosophy">Philosophy</a></li>
-                <li><a href="#algorithms">Algorithms</a></li>
-                <li><a href="#interactive">Live Performance</a></li>
-                <li><a href="#builder">Portfolio Builder</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="live.html" style="color: var(--success-green);">Live 2026</a></li>
-            </ul>
+            <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
+            <div class="nav-links">
+                <a href="#philosophy">Philosophy</a>
+                <a href="#algorithms">Algorithms</a>
+                <a href="alpha.html">ALPHA</a>
+                <a href="shield.html">SHIELD</a>
+                <a href="omni.html">OMNI</a>
+                <a href="live.html" class="live-link">Live 2026</a>
+            </div>
         </div>
     </nav>
 
@@ -1221,6 +1309,34 @@
                     <div class="perf-card-label">OMNI</div>
                     <div class="perf-card-value" id="hero-omni">+16.59%</div>
                     <div class="perf-card-note">2025 Full Year</div>
+                </div>
+            </div>
+
+            <!-- Investment Preview -->
+            <div class="investment-preview">
+                <div class="investment-preview-title">See what your investment could be worth today:</div>
+                <div class="amount-selector">
+                    <button class="amount-btn" data-amount="5000">$5K</button>
+                    <button class="amount-btn active" data-amount="10000">$10K</button>
+                    <button class="amount-btn" data-amount="25000">$25K</button>
+                    <button class="amount-btn" data-amount="50000">$50K</button>
+                </div>
+                <div class="preview-results">
+                    <div class="preview-card alpha">
+                        <div class="preview-algo">ALPHA</div>
+                        <div class="preview-result" id="preview-alpha-result">$13,669</div>
+                        <div class="preview-gain" id="preview-alpha-gain">+$3,669</div>
+                    </div>
+                    <div class="preview-card shield">
+                        <div class="preview-algo">SHIELD</div>
+                        <div class="preview-result" id="preview-shield-result">$11,792</div>
+                        <div class="preview-gain" id="preview-shield-gain">+$1,792</div>
+                    </div>
+                    <div class="preview-card omni">
+                        <div class="preview-algo">OMNI</div>
+                        <div class="preview-result" id="preview-omni-result">$11,659</div>
+                        <div class="preview-gain" id="preview-omni-gain">+$1,659</div>
+                    </div>
                 </div>
             </div>
 
@@ -1856,6 +1972,7 @@
             renderAllocations();
             updateResults();
             initTimePeriodButtons();
+            initInvestmentPreview();
 
             // Try to fetch live data
             fetchLiveData();
@@ -2581,6 +2698,58 @@
                 return (value / 1000).toFixed(1) + 'K%';
             }
             return value.toFixed(1) + '%';
+        }
+
+        // ============================
+        // Investment Preview
+        // ============================
+        const ALGO_RETURNS_2025 = {
+            ALPHA: 36.88,
+            SHIELD: 17.92,
+            OMNI: 16.59
+        };
+
+        let previewInvestment = 10000;
+
+        function initInvestmentPreview() {
+            const amountBtns = document.querySelectorAll('.amount-btn');
+
+            amountBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    previewInvestment = parseInt(btn.dataset.amount);
+                    amountBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateInvestmentPreview();
+                });
+            });
+
+            // Initial update
+            updateInvestmentPreview();
+        }
+
+        function updateInvestmentPreview() {
+            for (const [name, returnPct] of Object.entries(ALGO_RETURNS_2025)) {
+                const lowerName = name.toLowerCase();
+                const resultEl = document.getElementById(`preview-${lowerName}-result`);
+                const gainEl = document.getElementById(`preview-${lowerName}-gain`);
+
+                if (resultEl && gainEl) {
+                    const projectedValue = previewInvestment * (1 + returnPct / 100);
+                    const gain = projectedValue - previewInvestment;
+
+                    resultEl.textContent = formatPreviewCurrency(projectedValue);
+                    gainEl.textContent = '+' + formatPreviewCurrency(gain);
+                }
+            }
+        }
+
+        function formatPreviewCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
         }
 
         // ============================

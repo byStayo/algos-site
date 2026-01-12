@@ -42,8 +42,13 @@
         nav .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
         .logo span { color: var(--accent-blue); }
-        .back-link { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
-        .back-link:hover { color: var(--accent-blue); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--alpha-color); }
+        .nav-links .live-link { color: var(--success-green); }
+        .nav-links .live-link::before { content: '●'; margin-right: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .hero {
             padding: 140px 0 60px;
@@ -238,7 +243,13 @@
     <nav>
         <div class="container">
             <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
-            <a href="index.html" class="back-link">&larr; Back to Overview</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="alpha.html" class="active">ALPHA</a>
+                <a href="shield.html">SHIELD</a>
+                <a href="omni.html">OMNI</a>
+                <a href="live.html" class="live-link">Live 2026</a>
+            </div>
         </div>
     </nav>
 
@@ -249,46 +260,6 @@
             <p class="hero-tagline">Capture the Next Big Thing</p>
             <div class="hero-return">+36.69%</div>
             <p class="hero-return-note">2025 Full Year Performance (Real Money)</p>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <div class="who-for">
-                <div class="persona-icon">&#128116;</div>
-                <h3>Who Is ALPHA For?</h3>
-                <p>
-                    You've mastered the defensive side of investing. You understand bonds, fixed income,
-                    dividend strategies, and how to protect your portfolio. But finding the next growth
-                    opportunity? Knowing when to rotate into tech, crypto, or emerging sectors?
-                    That's where you need help.
-                    <br><br>
-                    <strong>ALPHA handles the offense while you maintain your defense.</strong>
-                </p>
-            </div>
-
-            <div class="section-header">
-                <h2>How ALPHA Works</h2>
-                <p>Dynamic long-only exposure to growth opportunities</p>
-            </div>
-
-            <div class="how-works-grid">
-                <div class="how-card">
-                    <div class="how-card-icon">&#128200;</div>
-                    <h4>Growth Sector Focus</h4>
-                    <p>Continuously monitors technology, healthcare, emerging markets, and high-momentum sectors for opportunities.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-card-icon">&#128260;</div>
-                    <h4>Dynamic Reallocation</h4>
-                    <p>Automatically shifts capital to where momentum is building, staying ahead of major market moves.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-card-icon">&#128161;</div>
-                    <h4>Long-Only Strategy</h4>
-                    <p>Never shorts the market. Pure upside exposure designed to complement your existing defensive positions.</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -382,6 +353,46 @@
 
     <section>
         <div class="container">
+            <div class="who-for">
+                <div class="persona-icon">&#128116;</div>
+                <h3>Who Is ALPHA For?</h3>
+                <p>
+                    You've mastered the defensive side of investing. You understand bonds, fixed income,
+                    dividend strategies, and how to protect your portfolio. But finding the next growth
+                    opportunity? Knowing when to rotate into tech, crypto, or emerging sectors?
+                    That's where you need help.
+                    <br><br>
+                    <strong>ALPHA handles the offense while you maintain your defense.</strong>
+                </p>
+            </div>
+
+            <div class="section-header">
+                <h2>How ALPHA Works</h2>
+                <p>Dynamic long-only exposure to growth opportunities</p>
+            </div>
+
+            <div class="how-works-grid">
+                <div class="how-card">
+                    <div class="how-card-icon">&#128200;</div>
+                    <h4>Growth Sector Focus</h4>
+                    <p>Continuously monitors technology, healthcare, emerging markets, and high-momentum sectors for opportunities.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128260;</div>
+                    <h4>Dynamic Reallocation</h4>
+                    <p>Automatically shifts capital to where momentum is building, staying ahead of major market moves.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128161;</div>
+                    <h4>Long-Only Strategy</h4>
+                    <p>Never shorts the market. Pure upside exposure designed to complement your existing defensive positions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
             <div class="vehicles-section">
                 <h3>Underlying Investment Vehicles</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 20px;">
@@ -435,11 +446,30 @@
             '10Y': { cumReturn: 4626320.3, annualReturn: 193.0, sharpe: 2.27, maxDD: -40.0, calmar: 4.83, stdDev: 53.4 }
         };
 
+        // Benchmark data for chart comparison across periods
+        const benchmarkData = {
+            '2025': { ALPHA: 36.69, SPY: 23.0, QQQ: 28.0, GBTC: 45.0 },
+            '1Y': { ALPHA: 49.8, SPY: 40.0, QQQ: 42.4, GBTC: 122.2 },
+            '3Y': { ALPHA: 1100.4, SPY: 35.0, QQQ: 42.0, GBTC: 200.0 },
+            '5Y': { ALPHA: 161978.4, SPY: 85.0, QQQ: 120.0, GBTC: 500.0 },
+            '10Y': { ALPHA: 4626320.3, SPY: 180.0, QQQ: 350.0, GBTC: 1000.0 }
+        };
+
+        const periodLabels = {
+            '2025': '2025 Return',
+            '1Y': '1Y Return',
+            '3Y': '3Y Return',
+            '5Y': '5Y Return',
+            '10Y': '10Y Return'
+        };
+
         document.querySelectorAll('.period-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                updateMetrics(this.dataset.period);
+                const period = this.dataset.period;
+                updateMetrics(period);
+                updateChart(period);
             });
         });
 
@@ -454,14 +484,22 @@
         }
 
         function formatNumber(num) {
+            if (typeof num === 'string') return num;
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toFixed(1);
         }
 
+        function updateChart(period) {
+            const data = benchmarkData[period];
+            comparisonChart.data.datasets[0].label = periodLabels[period];
+            comparisonChart.data.datasets[0].data = [data.ALPHA, data.SPY, data.QQQ, data.GBTC];
+            comparisonChart.update();
+        }
+
         // Chart
         const ctx = document.getElementById('comparison-chart').getContext('2d');
-        new Chart(ctx, {
+        let comparisonChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['ALPHA', 'SPY', 'QQQ', 'GBTC'],
@@ -487,7 +525,7 @@
                         grid: { color: '#30363d' },
                         ticks: {
                             color: '#7d8590',
-                            callback: function(value) { return value + '%'; }
+                            callback: function(value) { return formatNumber(value) + '%'; }
                         }
                     }
                 }

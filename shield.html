@@ -41,8 +41,13 @@
         nav .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
         .logo span { color: var(--accent-blue); }
-        .back-link { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
-        .back-link:hover { color: var(--accent-blue); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--shield-color); }
+        .nav-links .live-link { color: var(--success-green); }
+        .nav-links .live-link::before { content: '●'; margin-right: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .hero {
             padding: 140px 0 60px;
@@ -265,7 +270,13 @@
     <nav>
         <div class="container">
             <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
-            <a href="index.html" class="back-link">&larr; Back to Overview</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="alpha.html">ALPHA</a>
+                <a href="shield.html" class="active">SHIELD</a>
+                <a href="omni.html">OMNI</a>
+                <a href="live.html" class="live-link">Live 2026</a>
+            </div>
         </div>
     </nav>
 
@@ -276,46 +287,6 @@
             <p class="hero-tagline">Protect Your Downside</p>
             <div class="hero-return">+17.92%</div>
             <p class="hero-return-note">2025 Full Year Performance (Real Money)</p>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <div class="who-for">
-                <div class="persona-icon">&#128640;</div>
-                <h3>Who Is SHIELD For?</h3>
-                <p>
-                    You're young, ambitious, and you know the future. Tech stocks, crypto, AI - you've
-                    picked the winners. But you've also been burned by sudden crashes. That 30% drawdown
-                    wiped out months of gains overnight.
-                    <br><br>
-                    <strong>SHIELD lets you stay aggressive while sleeping well at night.</strong>
-                    It automatically shifts to defensive assets when danger signals appear.
-                </p>
-            </div>
-
-            <div class="section-header">
-                <h2>How SHIELD Works</h2>
-                <p>Automated defense that activates when you need it most</p>
-            </div>
-
-            <div class="how-works-grid">
-                <div class="how-card">
-                    <div class="how-card-icon">&#128680;</div>
-                    <h4>Risk Detection</h4>
-                    <p>Advanced algorithms monitor market conditions for early warning signs of downturns before they become crashes.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-card-icon">&#128737;</div>
-                    <h4>Safe-Haven Shift</h4>
-                    <p>When risk is elevated, SHIELD automatically rotates into bonds, treasuries, and gold to preserve capital.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-card-icon">&#128201;</div>
-                    <h4>Minimal Drawdown</h4>
-                    <p>Designed to minimize losses during corrections. Only -7.1% max drawdown vs -33% for SPY during the same period.</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -358,6 +329,13 @@
                 <div class="metric-card">
                     <div class="metric-card-value" id="std-dev">14.6%</div>
                     <div class="metric-card-label">Volatility</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>SHIELD vs Benchmarks</h3>
+                <div class="chart-wrapper">
+                    <canvas id="comparison-chart"></canvas>
                 </div>
             </div>
 
@@ -450,6 +428,46 @@
 
     <section>
         <div class="container">
+            <div class="who-for">
+                <div class="persona-icon">&#128640;</div>
+                <h3>Who Is SHIELD For?</h3>
+                <p>
+                    You're young, ambitious, and you know the future. Tech stocks, crypto, AI - you've
+                    picked the winners. But you've also been burned by sudden crashes. That 30% drawdown
+                    wiped out months of gains overnight.
+                    <br><br>
+                    <strong>SHIELD lets you stay aggressive while sleeping well at night.</strong>
+                    It automatically shifts to defensive assets when danger signals appear.
+                </p>
+            </div>
+
+            <div class="section-header">
+                <h2>How SHIELD Works</h2>
+                <p>Automated defense that activates when you need it most</p>
+            </div>
+
+            <div class="how-works-grid">
+                <div class="how-card">
+                    <div class="how-card-icon">&#128680;</div>
+                    <h4>Risk Detection</h4>
+                    <p>Advanced algorithms monitor market conditions for early warning signs of downturns before they become crashes.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128737;</div>
+                    <h4>Safe-Haven Shift</h4>
+                    <p>When risk is elevated, SHIELD automatically rotates into bonds, treasuries, and gold to preserve capital.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">&#128201;</div>
+                    <h4>Minimal Drawdown</h4>
+                    <p>Designed to minimize losses during corrections. Only -7.1% max drawdown vs -33% for SPY during the same period.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
             <div class="vehicles-section">
                 <h3>Underlying Investment Vehicles</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 20px;">
@@ -503,11 +521,30 @@
             '10Y': { cumReturn: 13770.5, annualReturn: 63.8, sharpe: 1.55, maxDD: -29.2, calmar: 2.19, stdDev: 35.9 }
         };
 
+        // Benchmark data for chart comparison across periods
+        const benchmarkData = {
+            '2025': { SHIELD: 17.92, TLT: 10.0, AGG: 5.0, GLD: 25.0 },
+            '1Y': { SHIELD: 19.0, TLT: 14.8, AGG: 11.1, GLD: 37.9 },
+            '3Y': { SHIELD: 648.4, TLT: 30.0, AGG: 15.0, GLD: 50.0 },
+            '5Y': { SHIELD: 4689.0, TLT: 45.0, AGG: 25.0, GLD: 80.0 },
+            '10Y': { SHIELD: 13770.5, TLT: 60.0, AGG: 40.0, GLD: 120.0 }
+        };
+
+        const periodLabels = {
+            '2025': '2025 Return',
+            '1Y': '1Y Return',
+            '3Y': '3Y Return',
+            '5Y': '5Y Return',
+            '10Y': '10Y Return'
+        };
+
         document.querySelectorAll('.period-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                updateMetrics(this.dataset.period);
+                const period = this.dataset.period;
+                updateMetrics(period);
+                updateChart(period);
             });
         });
 
@@ -522,10 +559,53 @@
         }
 
         function formatNumber(num) {
+            if (typeof num === 'string') return num;
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toFixed(1);
         }
+
+        function updateChart(period) {
+            const data = benchmarkData[period];
+            comparisonChart.data.datasets[0].label = periodLabels[period];
+            comparisonChart.data.datasets[0].data = [data.SHIELD, data.TLT, data.AGG, data.GLD];
+            comparisonChart.update();
+        }
+
+        // Chart
+        const ctx = document.getElementById('comparison-chart').getContext('2d');
+        let comparisonChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['SHIELD', 'TLT', 'AGG', 'GLD'],
+                datasets: [{
+                    label: '1Y Return',
+                    data: [19.0, 14.8, 11.1, 37.9],
+                    backgroundColor: ['#ef4444', '#3b82f6', '#3b82f6', '#3b82f6'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { color: '#30363d' },
+                        ticks: { color: '#7d8590' }
+                    },
+                    y: {
+                        grid: { color: '#30363d' },
+                        ticks: {
+                            color: '#7d8590',
+                            callback: function(value) { return formatNumber(value) + '%'; }
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
