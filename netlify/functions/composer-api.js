@@ -645,8 +645,8 @@ function generateRealisticSymphonyData(dates, symphonyName, finalReturn) {
 }
 
 function getHardcodedPerformanceData() {
-    // Real 2025 YTD performance data - manually tracked
-    // Final returns: ALPHA +36.87%, SHIELD +18.08%, OMNI +20.73%
+    // Real 2025 YTD performance data - actual invested money ($1000 each at start)
+    // Final returns: ALPHA +36.69%, SHIELD +17.92%, OMNI +16.59%
 
     // Generate realistic daily data from Jan 2025 to now
     const startDate = new Date('2025-01-02');
@@ -656,8 +656,8 @@ function getHardcodedPerformanceData() {
     const shieldReturns = [];
     const omniReturns = [];
 
-    // Target final returns
-    const targets = { ALPHA: 36.87, SHIELD: 18.08, OMNI: 20.73 };
+    // Target final returns (CORRECT values from actual performance)
+    const targets = { ALPHA: 36.69, SHIELD: 17.92, OMNI: 16.59 };
 
     let currentDate = new Date(startDate);
     let dayCount = 0;
