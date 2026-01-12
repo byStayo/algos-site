@@ -2359,57 +2359,22 @@
         }
 
         async function fetchLiveData() {
-            let dataLoaded = false;
-
-            // First try the live Composer API
+            // Always use static 2025 backtest data for consistent display
             try {
-                const composerResponse = await fetch('/.netlify/functions/composer-api?action=symphony-history');
-                if (composerResponse.ok) {
-                    const data = await composerResponse.json();
+                const staticResponse = await fetch('/data/chart-data-2025.json');
+                if (staticResponse.ok) {
+                    const data = await staticResponse.json();
                     if (data.dates && data.dates.length > 0) {
                         fullChartData = data;
-                        dataLoaded = true;
-                        console.log('Loaded live data from Composer API:', fullChartData.dates.length, 'data points');
-
-                        // Also fetch SPY data from Yahoo Finance
-                        try {
-                            const spyData = await fetchStockData('SPY');
-                            if (spyData && spyData.dates && spyData.dates.length > 0) {
-                                const aligned = alignStockDataToDates(spyData, fullChartData.dates);
-                                fullChartData.SPY = aligned;
-                            }
-                        } catch (spyErr) {
-                            console.log('Could not fetch SPY data:', spyErr);
-                        }
+                        console.log('Loaded static 2025 backtest data:', fullChartData.dates.length, 'data points');
+                        filterChartDataByPeriod(currentPeriod);
+                        return;
                     }
                 }
-            } catch (e) {
-                console.log('Live API not available:', e.message);
+            } catch (staticErr) {
+                console.log('Could not load static data:', staticErr.message);
             }
-
-            // Fallback to static 2025 backtest data if live API failed
-            if (!dataLoaded) {
-                try {
-                    const staticResponse = await fetch('/data/chart-data-2025.json');
-                    if (staticResponse.ok) {
-                        const data = await staticResponse.json();
-                        if (data.dates && data.dates.length > 0) {
-                            fullChartData = data;
-                            dataLoaded = true;
-                            console.log('Loaded static 2025 backtest data:', fullChartData.dates.length, 'data points');
-                        }
-                    }
-                } catch (staticErr) {
-                    console.log('Could not load static data:', staticErr.message);
-                }
-            }
-
-            // Apply time period filter if data was loaded
-            if (dataLoaded) {
-                filterChartDataByPeriod(currentPeriod);
-            } else {
-                console.log('No data available - charts will be empty');
-            }
+            console.log('No data available - charts will be empty');
         }
 
         // ============================

@@ -563,12 +563,8 @@
             setupInvestmentCalculator();
             setupReturnViewToggle();
 
-            if (IS_LOCAL) {
-                loadFallbackData();
-            } else {
-                fetchAllData();
-                startAutoRefresh();
-            }
+            // Always use static demo data for consistent display
+            loadFallbackData();
         });
 
         // Setup Investment Calculator
