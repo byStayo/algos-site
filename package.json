@@ -1,0 +1,9 @@
+{
+  "name": "algos-tracker",
+  "version": "1.0.0",
+  "description": "Algorithmic portfolio tracking with daily data collection",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "^8.0.0"
+  }
+}

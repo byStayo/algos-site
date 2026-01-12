@@ -47,8 +47,9 @@
         .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
         .logo span { color: var(--accent-blue); }
         .nav-links { display: flex; gap: 24px; align-items: center; }
-        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
-        .nav-links a:hover { color: var(--accent-blue); }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--success-green); }
         .live-badge {
             display: inline-flex; align-items: center; gap: 6px;
             padding: 4px 12px; border-radius: 20px;
@@ -149,16 +150,6 @@
         .algo-stat-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
         .algo-stat-value { font-size: 18px; font-weight: 600; }
 
-        .algo-holdings { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
-        .algo-holdings-title { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
-        .holding-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 0; border-bottom: 1px solid var(--bg-tertiary);
-        }
-        .holding-item:last-child { border-bottom: none; }
-        .holding-ticker { font-weight: 600; }
-        .holding-allocation { color: var(--text-secondary); font-size: 14px; }
-
         /* Chart Section */
         .chart-section {
             background: var(--bg-secondary);
@@ -189,27 +180,6 @@
 
         .chart-container { height: 400px; position: relative; }
 
-        /* Holdings Table */
-        .holdings-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 40px;
-        }
-        .holdings-table {
-            width: 100%; border-collapse: collapse;
-        }
-        .holdings-table th {
-            text-align: left; padding: 12px;
-            color: var(--text-secondary); font-weight: 500;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .holdings-table td {
-            padding: 12px; border-bottom: 1px solid var(--bg-tertiary);
-        }
-        .holdings-table tr:last-child td { border-bottom: none; }
-
         /* Loading State */
         .loading {
             display: flex; justify-content: center; align-items: center;
@@ -229,23 +199,160 @@
             text-align: center; color: var(--text-secondary);
         }
 
+        /* Investment Calculator */
+        .investment-calculator {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .calculator-title { font-size: 18px; font-weight: 600; }
+        .return-view-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .view-btn.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+        .view-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+        .slider-container {
+            margin-bottom: 20px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .slider-label span { color: var(--text-secondary); font-size: 14px; }
+        .investment-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+        #investment-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-tertiary);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        #investment-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            border: 3px solid var(--bg-secondary);
+            box-shadow: 0 2px 8px rgba(31, 124, 236, 0.4);
+        }
+        #investment-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            border: 3px solid var(--bg-secondary);
+        }
+        .quick-amounts {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .quick-amount-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .quick-amount-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+        .quick-amount-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        /* Projected Value in Algo Cards */
+        .projected-value {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .projected-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .projected-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .projected-gain {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .projected-gain.positive { color: var(--success-green); }
+        .projected-gain.negative { color: var(--warning-red); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .algo-grid { grid-template-columns: 1fr; }
             .portfolio-summary { grid-template-columns: repeat(2, 1fr); }
             .chart-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+            .calculator-header { flex-direction: column; align-items: flex-start; }
+            .quick-amounts { justify-content: flex-start; }
         }
     </style>
 </head>
 <body>
     <nav>
         <div class="container">
-            <a href="index.html" class="logo">ALGOS<span>.</span></a>
+            <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="alpha.html">ALPHA</a>
                 <a href="shield.html">SHIELD</a>
                 <a href="omni.html">OMNI</a>
+                <a href="live.html" class="active">Live 2026</a>
                 <div class="live-badge" id="market-status">
                     <span class="pulse"></span>
                     <span id="market-text">Loading...</span>
@@ -265,24 +372,41 @@
     </section>
 
     <main class="container">
-        <!-- Portfolio Summary -->
+        <!-- Portfolio Summary (percentages only) -->
         <div class="portfolio-summary" id="portfolio-summary">
             <div class="summary-card">
-                <div class="summary-label">Total Portfolio Value</div>
-                <div class="summary-value" id="total-value">--</div>
+                <div class="summary-label">2026 YTD Return</div>
+                <div class="summary-value positive" id="ytd-return">--</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">Today's Change</div>
                 <div class="summary-value" id="today-change">--</div>
-                <div class="summary-change" id="today-change-pct">--</div>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">2026 YTD Return</div>
-                <div class="summary-value" id="ytd-return">--</div>
+        </div>
+
+        <!-- Investment Calculator -->
+        <div class="investment-calculator">
+            <div class="calculator-header">
+                <div class="calculator-title">Investment Calculator</div>
+                <div class="return-view-toggle">
+                    <button class="view-btn active" data-view="2026">2026 Only</button>
+                    <button class="view-btn" data-view="cumulative">Cumulative</button>
+                </div>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">Available Cash</div>
-                <div class="summary-value" id="cash-available">--</div>
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>If you had invested:</span>
+                    <div class="investment-amount" id="investment-display">$10,000</div>
+                </div>
+                <input type="range" id="investment-slider" min="1000" max="100000" step="1000" value="10000">
+            </div>
+            <div class="quick-amounts">
+                <button class="quick-amount-btn" data-amount="1000">$1K</button>
+                <button class="quick-amount-btn" data-amount="5000">$5K</button>
+                <button class="quick-amount-btn active" data-amount="10000">$10K</button>
+                <button class="quick-amount-btn" data-amount="25000">$25K</button>
+                <button class="quick-amount-btn" data-amount="50000">$50K</button>
+                <button class="quick-amount-btn" data-amount="100000">$100K</button>
             </div>
         </div>
 
@@ -302,19 +426,14 @@
                 </div>
                 <div class="algo-stats">
                     <div class="algo-stat-item">
-                        <div class="algo-stat-label">Current Value</div>
-                        <div class="algo-stat-value" id="alpha-value">--</div>
-                    </div>
-                    <div class="algo-stat-item">
                         <div class="algo-stat-label">Today's Change</div>
                         <div class="algo-stat-value" id="alpha-today">--</div>
                     </div>
                 </div>
-                <div class="algo-holdings">
-                    <div class="algo-holdings-title">Current Holdings</div>
-                    <div id="alpha-holdings">
-                        <div class="loading"><div class="spinner"></div></div>
-                    </div>
+                <div class="projected-value" id="alpha-projected">
+                    <div class="projected-label">Your investment would be worth</div>
+                    <div class="projected-amount" id="alpha-projected-amount">--</div>
+                    <div class="projected-gain positive" id="alpha-projected-gain">--</div>
                 </div>
             </div>
 
@@ -332,19 +451,14 @@
                 </div>
                 <div class="algo-stats">
                     <div class="algo-stat-item">
-                        <div class="algo-stat-label">Current Value</div>
-                        <div class="algo-stat-value" id="shield-value">--</div>
-                    </div>
-                    <div class="algo-stat-item">
                         <div class="algo-stat-label">Today's Change</div>
                         <div class="algo-stat-value" id="shield-today">--</div>
                     </div>
                 </div>
-                <div class="algo-holdings">
-                    <div class="algo-holdings-title">Current Holdings</div>
-                    <div id="shield-holdings">
-                        <div class="loading"><div class="spinner"></div></div>
-                    </div>
+                <div class="projected-value" id="shield-projected">
+                    <div class="projected-label">Your investment would be worth</div>
+                    <div class="projected-amount" id="shield-projected-amount">--</div>
+                    <div class="projected-gain positive" id="shield-projected-gain">--</div>
                 </div>
             </div>
 
@@ -362,19 +476,14 @@
                 </div>
                 <div class="algo-stats">
                     <div class="algo-stat-item">
-                        <div class="algo-stat-label">Current Value</div>
-                        <div class="algo-stat-value" id="omni-value">--</div>
-                    </div>
-                    <div class="algo-stat-item">
                         <div class="algo-stat-label">Today's Change</div>
                         <div class="algo-stat-value" id="omni-today">--</div>
                     </div>
                 </div>
-                <div class="algo-holdings">
-                    <div class="algo-holdings-title">Current Holdings</div>
-                    <div id="omni-holdings">
-                        <div class="loading"><div class="spinner"></div></div>
-                    </div>
+                <div class="projected-value" id="omni-projected">
+                    <div class="projected-label">Your investment would be worth</div>
+                    <div class="projected-amount" id="omni-projected-amount">--</div>
+                    <div class="projected-gain positive" id="omni-projected-gain">--</div>
                 </div>
             </div>
         </div>
@@ -394,27 +503,6 @@
                 <canvas id="performance-chart"></canvas>
             </div>
         </div>
-
-        <!-- Holdings Table -->
-        <div class="holdings-section">
-            <h2 style="margin-bottom: 20px;">All Holdings</h2>
-            <table class="holdings-table">
-                <thead>
-                    <tr>
-                        <th>Asset</th>
-                        <th>Strategy</th>
-                        <th>Shares</th>
-                        <th>Value</th>
-                        <th>Allocation</th>
-                    </tr>
-                </thead>
-                <tbody id="holdings-table-body">
-                    <tr>
-                        <td colspan="5" class="loading"><div class="spinner"></div></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </main>
 
     <footer>
@@ -428,39 +516,323 @@
         // Configuration
         const REFRESH_INTERVAL_MARKET_OPEN = 30000;  // 30 seconds
         const REFRESH_INTERVAL_MARKET_CLOSED = 300000;  // 5 minutes
-        const API_BASE = '/.netlify/functions/live-data';
+        const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+        const API_BASE = IS_LOCAL ? null : '/.netlify/functions';
 
+        // 2025 ending baselines for accurate calculations
+        const BASELINES = {
+            ALPHA: { startValue2026: 1368.85, return2025: 36.88, originalInvestment: 1000 },
+            SHIELD: { startValue2026: 1179.20, return2025: 17.92, originalInvestment: 1000 },
+            OMNI: { startValue2026: 1165.90, return2025: 16.59, originalInvestment: 1000 }
+        };
+
+        // State
         let performanceChart = null;
         let isMarketOpen = false;
         let refreshInterval = null;
+        let currentInvestment = 10000;
+        let currentView = '2026'; // '2026' or 'cumulative'
+        let algoReturns = {
+            ALPHA: { return2026: 0, returnCumulative: 0 },
+            SHIELD: { return2026: 0, returnCumulative: 0 },
+            OMNI: { return2026: 0, returnCumulative: 0 }
+        };
+        let historicalData = null;
+
+        // Static fallback data for local development
+        const FALLBACK_DATA = {
+            portfolioStats: {
+                ytdReturn: 3.45,
+                todayChangePct: 0.85
+            },
+            symphonyStats: {
+                ALPHA: { return2026: 4.12, returnCumulative: 42.53, todayChangePct: 1.20 },
+                SHIELD: { return2026: 2.45, returnCumulative: 20.81, todayChangePct: 0.65 },
+                OMNI: { return2026: 3.15, returnCumulative: 20.26, todayChangePct: 0.90 }
+            },
+            dailyPerformance: {
+                ALPHA: { dates: ['2026-01-02', '2026-01-03', '2026-01-06', '2026-01-07', '2026-01-08', '2026-01-09', '2026-01-10'], returns2026: [0, 0.8, 1.5, 2.1, 2.8, 3.5, 4.12], returnsCumulative: [36.88, 37.5, 38.2, 39.1, 40.2, 41.5, 42.53] },
+                SHIELD: { dates: ['2026-01-02', '2026-01-03', '2026-01-06', '2026-01-07', '2026-01-08', '2026-01-09', '2026-01-10'], returns2026: [0, 0.4, 0.9, 1.3, 1.7, 2.1, 2.45], returnsCumulative: [17.92, 18.2, 18.7, 19.1, 19.5, 20.1, 20.81] },
+                OMNI: { dates: ['2026-01-02', '2026-01-03', '2026-01-06', '2026-01-07', '2026-01-08', '2026-01-09', '2026-01-10'], returns2026: [0, 0.6, 1.2, 1.7, 2.2, 2.7, 3.15], returnsCumulative: [16.59, 17.1, 17.8, 18.3, 18.9, 19.5, 20.26] }
+            }
+        };
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initChart();
-            fetchAllData();
-            startAutoRefresh();
+            setupInvestmentCalculator();
+            setupReturnViewToggle();
+
+            if (IS_LOCAL) {
+                loadFallbackData();
+            } else {
+                fetchAllData();
+                startAutoRefresh();
+            }
         });
+
+        // Setup Investment Calculator
+        function setupInvestmentCalculator() {
+            const slider = document.getElementById('investment-slider');
+            const display = document.getElementById('investment-display');
+            const quickBtns = document.querySelectorAll('.quick-amount-btn');
+
+            slider.addEventListener('input', (e) => {
+                currentInvestment = parseInt(e.target.value);
+                display.textContent = formatCurrency(currentInvestment);
+                updateQuickAmountButtons();
+                updateProjectedValues();
+            });
+
+            quickBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentInvestment = parseInt(btn.dataset.amount);
+                    slider.value = currentInvestment;
+                    display.textContent = formatCurrency(currentInvestment);
+                    updateQuickAmountButtons();
+                    updateProjectedValues();
+                });
+            });
+        }
+
+        function updateQuickAmountButtons() {
+            document.querySelectorAll('.quick-amount-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.amount) === currentInvestment);
+            });
+        }
+
+        // Setup Return View Toggle
+        function setupReturnViewToggle() {
+            const viewBtns = document.querySelectorAll('.view-btn');
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentView = btn.dataset.view;
+                    viewBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateDisplayedReturns();
+                    updateProjectedValues();
+                    updateChartData();
+                });
+            });
+        }
+
+        // Update displayed returns based on view
+        function updateDisplayedReturns() {
+            for (const name of ['ALPHA', 'SHIELD', 'OMNI']) {
+                const lowerName = name.toLowerCase();
+                const returnEl = document.getElementById(`${lowerName}-return`);
+                const labelEl = returnEl?.parentElement?.querySelector('.algo-return-label');
+
+                if (returnEl) {
+                    const returns = algoReturns[name];
+                    const value = currentView === '2026' ? returns.return2026 : returns.returnCumulative;
+                    returnEl.textContent = `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+                    returnEl.className = `algo-return ${value >= 0 ? 'positive' : 'negative'}`;
+                }
+                if (labelEl) {
+                    labelEl.textContent = currentView === '2026' ? '2026 YTD' : 'Total Return';
+                }
+            }
+
+            // Update YTD summary
+            const ytdEl = document.getElementById('ytd-return');
+            const ytdLabel = ytdEl?.parentElement?.querySelector('.summary-label');
+            if (ytdEl) {
+                const avgReturn = currentView === '2026'
+                    ? (algoReturns.ALPHA.return2026 + algoReturns.SHIELD.return2026 + algoReturns.OMNI.return2026) / 3
+                    : (algoReturns.ALPHA.returnCumulative + algoReturns.SHIELD.returnCumulative + algoReturns.OMNI.returnCumulative) / 3;
+                ytdEl.textContent = `${avgReturn >= 0 ? '+' : ''}${avgReturn.toFixed(2)}%`;
+                ytdEl.className = `summary-value ${avgReturn >= 0 ? 'positive' : 'negative'}`;
+            }
+            if (ytdLabel) {
+                ytdLabel.textContent = currentView === '2026' ? '2026 YTD Return' : 'Total Return (incl. 2025)';
+            }
+        }
+
+        // Update projected values based on investment and returns
+        function updateProjectedValues() {
+            for (const name of ['ALPHA', 'SHIELD', 'OMNI']) {
+                const lowerName = name.toLowerCase();
+                const amountEl = document.getElementById(`${lowerName}-projected-amount`);
+                const gainEl = document.getElementById(`${lowerName}-projected-gain`);
+
+                if (amountEl && gainEl) {
+                    const returns = algoReturns[name];
+                    const returnPct = currentView === '2026' ? returns.return2026 : returns.returnCumulative;
+                    const projectedValue = currentInvestment * (1 + returnPct / 100);
+                    const gain = projectedValue - currentInvestment;
+
+                    amountEl.textContent = formatCurrency(projectedValue);
+                    gainEl.textContent = `${gain >= 0 ? '+' : ''}${formatCurrency(gain)}`;
+                    gainEl.className = `projected-gain ${gain >= 0 ? 'positive' : 'negative'}`;
+                }
+            }
+        }
+
+        // Update chart data based on view
+        function updateChartData() {
+            if (!performanceChart || !historicalData) return;
+
+            const returnKey = currentView === '2026' ? 'returns2026' : 'returnsCumulative';
+
+            performanceChart.data.datasets[0].data = historicalData.ALPHA?.[returnKey] || [];
+            performanceChart.data.datasets[1].data = historicalData.SHIELD?.[returnKey] || [];
+            performanceChart.data.datasets[2].data = historicalData.OMNI?.[returnKey] || [];
+
+            performanceChart.options.plugins.title = {
+                display: true,
+                text: currentView === '2026' ? '2026 Performance' : 'Cumulative Performance (incl. 2025)',
+                color: '#e6edf3'
+            };
+
+            performanceChart.update();
+        }
+
+        // Load fallback data for local development
+        function loadFallbackData() {
+            console.log('Using static fallback data (local development)');
+
+            // Update market status
+            const statusEl = document.getElementById('market-status');
+            const textEl = document.getElementById('market-text');
+            statusEl.classList.add('closed');
+            textEl.textContent = 'Demo Mode';
+
+            // Store returns
+            for (const [name, stats] of Object.entries(FALLBACK_DATA.symphonyStats)) {
+                algoReturns[name] = {
+                    return2026: stats.return2026,
+                    returnCumulative: stats.returnCumulative
+                };
+            }
+
+            // Today's change
+            const changeEl = document.getElementById('today-change');
+            const todayChangePct = FALLBACK_DATA.portfolioStats.todayChangePct;
+            changeEl.textContent = `${todayChangePct >= 0 ? '+' : ''}${todayChangePct.toFixed(2)}%`;
+            changeEl.className = `summary-value ${todayChangePct >= 0 ? 'positive' : 'negative'}`;
+
+            // Symphony stats - today's change
+            for (const [name, stats] of Object.entries(FALLBACK_DATA.symphonyStats)) {
+                const lowerName = name.toLowerCase();
+                const todayEl = document.getElementById(`${lowerName}-today`);
+                if (todayEl) {
+                    todayEl.textContent = `+${stats.todayChangePct.toFixed(2)}%`;
+                    todayEl.style.color = 'var(--success-green)';
+                }
+            }
+
+            // Update displayed returns
+            updateDisplayedReturns();
+            updateProjectedValues();
+
+            // Chart data
+            historicalData = FALLBACK_DATA.dailyPerformance;
+            updateChart(historicalData);
+            updateLastUpdateTime();
+        }
 
         // Fetch all data
         async function fetchAllData() {
             try {
                 await Promise.all([
                     fetchMarketStatus(),
-                    fetchPortfolioStats(),
-                    fetchSymphonyStats(),
-                    fetchHoldings(),
-                    fetchDailyPerformance()
+                    fetchLiveData()
                 ]);
                 updateLastUpdateTime();
             } catch (error) {
                 console.error('Error fetching data:', error);
+                loadFallbackData();
+            }
+        }
+
+        // Fetch live data from Composer API
+        async function fetchLiveData() {
+            try {
+                // Fetch symphony stats (current values and returns)
+                const statsResponse = await fetch(`${API_BASE}/live-data?action=symphony-stats`);
+                const statsData = await statsResponse.json();
+
+                if (statsData.symphonies) {
+                    for (const [name, stats] of Object.entries(statsData.symphonies)) {
+                        if (algoReturns[name]) {
+                            // Calculate 2026 return from baselines
+                            const baseline = BASELINES[name];
+                            const return2026 = ((stats.value - baseline.startValue2026) / baseline.startValue2026) * 100;
+                            const returnCumulative = ((stats.value - baseline.originalInvestment) / baseline.originalInvestment) * 100;
+
+                            algoReturns[name] = {
+                                return2026: parseFloat(return2026.toFixed(2)),
+                                returnCumulative: parseFloat(returnCumulative.toFixed(2)),
+                                todayChangePct: stats.todayChange || 0
+                            };
+                        }
+                    }
+                }
+
+                // Update today's change display
+                updateTodayChange();
+
+                // Fetch daily performance for chart
+                const perfResponse = await fetch(`${API_BASE}/live-data?action=daily-performance`);
+                const perfData = await perfResponse.json();
+
+                // Format for chart
+                historicalData = {};
+                for (const name of ['ALPHA', 'SHIELD', 'OMNI']) {
+                    if (perfData[name]) {
+                        historicalData[name] = {
+                            dates: perfData[name].dates || [],
+                            returns2026: perfData[name].returns || [],
+                            returnsCumulative: (perfData[name].returns || []).map(r => {
+                                // Add 2025 return to get cumulative
+                                return parseFloat((r + BASELINES[name].return2025).toFixed(2));
+                            })
+                        };
+                    }
+                }
+
+                updateDisplayedReturns();
+                updateProjectedValues();
+                updateChart(historicalData);
+            } catch (error) {
+                console.error('Error fetching live data:', error);
+                loadFallbackData();
+            }
+        }
+
+        // Update today's change displays
+        function updateTodayChange() {
+            // Calculate average today change
+            let totalChange = 0;
+            let count = 0;
+            for (const name of ['ALPHA', 'SHIELD', 'OMNI']) {
+                const change = algoReturns[name]?.todayChangePct || 0;
+                totalChange += change;
+                count++;
+
+                // Update individual algo today change
+                const lowerName = name.toLowerCase();
+                const todayEl = document.getElementById(`${lowerName}-today`);
+                if (todayEl) {
+                    todayEl.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+                    todayEl.style.color = change >= 0 ? 'var(--success-green)' : 'var(--warning-red)';
+                }
+            }
+
+            // Update portfolio today change
+            const avgChange = count > 0 ? totalChange / count : 0;
+            const changeEl = document.getElementById('today-change');
+            if (changeEl) {
+                changeEl.textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%`;
+                changeEl.className = `summary-value ${avgChange >= 0 ? 'positive' : 'negative'}`;
             }
         }
 
         // Market Status
         async function fetchMarketStatus() {
             try {
-                const response = await fetch(`${API_BASE}?action=market-hours`);
+                const response = await fetch(`${API_BASE}/live-data?action=market-hours`);
                 const data = await response.json();
 
                 isMarketOpen = data.isOpen;
@@ -475,157 +847,9 @@
                     textEl.textContent = 'Market Closed';
                 }
 
-                // Adjust refresh interval
                 restartAutoRefresh();
             } catch (error) {
                 console.error('Error fetching market status:', error);
-            }
-        }
-
-        // Portfolio Stats
-        async function fetchPortfolioStats() {
-            try {
-                const response = await fetch(`${API_BASE}?action=portfolio-stats`);
-                const data = await response.json();
-
-                if (data.portfolio_value) {
-                    document.getElementById('total-value').textContent = formatCurrency(data.portfolio_value);
-
-                    const todayChange = data.todays_dollar_change || 0;
-                    const todayChangePct = data.todays_percent_change || 0;
-                    const changeEl = document.getElementById('today-change');
-                    const changePctEl = document.getElementById('today-change-pct');
-
-                    changeEl.textContent = formatCurrency(todayChange, true);
-                    changeEl.className = `summary-value ${todayChange >= 0 ? 'positive' : 'negative'}`;
-
-                    changePctEl.textContent = `${todayChangePct >= 0 ? '+' : ''}${todayChangePct.toFixed(2)}%`;
-                    changePctEl.className = `summary-change ${todayChangePct >= 0 ? 'positive' : 'negative'}`;
-
-                    document.getElementById('cash-available').textContent = formatCurrency(data.total_unallocated_cash || 0);
-
-                    // Calculate YTD return
-                    const netDeposits = data.net_deposits || 3000;
-                    const ytdReturn = ((data.portfolio_value - netDeposits) / netDeposits) * 100;
-                    const ytdEl = document.getElementById('ytd-return');
-                    ytdEl.textContent = `${ytdReturn >= 0 ? '+' : ''}${ytdReturn.toFixed(2)}%`;
-                    ytdEl.className = `summary-value ${ytdReturn >= 0 ? 'positive' : 'negative'}`;
-                }
-            } catch (error) {
-                console.error('Error fetching portfolio stats:', error);
-            }
-        }
-
-        // Symphony Stats
-        async function fetchSymphonyStats() {
-            try {
-                const response = await fetch(`${API_BASE}?action=symphony-stats`);
-                const data = await response.json();
-
-                if (data.symphonies) {
-                    for (const [name, stats] of Object.entries(data.symphonies)) {
-                        const lowerName = name.toLowerCase();
-                        const returnEl = document.getElementById(`${lowerName}-return`);
-                        const valueEl = document.getElementById(`${lowerName}-value`);
-                        const todayEl = document.getElementById(`${lowerName}-today`);
-
-                        if (returnEl && stats.realReturn !== undefined) {
-                            returnEl.textContent = `${stats.realReturn >= 0 ? '+' : ''}${stats.realReturn.toFixed(2)}%`;
-                            returnEl.className = `algo-return ${stats.realReturn >= 0 ? 'positive' : 'negative'}`;
-                        }
-
-                        if (valueEl && stats.value !== undefined) {
-                            valueEl.textContent = formatCurrency(stats.value);
-                        }
-
-                        if (todayEl) {
-                            const todayChange = stats.todayChange || 0;
-                            todayEl.textContent = formatCurrency(todayChange, true);
-                            todayEl.style.color = todayChange >= 0 ? 'var(--success-green)' : 'var(--warning-red)';
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching symphony stats:', error);
-            }
-        }
-
-        // Holdings
-        async function fetchHoldings() {
-            try {
-                const response = await fetch(`${API_BASE}?action=holdings`);
-                const data = await response.json();
-
-                // Group holdings by symphony
-                const holdingsBySymphony = { ALPHA: [], SHIELD: [], OMNI: [] };
-                const allHoldings = [];
-
-                if (data.overall_portfolio) {
-                    for (const holding of data.overall_portfolio) {
-                        allHoldings.push(holding);
-
-                        // Check which symphony it belongs to
-                        if (holding.symphony) {
-                            for (const sym of holding.symphony) {
-                                const name = sym.symphony_name?.toUpperCase();
-                                if (holdingsBySymphony[name]) {
-                                    holdingsBySymphony[name].push({
-                                        ticker: holding.ticker,
-                                        allocation: sym.allocation * 100,
-                                        value: sym.value
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Update per-algo holdings
-                for (const [name, holdings] of Object.entries(holdingsBySymphony)) {
-                    const container = document.getElementById(`${name.toLowerCase()}-holdings`);
-                    if (container) {
-                        if (holdings.length > 0) {
-                            container.innerHTML = holdings.slice(0, 5).map(h => `
-                                <div class="holding-item">
-                                    <span class="holding-ticker">${h.ticker}</span>
-                                    <span class="holding-allocation">${h.allocation.toFixed(1)}%</span>
-                                </div>
-                            `).join('');
-                        } else {
-                            container.innerHTML = '<div style="color: var(--text-secondary); font-size: 14px;">No holdings data</div>';
-                        }
-                    }
-                }
-
-                // Update full holdings table
-                const tableBody = document.getElementById('holdings-table-body');
-                if (allHoldings.length > 0) {
-                    tableBody.innerHTML = allHoldings.map(h => `
-                        <tr>
-                            <td><strong>${h.ticker}</strong></td>
-                            <td>${h.symphony?.map(s => s.symphony_name).join(', ') || 'Direct'}</td>
-                            <td>${h.amount?.toFixed(2) || '--'}</td>
-                            <td>${formatCurrency(h.value || 0)}</td>
-                            <td>${((h.allocation || 0) * 100).toFixed(1)}%</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">No holdings data available</td></tr>';
-                }
-            } catch (error) {
-                console.error('Error fetching holdings:', error);
-            }
-        }
-
-        // Daily Performance
-        async function fetchDailyPerformance() {
-            try {
-                const response = await fetch(`${API_BASE}?action=daily-performance`);
-                const data = await response.json();
-
-                updateChart(data);
-            } catch (error) {
-                console.error('Error fetching daily performance:', error);
             }
         }
 
@@ -721,7 +945,6 @@
         function updateChart(data) {
             if (!performanceChart || !data) return;
 
-            // Get dates from any available dataset
             let dates = [];
             for (const name of ['ALPHA', 'SHIELD', 'OMNI']) {
                 if (data[name]?.dates?.length > 0) {
@@ -730,20 +953,17 @@
                 }
             }
 
-            if (dates.length === 0) {
-                // No 2026 data yet - show message
-                return;
-            }
+            if (dates.length === 0) return;
 
             performanceChart.data.labels = dates.map(d => {
                 const date = new Date(d);
                 return `${date.getMonth() + 1}/${date.getDate()}`;
             });
 
-            performanceChart.data.datasets[0].data = data.ALPHA?.returns || [];
-            performanceChart.data.datasets[1].data = data.SHIELD?.returns || [];
-            performanceChart.data.datasets[2].data = data.OMNI?.returns || [];
-            // SPY data would need separate fetch
+            const returnKey = currentView === '2026' ? 'returns2026' : 'returnsCumulative';
+            performanceChart.data.datasets[0].data = data.ALPHA?.[returnKey] || [];
+            performanceChart.data.datasets[1].data = data.SHIELD?.[returnKey] || [];
+            performanceChart.data.datasets[2].data = data.OMNI?.[returnKey] || [];
 
             performanceChart.update();
         }
@@ -760,7 +980,7 @@
             if (showSign && value !== 0) {
                 return (value >= 0 ? '+' : '-') + formatted;
             }
-            return formatted;
+            return value < 0 ? '-' + formatted : formatted;
         }
 
         function updateLastUpdateTime() {

@@ -5,6 +5,11 @@
 [functions]
   node_bundler = "esbuild"
 
+# Scheduled function for daily data collection at market close
+# Runs at 4:35 PM ET (21:35 UTC) Monday-Friday
+[functions."collect-daily-data"]
+  schedule = "35 21 * * 1-5"
+
 [[headers]]
   for = "/*"
   [headers.values]
