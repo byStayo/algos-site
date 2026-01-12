@@ -499,10 +499,39 @@
     ]
   },
   "realPerformance2025": {
-    "note": "Real money performance from Jan 2025 - Present ($1,000 initial investment per algo)",
-    "ALPHA": { "return": 36.87, "initialInvestment": 1000 },
-    "SHIELD": { "return": 18.08, "initialInvestment": 1000 },
-    "OMNI": { "return": 20.73, "initialInvestment": 1000 },
-    "combined": { "return": 25.23, "totalInvestment": 3000 }
+    "note": "Full year 2025 backtest performance (Jan 1 - Dec 31, 2025)",
+    "dateRange": { "start": "2025-01-01", "end": "2025-12-31" },
+    "ALPHA": {
+      "cumulativeReturn": 50.28,
+      "annualizedReturn": 50.77,
+      "maxDrawdown": -37.38,
+      "sharpeRatio": 0.88,
+      "standardDeviation": 74.26,
+      "calmarRatio": 1.36
+    },
+    "SHIELD": {
+      "cumulativeReturn": 31.16,
+      "annualizedReturn": 31.44,
+      "maxDrawdown": -23.91,
+      "sharpeRatio": 0.77,
+      "standardDeviation": 50.94,
+      "calmarRatio": 1.32
+    },
+    "OMNI": {
+      "cumulativeReturn": 38.43,
+      "annualizedReturn": 38.79,
+      "maxDrawdown": -38.39,
+      "sharpeRatio": 0.80,
+      "standardDeviation": 66.62,
+      "calmarRatio": 1.01
+    },
+    "SPY": {
+      "cumulativeReturn": 18.01,
+      "annualizedReturn": 18.17,
+      "maxDrawdown": -18.76,
+      "sharpeRatio": 0.95,
+      "standardDeviation": 19.52,
+      "calmarRatio": 0.97
+    }
   }
 }
