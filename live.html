@@ -751,7 +751,22 @@
             try {
                 // Fetch symphony stats (current values and returns)
                 const statsResponse = await fetch(`${API_BASE}/live-data?action=symphony-stats`);
+
+                // Check HTTP status first
+                if (!statsResponse.ok) {
+                    console.log('API returned error status:', statsResponse.status, '- using fallback');
+                    loadFallbackData();
+                    return;
+                }
+
                 const statsData = await statsResponse.json();
+
+                // Check for error in response
+                if (statsData.error) {
+                    console.log('API returned error:', statsData.error, '- using fallback');
+                    loadFallbackData();
+                    return;
+                }
 
                 // VALIDATION: Check if we got actual symphony data with values
                 const hasValidData = statsData.symphonies &&
