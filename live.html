@@ -753,6 +753,17 @@
                 const statsResponse = await fetch(`${API_BASE}/live-data?action=symphony-stats`);
                 const statsData = await statsResponse.json();
 
+                // VALIDATION: Check if we got actual symphony data with values
+                const hasValidData = statsData.symphonies &&
+                    Object.keys(statsData.symphonies).length > 0 &&
+                    Object.values(statsData.symphonies).some(s => s.value && s.value > 0);
+
+                if (!hasValidData) {
+                    console.log('API returned empty/invalid data, using fallback');
+                    loadFallbackData();
+                    return;
+                }
+
                 if (statsData.symphonies) {
                     for (const [name, stats] of Object.entries(statsData.symphonies)) {
                         if (algoReturns[name]) {
