@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live 2026 Tracker | ALGOS</title>
+    <meta name="description" content="Real-time tracking of ALPHA, SHIELD, and OMNI algorithms performance in 2026.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #7d8590;
+            --accent-blue: #1F7CEC;
+            --success-green: #3fb950;
+            --warning-red: #f85149;
+            --warning-yellow: #d29922;
+            --alpha-color: #22c55e;
+            --shield-color: #3b82f6;
+            --omni-color: #a855f7;
+        }
+        body {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000; padding: 16px 0;
+        }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--text-primary); text-decoration: none; }
+        .logo span { color: var(--accent-blue); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+        .nav-links a:hover { color: var(--accent-blue); }
+        .live-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 20px;
+            background: rgba(63, 185, 80, 0.15);
+            border: 1px solid var(--success-green);
+            font-size: 12px; font-weight: 600; color: var(--success-green);
+        }
+        .live-badge.closed {
+            background: rgba(248, 81, 73, 0.15);
+            border-color: var(--warning-red);
+            color: var(--warning-red);
+        }
+        .pulse {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--success-green);
+            animation: pulse 2s infinite;
+        }
+        .live-badge.closed .pulse { background: var(--warning-red); animation: none; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Header */
+        .page-header {
+            padding: 100px 0 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header-top {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px;
+        }
+        .page-header h1 { font-size: 32px; font-weight: 700; }
+        .page-header h1 span { color: var(--accent-blue); }
+        .last-update { color: var(--text-secondary); font-size: 14px; }
+
+        /* Portfolio Summary Bar */
+        .portfolio-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .summary-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .summary-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
+        .summary-value { font-size: 28px; font-weight: 700; }
+        .summary-value.positive { color: var(--success-green); }
+        .summary-value.negative { color: var(--warning-red); }
+        .summary-change { font-size: 14px; margin-top: 4px; }
+        .summary-change.positive { color: var(--success-green); }
+        .summary-change.negative { color: var(--warning-red); }
+
+        /* Algo Cards Grid */
+        .algo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .algo-live-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: border-color 0.2s;
+        }
+        .algo-live-card:hover { border-color: var(--accent-blue); }
+        .algo-live-card.alpha { border-top: 3px solid var(--alpha-color); }
+        .algo-live-card.shield { border-top: 3px solid var(--shield-color); }
+        .algo-live-card.omni { border-top: 3px solid var(--omni-color); }
+
+        .algo-card-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .algo-name { font-size: 24px; font-weight: 700; }
+        .algo-name.alpha { color: var(--alpha-color); }
+        .algo-name.shield { color: var(--shield-color); }
+        .algo-name.omni { color: var(--omni-color); }
+        .algo-return {
+            font-size: 32px; font-weight: 700;
+            text-align: right;
+        }
+        .algo-return.positive { color: var(--success-green); }
+        .algo-return.negative { color: var(--warning-red); }
+        .algo-return-label { font-size: 12px; color: var(--text-secondary); text-align: right; }
+
+        .algo-stats {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 16px; margin-bottom: 20px;
+        }
+        .algo-stat-item { }
+        .algo-stat-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+        .algo-stat-value { font-size: 18px; font-weight: 600; }
+
+        .algo-holdings { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+        .algo-holdings-title { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
+        .holding-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .holding-item:last-child { border-bottom: none; }
+        .holding-ticker { font-weight: 600; }
+        .holding-allocation { color: var(--text-secondary); font-size: 14px; }
+
+        /* Chart Section */
+        .chart-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        .chart-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px;
+        }
+        .chart-title { font-size: 20px; font-weight: 700; }
+        .chart-legend {
+            display: flex; gap: 20px;
+        }
+        .legend-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 14px; color: var(--text-secondary);
+        }
+        .legend-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+        }
+        .legend-dot.alpha { background: var(--alpha-color); }
+        .legend-dot.shield { background: var(--shield-color); }
+        .legend-dot.omni { background: var(--omni-color); }
+        .legend-dot.spy { background: #f59e0b; }
+
+        .chart-container { height: 400px; position: relative; }
+
+        /* Holdings Table */
+        .holdings-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        .holdings-table {
+            width: 100%; border-collapse: collapse;
+        }
+        .holdings-table th {
+            text-align: left; padding: 12px;
+            color: var(--text-secondary); font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .holdings-table td {
+            padding: 12px; border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .holdings-table tr:last-child td { border-bottom: none; }
+
+        /* Loading State */
+        .loading {
+            display: flex; justify-content: center; align-items: center;
+            height: 200px; color: var(--text-secondary);
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--border-color);
+            border-top-color: var(--accent-blue); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center; color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .algo-grid { grid-template-columns: 1fr; }
+            .portfolio-summary { grid-template-columns: repeat(2, 1fr); }
+            .chart-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">ALGOS<span>.</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="alpha.html">ALPHA</a>
+                <a href="shield.html">SHIELD</a>
+                <a href="omni.html">OMNI</a>
+                <div class="live-badge" id="market-status">
+                    <span class="pulse"></span>
+                    <span id="market-text">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <div class="header-top">
+                <h1>Live <span>2026</span> Tracker</h1>
+                <div class="last-update">Last updated: <span id="last-update-time">--</span></div>
+            </div>
+            <p style="color: var(--text-secondary);">Real-time performance tracking of your algorithmic strategies.</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Portfolio Summary -->
+        <div class="portfolio-summary" id="portfolio-summary">
+            <div class="summary-card">
+                <div class="summary-label">Total Portfolio Value</div>
+                <div class="summary-value" id="total-value">--</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Today's Change</div>
+                <div class="summary-value" id="today-change">--</div>
+                <div class="summary-change" id="today-change-pct">--</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">2026 YTD Return</div>
+                <div class="summary-value" id="ytd-return">--</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Available Cash</div>
+                <div class="summary-value" id="cash-available">--</div>
+            </div>
+        </div>
+
+        <!-- Algo Cards -->
+        <div class="algo-grid" id="algo-grid">
+            <!-- ALPHA Card -->
+            <div class="algo-live-card alpha">
+                <div class="algo-card-header">
+                    <div>
+                        <div class="algo-name alpha">ALPHA</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">Growth Exposure</div>
+                    </div>
+                    <div>
+                        <div class="algo-return positive" id="alpha-return">--</div>
+                        <div class="algo-return-label">2026 YTD</div>
+                    </div>
+                </div>
+                <div class="algo-stats">
+                    <div class="algo-stat-item">
+                        <div class="algo-stat-label">Current Value</div>
+                        <div class="algo-stat-value" id="alpha-value">--</div>
+                    </div>
+                    <div class="algo-stat-item">
+                        <div class="algo-stat-label">Today's Change</div>
+                        <div class="algo-stat-value" id="alpha-today">--</div>
+                    </div>
+                </div>
+                <div class="algo-holdings">
+                    <div class="algo-holdings-title">Current Holdings</div>
+                    <div id="alpha-holdings">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHIELD Card -->
+            <div class="algo-live-card shield">
+                <div class="algo-card-header">
+                    <div>
+                        <div class="algo-name shield">SHIELD</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">Defensive Protection</div>
+                    </div>
+                    <div>
+                        <div class="algo-return positive" id="shield-return">--</div>
+                        <div class="algo-return-label">2026 YTD</div>
+                    </div>
+                </div>
+                <div class="algo-stats">
+                    <div class="algo-stat-item">
+                        <div class="algo-stat-label">Current Value</div>
+                        <div class="algo-stat-value" id="shield-value">--</div>
+                    </div>
+                    <div class="algo-stat-item">
+                        <div class="algo-stat-label">Today's Change</div>
+                        <div class="algo-stat-value" id="shield-today">--</div>
+                    </div>
+                </div>
+                <div class="algo-holdings">
+                    <div class="algo-holdings-title">Current Holdings</div>
+                    <div id="shield-holdings">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OMNI Card -->
+            <div class="algo-live-card omni">
+                <div class="algo-card-header">
+                    <div>
+                        <div class="algo-name omni">OMNI</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">Full Automation</div>
+                    </div>
+                    <div>
+                        <div class="algo-return positive" id="omni-return">--</div>
+                        <div class="algo-return-label">2026 YTD</div>
+                    </div>
+                </div>
+                <div class="algo-stats">
+                    <div class="algo-stat-item">
+                        <div class="algo-stat-label">Current Value</div>
+                        <div class="algo-stat-value" id="omni-value">--</div>
+                    </div>
+                    <div class="algo-stat-item">
+                        <div class="algo-stat-label">Today's Change</div>
+                        <div class="algo-stat-value" id="omni-today">--</div>
+                    </div>
+                </div>
+                <div class="algo-holdings">
+                    <div class="algo-holdings-title">Current Holdings</div>
+                    <div id="omni-holdings">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">2026 Performance</div>
+                <div class="chart-legend">
+                    <div class="legend-item"><div class="legend-dot alpha"></div> ALPHA</div>
+                    <div class="legend-item"><div class="legend-dot shield"></div> SHIELD</div>
+                    <div class="legend-item"><div class="legend-dot omni"></div> OMNI</div>
+                    <div class="legend-item"><div class="legend-dot spy"></div> SPY</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="performance-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Holdings Table -->
+        <div class="holdings-section">
+            <h2 style="margin-bottom: 20px;">All Holdings</h2>
+            <table class="holdings-table">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Strategy</th>
+                        <th>Shares</th>
+                        <th>Value</th>
+                        <th>Allocation</th>
+                    </tr>
+                </thead>
+                <tbody id="holdings-table-body">
+                    <tr>
+                        <td colspan="5" class="loading"><div class="spinner"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Auto-refreshes every 30 seconds during market hours</p>
+            <p style="margin-top: 8px;">&copy; 2026 ALGOS. Powered by Composer.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration
+        const REFRESH_INTERVAL_MARKET_OPEN = 30000;  // 30 seconds
+        const REFRESH_INTERVAL_MARKET_CLOSED = 300000;  // 5 minutes
+        const API_BASE = '/.netlify/functions/live-data';
+
+        let performanceChart = null;
+        let isMarketOpen = false;
+        let refreshInterval = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            fetchAllData();
+            startAutoRefresh();
+        });
+
+        // Fetch all data
+        async function fetchAllData() {
+            try {
+                await Promise.all([
+                    fetchMarketStatus(),
+                    fetchPortfolioStats(),
+                    fetchSymphonyStats(),
+                    fetchHoldings(),
+                    fetchDailyPerformance()
+                ]);
+                updateLastUpdateTime();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Market Status
+        async function fetchMarketStatus() {
+            try {
+                const response = await fetch(`${API_BASE}?action=market-hours`);
+                const data = await response.json();
+
+                isMarketOpen = data.isOpen;
+                const statusEl = document.getElementById('market-status');
+                const textEl = document.getElementById('market-text');
+
+                if (isMarketOpen) {
+                    statusEl.classList.remove('closed');
+                    textEl.textContent = 'Market Open';
+                } else {
+                    statusEl.classList.add('closed');
+                    textEl.textContent = 'Market Closed';
+                }
+
+                // Adjust refresh interval
+                restartAutoRefresh();
+            } catch (error) {
+                console.error('Error fetching market status:', error);
+            }
+        }
+
+        // Portfolio Stats
+        async function fetchPortfolioStats() {
+            try {
+                const response = await fetch(`${API_BASE}?action=portfolio-stats`);
+                const data = await response.json();
+
+                if (data.portfolio_value) {
+                    document.getElementById('total-value').textContent = formatCurrency(data.portfolio_value);
+
+                    const todayChange = data.todays_dollar_change || 0;
+                    const todayChangePct = data.todays_percent_change || 0;
+                    const changeEl = document.getElementById('today-change');
+                    const changePctEl = document.getElementById('today-change-pct');
+
+                    changeEl.textContent = formatCurrency(todayChange, true);
+                    changeEl.className = `summary-value ${todayChange >= 0 ? 'positive' : 'negative'}`;
+
+                    changePctEl.textContent = `${todayChangePct >= 0 ? '+' : ''}${todayChangePct.toFixed(2)}%`;
+                    changePctEl.className = `summary-change ${todayChangePct >= 0 ? 'positive' : 'negative'}`;
+
+                    document.getElementById('cash-available').textContent = formatCurrency(data.total_unallocated_cash || 0);
+
+                    // Calculate YTD return
+                    const netDeposits = data.net_deposits || 3000;
+                    const ytdReturn = ((data.portfolio_value - netDeposits) / netDeposits) * 100;
+                    const ytdEl = document.getElementById('ytd-return');
+                    ytdEl.textContent = `${ytdReturn >= 0 ? '+' : ''}${ytdReturn.toFixed(2)}%`;
+                    ytdEl.className = `summary-value ${ytdReturn >= 0 ? 'positive' : 'negative'}`;
+                }
+            } catch (error) {
+                console.error('Error fetching portfolio stats:', error);
+            }
+        }
+
+        // Symphony Stats
+        async function fetchSymphonyStats() {
+            try {
+                const response = await fetch(`${API_BASE}?action=symphony-stats`);
+                const data = await response.json();
+
+                if (data.symphonies) {
+                    for (const [name, stats] of Object.entries(data.symphonies)) {
+                        const lowerName = name.toLowerCase();
+                        const returnEl = document.getElementById(`${lowerName}-return`);
+                        const valueEl = document.getElementById(`${lowerName}-value`);
+                        const todayEl = document.getElementById(`${lowerName}-today`);
+
+                        if (returnEl && stats.realReturn !== undefined) {
+                            returnEl.textContent = `${stats.realReturn >= 0 ? '+' : ''}${stats.realReturn.toFixed(2)}%`;
+                            returnEl.className = `algo-return ${stats.realReturn >= 0 ? 'positive' : 'negative'}`;
+                        }
+
+                        if (valueEl && stats.value !== undefined) {
+                            valueEl.textContent = formatCurrency(stats.value);
+                        }
+
+                        if (todayEl) {
+                            const todayChange = stats.todayChange || 0;
+                            todayEl.textContent = formatCurrency(todayChange, true);
+                            todayEl.style.color = todayChange >= 0 ? 'var(--success-green)' : 'var(--warning-red)';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching symphony stats:', error);
+            }
+        }
+
+        // Holdings
+        async function fetchHoldings() {
+            try {
+                const response = await fetch(`${API_BASE}?action=holdings`);
+                const data = await response.json();
+
+                // Group holdings by symphony
+                const holdingsBySymphony = { ALPHA: [], SHIELD: [], OMNI: [] };
+                const allHoldings = [];
+
+                if (data.overall_portfolio) {
+                    for (const holding of data.overall_portfolio) {
+                        allHoldings.push(holding);
+
+                        // Check which symphony it belongs to
+                        if (holding.symphony) {
+                            for (const sym of holding.symphony) {
+                                const name = sym.symphony_name?.toUpperCase();
+                                if (holdingsBySymphony[name]) {
+                                    holdingsBySymphony[name].push({
+                                        ticker: holding.ticker,
+                                        allocation: sym.allocation * 100,
+                                        value: sym.value
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Update per-algo holdings
+                for (const [name, holdings] of Object.entries(holdingsBySymphony)) {
+                    const container = document.getElementById(`${name.toLowerCase()}-holdings`);
+                    if (container) {
+                        if (holdings.length > 0) {
+                            container.innerHTML = holdings.slice(0, 5).map(h => `
+                                <div class="holding-item">
+                                    <span class="holding-ticker">${h.ticker}</span>
+                                    <span class="holding-allocation">${h.allocation.toFixed(1)}%</span>
+                                </div>
+                            `).join('');
+                        } else {
+                            container.innerHTML = '<div style="color: var(--text-secondary); font-size: 14px;">No holdings data</div>';
+                        }
+                    }
+                }
+
+                // Update full holdings table
+                const tableBody = document.getElementById('holdings-table-body');
+                if (allHoldings.length > 0) {
+                    tableBody.innerHTML = allHoldings.map(h => `
+                        <tr>
+                            <td><strong>${h.ticker}</strong></td>
+                            <td>${h.symphony?.map(s => s.symphony_name).join(', ') || 'Direct'}</td>
+                            <td>${h.amount?.toFixed(2) || '--'}</td>
+                            <td>${formatCurrency(h.value || 0)}</td>
+                            <td>${((h.allocation || 0) * 100).toFixed(1)}%</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">No holdings data available</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error fetching holdings:', error);
+            }
+        }
+
+        // Daily Performance
+        async function fetchDailyPerformance() {
+            try {
+                const response = await fetch(`${API_BASE}?action=daily-performance`);
+                const data = await response.json();
+
+                updateChart(data);
+            } catch (error) {
+                console.error('Error fetching daily performance:', error);
+            }
+        }
+
+        // Chart Initialization
+        function initChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'ALPHA',
+                            data: [],
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            tension: 0.1,
+                            fill: false,
+                            pointRadius: 0,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'SHIELD',
+                            data: [],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.1,
+                            fill: false,
+                            pointRadius: 0,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'OMNI',
+                            data: [],
+                            borderColor: '#a855f7',
+                            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                            tension: 0.1,
+                            fill: false,
+                            pointRadius: 0,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'SPY',
+                            data: [],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.1,
+                            fill: false,
+                            pointRadius: 0,
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#161b22',
+                            borderColor: '#30363d',
+                            borderWidth: 1,
+                            titleColor: '#e6edf3',
+                            bodyColor: '#e6edf3',
+                            callbacks: {
+                                label: (context) => `${context.dataset.label}: ${context.parsed.y >= 0 ? '+' : ''}${context.parsed.y.toFixed(2)}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#21262d' },
+                            ticks: { color: '#7d8590' }
+                        },
+                        y: {
+                            grid: { color: '#21262d' },
+                            ticks: {
+                                color: '#7d8590',
+                                callback: (value) => `${value >= 0 ? '+' : ''}${value}%`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Chart
+        function updateChart(data) {
+            if (!performanceChart || !data) return;
+
+            // Get dates from any available dataset
+            let dates = [];
+            for (const name of ['ALPHA', 'SHIELD', 'OMNI']) {
+                if (data[name]?.dates?.length > 0) {
+                    dates = data[name].dates;
+                    break;
+                }
+            }
+
+            if (dates.length === 0) {
+                // No 2026 data yet - show message
+                return;
+            }
+
+            performanceChart.data.labels = dates.map(d => {
+                const date = new Date(d);
+                return `${date.getMonth() + 1}/${date.getDate()}`;
+            });
+
+            performanceChart.data.datasets[0].data = data.ALPHA?.returns || [];
+            performanceChart.data.datasets[1].data = data.SHIELD?.returns || [];
+            performanceChart.data.datasets[2].data = data.OMNI?.returns || [];
+            // SPY data would need separate fetch
+
+            performanceChart.update();
+        }
+
+        // Utility Functions
+        function formatCurrency(value, showSign = false) {
+            const formatted = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(Math.abs(value));
+
+            if (showSign && value !== 0) {
+                return (value >= 0 ? '+' : '-') + formatted;
+            }
+            return formatted;
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('last-update-time').textContent = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function startAutoRefresh() {
+            const interval = isMarketOpen ? REFRESH_INTERVAL_MARKET_OPEN : REFRESH_INTERVAL_MARKET_CLOSED;
+            refreshInterval = setInterval(fetchAllData, interval);
+        }
+
+        function restartAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            startAutoRefresh();
+        }
+    </script>
+</body>
+</html>
