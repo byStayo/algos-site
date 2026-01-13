@@ -49,6 +49,33 @@
         .nav-links .live-link::before { content: '●'; margin-right: 6px; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
+        /* Hamburger Menu */
+        .hamburger { display: none; flex-direction: column; cursor: pointer; padding: 10px; z-index: 1001; }
+        .hamburger span { width: 25px; height: 3px; background: var(--text-primary); margin: 3px 0; border-radius: 2px; transition: all 0.3s ease; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 8px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -8px); }
+
+        /* Mobile Navigation */
+        .mobile-nav { display: none; position: fixed; top: 60px; left: 0; right: 0; background: rgba(13, 17, 23, 0.98); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); padding: 20px; z-index: 999; }
+        .mobile-nav.active { display: block; }
+        .mobile-nav a { display: block; padding: 12px 0; color: var(--text-secondary); text-decoration: none; font-size: 16px; font-weight: 500; border-bottom: 1px solid var(--border-color); }
+        .mobile-nav a:last-child { border-bottom: none; }
+        .mobile-nav a:hover { color: var(--text-primary); }
+        .mobile-nav a.active { color: var(--shield-color); }
+        .mobile-nav .live-link { color: var(--success-green); }
+
+        /* Skip to content */
+        .skip-link { position: absolute; top: -40px; left: 0; background: var(--accent-blue); color: white; padding: 8px 16px; z-index: 10000; text-decoration: none; }
+        .skip-link:focus { top: 0; }
+
+        /* Focus indicators */
+        a:focus, button:focus, input:focus { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+        a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
         .hero {
             padding: 140px 0 60px;
             text-align: center;
@@ -261,12 +288,16 @@
         }
 
         @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
             .hero h1 { font-size: 40px; }
             .hero-return { font-size: 48px; }
         }
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <nav>
         <div class="container">
             <a href="index.html" class="logo">Anastasiades<span>Algos</span></a>
@@ -277,10 +308,21 @@
                 <a href="omni.html">OMNI</a>
                 <a href="live.html" class="live-link">Live 2026</a>
             </div>
+            <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
-    <section class="hero">
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="index.html">Home</a>
+        <a href="alpha.html">ALPHA</a>
+        <a href="shield.html" class="active">SHIELD</a>
+        <a href="omni.html">OMNI</a>
+        <a href="live.html" class="live-link">Live 2026</a>
+    </div>
+
+    <section class="hero" id="main-content">
         <div class="container">
             <div class="hero-badge">Defensive Algorithm</div>
             <h1>SHIELD</h1>
@@ -606,6 +648,17 @@
                 }
             }
         });
+
+        // Hamburger menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const mobileNav = document.getElementById('mobile-nav');
+        if (hamburger && mobileNav) {
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+                this.setAttribute('aria-expanded', this.classList.contains('active'));
+            });
+        }
     </script>
 </body>
 </html>
