@@ -7,9 +7,8 @@
     <meta name="description" content="SHIELD provides automated downside protection by shifting to safe-haven assets when markets turn. For growth investors who need defense.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -22,7 +21,7 @@
             --accent-blue: #1F7CEC;
             --success-green: #3fb950;
             --warning-red: #f85149;
-            --shield-color: #3b82f6;
+            --shield-color: #ef4444;
         }
         body {
             font-family: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -84,7 +83,7 @@
         }
         .hero-badge {
             display: inline-block; padding: 6px 16px;
-            background: rgba(59, 130, 246, 0.15);
+            background: rgba(239, 68, 68, 0.15);
             border: 1px solid var(--shield-color);
             border-radius: 20px; font-size: 12px; font-weight: 600;
             color: var(--shield-color); margin-bottom: 20px;
@@ -226,7 +225,7 @@
         .comparison-table td:first-child { font-weight: 600; }
         .positive { color: var(--success-green); }
         .negative { color: var(--warning-red); }
-        .highlight-row { background: rgba(59, 130, 246, 0.1); }
+        .highlight-row { background: rgba(239, 68, 68, 0.1); }
 
         .vehicles-section {
             background: var(--bg-secondary);
@@ -246,7 +245,7 @@
         .vehicle-chip.safehaven { border-color: var(--shield-color); color: var(--shield-color); }
 
         .allocation-recommendation {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
             border: 1px solid var(--shield-color);
             border-radius: 16px; padding: 32px; text-align: center;
             margin: 40px 0;
@@ -272,7 +271,7 @@
             transition: all 0.2s; cursor: pointer; border: none;
         }
         .btn-primary { background: var(--shield-color); color: white; }
-        .btn-primary:hover { background: #2563eb; }
+        .btn-primary:hover { background: #dc2626; }
         .btn-secondary {
             background: var(--bg-secondary); color: var(--text-primary);
             border: 1px solid var(--border-color); margin-left: 12px;
@@ -624,7 +623,7 @@
                 datasets: [{
                     label: '1Y Return',
                     data: [19.0, 14.8, 11.1, 37.9],
-                    backgroundColor: ['#3b82f6', '#6b7280', '#6b7280', '#6b7280'],
+                    backgroundColor: ['#ef4444', '#3b82f6', '#3b82f6', '#3b82f6'],
                     borderRadius: 6
                 }]
             },
