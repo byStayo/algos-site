@@ -3,13 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algorithmic Portfolio Management | ALPHA, SHIELD, OMNI</title>
-    <meta name="description" content="Proprietary algorithmic investment strategies designed to replace traditional portfolio management. ALPHA for growth, SHIELD for protection, OMNI for complete automation.">
+    <title>Algo Trading Strategies | ALPHA, SHIELD, OMNI | Automated Investing</title>
+    <meta name="description" content="Discover ALPHA, SHIELD, and OMNI algorithmic trading strategies. Automated investing with proven returns - ALPHA +36.69%, SHIELD +17.92%, OMNI +16.59% in 2025.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://algos.anastasiades.io/">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Algo Trading Strategies | ALPHA, SHIELD, OMNI | Automated Investing">
+    <meta property="og:description" content="Discover ALPHA, SHIELD, and OMNI algorithmic trading strategies. Automated investing with proven returns - ALPHA +36.69%, SHIELD +17.92%, OMNI +16.59% in 2025.">
+    <meta property="og:url" content="https://algos.anastasiades.io/">
+    <meta property="og:image" content="https://algos.anastasiades.io/og-image.png">
+    <meta property="og:site_name" content="Anastasiades Algos">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Algo Trading Strategies | ALPHA, SHIELD, OMNI | Automated Investing">
+    <meta name="twitter:description" content="Discover ALPHA, SHIELD, and OMNI algorithmic trading strategies. Automated investing with proven returns.">
+    <meta name="twitter:image" content="https://algos.anastasiades.io/og-image.png">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="algorithmic trading, automated investing, ALPHA strategy, SHIELD strategy, OMNI strategy, portfolio management, algo trading">
+    <meta name="author" content="Anastasiades Algos">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Anastasiades Algos",
+        "url": "https://algos.anastasiades.io/",
+        "description": "Proprietary algorithmic trading strategies for automated portfolio management",
+        "logo": "https://algos.anastasiades.io/logo.png",
+        "sameAs": [],
+        "offers": {
+            "@type": "AggregateOffer",
+            "offerCount": 3,
+            "itemOffered": [
+                {
+                    "@type": "Service",
+                    "name": "ALPHA Strategy",
+                    "description": "Aggressive growth algorithm targeting high returns"
+                },
+                {
+                    "@type": "Service",
+                    "name": "SHIELD Strategy",
+                    "description": "Defensive algorithm for low volatility investing"
+                },
+                {
+                    "@type": "Service",
+                    "name": "OMNI Strategy",
+                    "description": "Balanced algorithm for optimal risk-adjusted returns"
+                }
+            ]
+        }
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns" defer></script>
     <style>
         * {
             margin: 0;
@@ -29,7 +87,7 @@
             --success-green: #3fb950;
             --warning-red: #f85149;
             --alpha-color: #22c55e;
-            --shield-color: #ef4444;
+            --shield-color: #3b82f6;
             --omni-color: #3b82f6;
         }
 
@@ -263,12 +321,19 @@
             padding: 20px 32px;
             text-align: center;
             min-width: 140px;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
         .perf-card:hover {
             transform: translateY(-2px);
             border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .perf-card:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .perf-card.alpha { border-top: 3px solid var(--alpha-color); }
@@ -312,9 +377,29 @@
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             cursor: pointer;
             border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
@@ -324,6 +409,13 @@
 
         .btn-primary:hover {
             background: var(--accent-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31, 124, 236, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(31, 124, 236, 0.2);
         }
 
         .btn-secondary {
@@ -334,6 +426,13 @@
 
         .btn-secondary:hover {
             border-color: var(--accent-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         /* Section Styling */
@@ -418,16 +517,23 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 32px;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
         .algo-card:hover {
             transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
-        .algo-card.alpha:hover { border-color: var(--alpha-color); }
-        .algo-card.shield:hover { border-color: var(--shield-color); }
-        .algo-card.omni:hover { border-color: var(--omni-color); }
+        .algo-card:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .algo-card.alpha:hover { border-color: var(--alpha-color); box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15); }
+        .algo-card.shield:hover { border-color: var(--shield-color); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.15); }
+        .algo-card.omni:hover { border-color: var(--omni-color); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15); }
 
         .algo-card-header {
             display: flex;
@@ -607,11 +713,18 @@
         .time-btn:hover {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .time-btn:active {
+            transform: translateY(0);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .time-btn.active {
             background: rgba(255, 255, 255, 0.12);
             color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         /* Stock Comparison Input */
@@ -1207,6 +1320,96 @@
         textarea:focus {
             outline: none;
             border-color: var(--accent-blue);
+        }
+
+        /* Form Validation Styles */
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group.valid input,
+        .form-group.valid textarea {
+            border-color: #3fb950;
+            box-shadow: 0 0 0 2px rgba(63, 185, 80, 0.15);
+        }
+
+        .form-group.invalid input,
+        .form-group.invalid textarea {
+            border-color: #f85149;
+            box-shadow: 0 0 0 2px rgba(248, 81, 73, 0.15);
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-group.valid .validation-icon.success,
+        .form-group.invalid .validation-icon.error {
+            opacity: 1;
+        }
+
+        .validation-icon.success {
+            color: #3fb950;
+        }
+
+        .validation-icon.error {
+            color: #f85149;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: #f85149;
+            margin-top: 6px;
+            min-height: 18px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-group.invalid .error-message {
+            opacity: 1;
+        }
+
+        .form-success {
+            background: rgba(63, 185, 80, 0.1);
+            border: 1px solid #3fb950;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: #3fb950;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .form-success.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* Footer */

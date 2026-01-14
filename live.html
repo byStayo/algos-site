@@ -3,12 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live 2026 Tracker | ALGOS</title>
-    <meta name="description" content="Real-time tracking of ALPHA, SHIELD, and OMNI algorithms performance in 2026.">
+    <title>Live 2026 Performance | Real-Time Algo Trading Results</title>
+    <meta name="description" content="Track ALPHA, SHIELD, and OMNI algorithmic trading strategies in real-time. Live 2026 performance data with daily updates and investment calculator.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://algos.anastasiades.io/live.html">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Live 2026 Performance | Real-Time Algo Trading Results">
+    <meta property="og:description" content="Track ALPHA, SHIELD, and OMNI algorithmic trading strategies in real-time. Live 2026 performance with daily updates.">
+    <meta property="og:url" content="https://algos.anastasiades.io/live.html">
+    <meta property="og:image" content="https://algos.anastasiades.io/og-image.png">
+    <meta property="og:site_name" content="Anastasiades Algos">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Live 2026 Performance | Real-Time Algo Trading Results">
+    <meta name="twitter:description" content="Track ALPHA, SHIELD, and OMNI algorithmic trading strategies in real-time. Live 2026 performance data.">
+    <meta name="twitter:image" content="https://algos.anastasiades.io/og-image.png">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="live trading results, algo trading performance, 2026 returns, ALPHA SHIELD OMNI, real-time investing">
+    <meta name="author" content="Anastasiades Algos">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Live 2026 Performance Tracker",
+        "description": "Real-time tracking of ALPHA, SHIELD, and OMNI algorithmic trading strategies",
+        "url": "https://algos.anastasiades.io/live.html",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Anastasiades Algos",
+            "url": "https://algos.anastasiades.io/"
+        },
+        "mainEntity": {
+            "@type": "FinancialService",
+            "name": "Algorithmic Trading Performance Tracker",
+            "description": "Real-time performance monitoring for automated trading strategies"
+        }
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -264,6 +309,198 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #21262d 25%, #30363d 50%, #21262d 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-text {
+            height: 1em;
+            margin-bottom: 0.5em;
+        }
+        .skeleton-text-lg {
+            height: 2em;
+            width: 60%;
+        }
+        .skeleton-text-sm {
+            height: 0.75em;
+            width: 40%;
+        }
+        .skeleton-value {
+            height: 32px;
+            width: 80px;
+            display: inline-block;
+        }
+        .skeleton-return {
+            height: 40px;
+            width: 100px;
+            display: inline-block;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border-radius: 16px;
+        }
+        .loading-overlay .spinner {
+            margin-bottom: 16px;
+        }
+        .loading-overlay p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Error State */
+        .error-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            text-align: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--warning-red);
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+        .error-state.visible {
+            display: flex;
+        }
+        .error-state-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(248, 81, 73, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 28px;
+        }
+        .error-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .error-state p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        .retry-btn {
+            padding: 12px 24px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .retry-btn:hover {
+            background: #3993FF;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            text-align: center;
+            background: var(--bg-secondary);
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+        .empty-state.visible {
+            display: flex;
+        }
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(125, 133, 144, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 28px;
+        }
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            max-width: 400px;
+        }
+
+        /* Fade-in Animation */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .data-loaded .algo-live-card,
+        .data-loaded .summary-card,
+        .data-loaded .chart-section {
+            opacity: 0;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .data-loaded .summary-card:nth-child(1) { animation-delay: 0s; }
+        .data-loaded .summary-card:nth-child(2) { animation-delay: 0.05s; }
+        .data-loaded .algo-live-card:nth-child(1) { animation-delay: 0.1s; }
+        .data-loaded .algo-live-card:nth-child(2) { animation-delay: 0.15s; }
+        .data-loaded .algo-live-card:nth-child(3) { animation-delay: 0.2s; }
+        .data-loaded .chart-section { animation-delay: 0.25s; }
+
+        /* Loading state content hiding */
+        .is-loading .data-content {
+            visibility: hidden;
+        }
+        .is-loading .skeleton-placeholder {
+            display: block;
+        }
+        .skeleton-placeholder {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
         /* Footer */
         footer {
             padding: 40px 0;
@@ -429,15 +666,15 @@
                 <a href="shield.html">SHIELD</a>
                 <a href="omni.html">OMNI</a>
                 <a href="live.html" class="active">Live 2026</a>
-                <div class="live-badge" id="market-status">
-                    <span class="pulse"></span>
+                <div class="live-badge" id="market-status" role="status" aria-live="polite">
+                    <span class="pulse" aria-hidden="true"></span>
                     <span id="market-text">Loading...</span>
                 </div>
             </div>
             <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
             </button>
         </div>
     </nav>
@@ -583,14 +820,14 @@
             <div class="chart-header">
                 <div class="chart-title">2026 Performance</div>
                 <div class="chart-legend">
-                    <div class="legend-item"><div class="legend-dot alpha"></div> ALPHA</div>
-                    <div class="legend-item"><div class="legend-dot shield"></div> SHIELD</div>
-                    <div class="legend-item"><div class="legend-dot omni"></div> OMNI</div>
-                    <div class="legend-item"><div class="legend-dot spy"></div> SPY</div>
+                    <div class="legend-item"><div class="legend-dot alpha" aria-hidden="true"></div> ALPHA</div>
+                    <div class="legend-item"><div class="legend-dot shield" aria-hidden="true"></div> SHIELD</div>
+                    <div class="legend-item"><div class="legend-dot omni" aria-hidden="true"></div> OMNI</div>
+                    <div class="legend-item"><div class="legend-dot spy" aria-hidden="true"></div> SPY</div>
                 </div>
             </div>
             <div class="chart-container">
-                <canvas id="performance-chart"></canvas>
+                <canvas id="performance-chart" role="img" aria-label="Line chart showing 2026 performance comparison of ALPHA, SHIELD, OMNI algorithms and SPY benchmark"></canvas>
             </div>
         </div>
     </main>
