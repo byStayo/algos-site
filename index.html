@@ -2353,20 +2353,22 @@
             const avg = (performances.ALPHA + performances.SHIELD + performances.OMNI) / 3;
             document.getElementById('avgReturn').textContent = `+${avg.toFixed(2)}%`;
 
-            // Check if SPY has real data (not null values)
+            // Check if SPY has real data (not null values), fallback to realData2025
             const spyLegendItem = document.getElementById('spy-legend-item');
             const hasRealSpyData = chartData.SPY?.returns?.some(r => r !== null);
 
+            let spyReturn;
             if (hasRealSpyData) {
-                const spyReturn = chartData.SPY.returns.filter(r => r !== null).pop() || 0;
-                const alpha = avg - spyReturn;
-                document.getElementById('vsSpy').textContent = `${alpha >= 0 ? '+' : ''}${alpha.toFixed(2)}%`;
-                document.getElementById('legend-spy').textContent = `${spyReturn >= 0 ? '+' : ''}${spyReturn.toFixed(2)}%`;
-                spyLegendItem.style.display = 'flex';
+                spyReturn = chartData.SPY.returns.filter(r => r !== null).pop() || 0;
             } else {
-                document.getElementById('vsSpy').textContent = '--';
-                spyLegendItem.style.display = 'none';
+                // Use hardcoded 2025 SPY return as fallback
+                spyReturn = realData2025.SPY?.return || 18.01;
             }
+
+            const alpha = avg - spyReturn;
+            document.getElementById('vsSpy').textContent = `${alpha >= 0 ? '+' : ''}${alpha.toFixed(2)}%`;
+            document.getElementById('legend-spy').textContent = `${spyReturn >= 0 ? '+' : ''}${spyReturn.toFixed(2)}%`;
+            spyLegendItem.style.display = 'flex';
 
             document.getElementById('dataPoints').textContent = `${chartData.dates.length} days`;
 
