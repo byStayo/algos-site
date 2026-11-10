@@ -1,8 +1,7 @@
-// Public, read-only projection of Composer history. Never return account values or identifiers.
+// Public, read-only projection of Composer history. Never return account values, identifiers, holdings or holding-derived quotes.
 const NAMES = ['ALPHA', 'SHIELD', 'OMNI', 'SPY'];
 const canonical = name => name === 'SHEILD' ? 'SHIELD' : name;
 const round = n => Math.round(n * 1e6) / 1e6;
-const validDate = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(Date.parse(d));
 
 function normalizeHistory(raw, today) {
   const times = raw?.epoch_ms, values = raw?.deposit_adjusted_series;
@@ -27,23 +26,13 @@ function normalizeHistory(raw, today) {
 }
 
 function buildPublic(stats, histories, now = new Date()) {
-  const today = now.toISOString().slice(0,10), strategies = {}, prices = new Map();
+  const today = now.toISOString().slice(0,10), strategies = {};
   for (const name of NAMES) {
     const matches = stats.symphonies.filter(row => canonical(row.name) === name);
     if (matches.length !== 1) throw Error('Ambiguous strategy');
-    const row = matches[0];
     strategies[name] = normalizeHistory(histories[name], today);
-    if (validDate(row.as_of) && row.as_of <= today) {
-      for (const holding of row.holdings || []) {
-        if (!/^[A-Z0-9.-]{1,12}$/.test(holding.ticker) || !Number.isFinite(holding.price) || holding.price <= 0) continue;
-        const quote = {ticker:holding.ticker,price:round(holding.price),asOf:row.as_of};
-        if (Number.isFinite(holding.last_percent_change)) quote.dailyChange = round(holding.last_percent_change * 100);
-        const previous = prices.get(quote.ticker);
-        if (!previous || previous.asOf < quote.asOf || (previous.asOf === quote.asOf && quote.dailyChange !== undefined)) prices.set(quote.ticker,quote);
-      }
-    }
   }
-  return {schemaVersion:2,asOf:NAMES.map(n=>strategies[n].asOf).sort()[0],retrievedAt:now.toISOString(),source:'Composer API: cash-flow-adjusted historical series',cadence:'Source observations are daily; the website checks for updates every five minutes while visible.',method:'Percentage change in the deposit-adjusted historical series. Each year uses its last available prior-year observation; SPY starts on 2 January 2025. Historical-series returns may differ slightly from Composer summary TWR.',strategies,quotes:[...prices.values()].sort((a,b)=>a.ticker.localeCompare(b.ticker))};
+  return {schemaVersion:2,asOf:NAMES.map(n=>strategies[n].asOf).sort()[0],retrievedAt:now.toISOString(),source:'Composer API: cash-flow-adjusted historical series',cadence:'Source observations are daily; the website checks for updates every five minutes while visible.',method:'Percentage change in the deposit-adjusted historical series. Each year uses its last available prior-year observation; SPY starts on 2 January 2025. Historical-series returns may differ slightly from Composer summary TWR.',strategies,quotes:[]};
 }
 
 async function source(path) {
